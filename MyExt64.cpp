@@ -1,0 +1,139 @@
+
+#include "MyExt64.h"
+#include "Utils.h"
+#include "CUserSocket.h"
+#include <stdio.h>
+
+const int MyExt64::ProtocolVersionGraciaFinal = 83;
+const int MyExt64::ProtocolVersionGraciaFinalUpdate1 = 87;
+const int MyExt64::ProtocolVersionGraciaEpilogue = 148;
+const int MyExt64::ProtocolVersionGraciaEpilogueUpdate1 = 152;
+
+int MyExt64::protocolVersion = MyExt64::ProtocolVersionGraciaFinal;
+
+void MyExt64::Init()
+{
+	SetProtocolVersion(ProtocolVersionGraciaEpilogueUpdate1);
+	SetMaxIndex(10000);
+	DeadlockTimeout(5 * 60000 * 1000);
+	DisableNoAuthExit();
+	DisableSendMail();
+	HideWarnings();
+	SetShutdownSeconds(180);
+	EnableLoadNpcSettingsAnytime();
+	AllowAirshipSkills();
+	MountUnmountKeepBuffs();
+	SetPledgeLoadTimeout(30);
+	SetPledgeWarLoadTimeout(30);
+	HookOnLoadEnd();
+}
+
+int MyExt64::GetProtocolVersion()
+{
+	return protocolVersion;
+}
+
+void MyExt64::SetProtocolVersion(int version)
+{
+	char buffer[4];
+	_snprintf_s(buffer, 4, "%d", version);
+	WriteMemoryBYTES(0xC6BD83, buffer, strlen(buffer));
+	protocolVersion = version;
+}
+
+void MyExt64::SetMaxIndex(const size_t index)
+{
+	WriteMemoryDWORD(0x629E58, index - 1);
+	WriteMemoryDWORD(0x643F3F, index - 1);
+	WriteMemoryDWORD(0x6AE331, index - 1);
+	WriteMemoryDWORD(0x7A76D9, index - 1);
+	WriteMemoryDWORD(0x7A9AA3, index - 1);
+	WriteMemoryDWORD(0xA268B3, index - 1);
+	WriteMemoryDWORD(0x443D6B, index);
+	WriteMemoryDWORD(0x5354A6, index);
+	WriteMemoryDWORD(0x6AE4BD, index);
+	WriteMemoryDWORD(0x71E052, index);
+	WriteMemoryDWORD(0x763124, index);
+	WriteMemoryDWORD(0x77C2B7, index);
+	WriteMemoryDWORD(0x77CD45, index);
+	WriteMemoryDWORD(0x77DC42, index);
+	WriteMemoryDWORD(0x77DD45, index);
+	WriteMemoryDWORD(0x7C7EF9, index);
+	WriteMemoryDWORD(0x7C95D5, index);
+	WriteMemoryDWORD(0x860E49, index);
+	WriteMemoryDWORD(0x8619F1, index);
+}
+
+void MyExt64::DeadlockTimeout(UINT32 timeout)
+{
+	WriteMemoryDWORD(0x690053, timeout);
+}
+
+void MyExt64::DisableNoAuthExit()
+{
+	WriteInstructionJmp(0x6B27AC, 0x6B273B, 0x6B27FE);
+}
+
+void MyExt64::DisableSendMail()
+{
+	NOPMemory(0x61BB2D, 5);
+	NOPMemory(0x61CABA, 5);
+}
+
+void MyExt64::HideWarnings()
+{
+	NOPMemory(0x42E44A, 5);
+	WriteMemoryBYTES(0x5EA1E2, "\x66\x31\xF6\x90\x90", 5);
+	NOPMemory(0x6D323A, 5);
+}
+
+void MyExt64::OnLoadEnd(UINT64 classBase)
+{
+	typedef UINT32 (__thiscall *t)(UINT64);
+	t f = reinterpret_cast<t>(0x470544);
+	if (f(classBase) == 0xF) {
+		CUserSocket::HookPacketHandlers();
+	}
+}
+
+void MyExt64::SetShutdownSeconds(const int seconds)
+{
+	WriteMemoryDWORD(0x691402 + 3, static_cast<UINT32>(seconds));
+}
+
+void MyExt64::EnableLoadNpcSettingsAnytime()
+{
+	WriteMemoryBYTE(0x644DC5, 0x30);
+}
+
+void MyExt64::EnableGlobalShout()
+{
+	WriteMemoryBYTES(0x8abc3a, "\x31\xDB\x89\x5C\x24\x3C\x90", 7);
+	WriteMemoryBYTES(0x8abc4a, "\x8D\x74\x24\xA0\x31\xFF", 6);
+}
+
+void MyExt64::AllowAirshipSkills()
+{
+	WriteMemoryBYTE(0x5310F3, 0x30);
+}
+
+void MyExt64::MountUnmountKeepBuffs()
+{
+	NOPMemory(0x8FD944, 5);
+	NOPMemory(0x8FE172, 5);
+}
+
+void MyExt64::SetPledgeLoadTimeout(time_t timeout)
+{
+	WriteMemoryDWORD(0x7D8449 + 2, static_cast<UINT32>(max(10, min(timeout, 1800))));
+}
+
+void MyExt64::SetPledgeWarLoadTimeout(time_t timeout)
+{
+	WriteMemoryBYTE(0x7D83FB + 3, static_cast<unsigned char>(max(10, min(timeout, 180)) - 6));
+}
+
+void MyExt64::HookOnLoadEnd()
+{
+	WriteInstructionCall(0x6B278A, reinterpret_cast<UINT32>(OnLoadEnd));
+}
