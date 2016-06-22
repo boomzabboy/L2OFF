@@ -34,6 +34,8 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
 		}
 	}
 
+	MyExt64::SetProtocolVersion(MyExt64::ProtocolVersionGraciaEpilogueUpdate1);
+	MyExt64::SetDebug(true);
 	MyExt64::Init();
 
 	return TRUE;

@@ -1,19 +1,20 @@
 
 #include "MyExt64.h"
 #include "Utils.h"
+#include "CUser.h"
 #include "CUserSocket.h"
+#include "SkillEnchantOperator.h"
+#include "GraciaEpilogue.h"
 #include <stdio.h>
 
-const int MyExt64::ProtocolVersionGraciaFinal = 83;
-const int MyExt64::ProtocolVersionGraciaFinalUpdate1 = 87;
-const int MyExt64::ProtocolVersionGraciaEpilogue = 148;
-const int MyExt64::ProtocolVersionGraciaEpilogueUpdate1 = 152;
-
 int MyExt64::protocolVersion = MyExt64::ProtocolVersionGraciaFinal;
+bool MyExt64::debug = false;
+CriticalSection MyExt64::pledgeInitCS;
+bool MyExt64::pledgeInitialized = false;
+
 
 void MyExt64::Init()
 {
-	SetProtocolVersion(ProtocolVersionGraciaEpilogueUpdate1);
 	SetMaxIndex(10000);
 	DeadlockTimeout(5 * 60000 * 1000);
 	DisableNoAuthExit();
@@ -23,9 +24,26 @@ void MyExt64::Init()
 	EnableLoadNpcSettingsAnytime();
 	AllowAirshipSkills();
 	MountUnmountKeepBuffs();
-	SetPledgeLoadTimeout(30);
+	SetPledgeLoadTimeout(60);
 	SetPledgeWarLoadTimeout(30);
 	HookOnLoadEnd();
+	FixLoading();
+	CUser::Init();
+	CUserSocket::Init();
+	SkillEnchantOperator::Init();
+	if (GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
+		GraciaEpilogue::Init();
+	}
+}
+
+bool MyExt64::IsDebug()
+{
+	return debug;
+}
+
+void MyExt64::SetDebug(bool debug)
+{
+	MyExt64::debug = debug;
 }
 
 int MyExt64::GetProtocolVersion()
@@ -92,7 +110,7 @@ void MyExt64::OnLoadEnd(UINT64 classBase)
 	typedef UINT32 (__thiscall *t)(UINT64);
 	t f = reinterpret_cast<t>(0x470544);
 	if (f(classBase) == 0xF) {
-		CUserSocket::HookPacketHandlers();
+		// ...
 	}
 }
 
@@ -133,7 +151,35 @@ void MyExt64::SetPledgeWarLoadTimeout(time_t timeout)
 	WriteMemoryBYTE(0x7D83FB + 3, static_cast<unsigned char>(max(10, min(timeout, 180)) - 6));
 }
 
+void MyExt64::FixLoading()
+{
+	WriteInstructionCall(0x6B24B9, reinterpret_cast<UINT32>(CDominionInitDominion));
+	WriteInstructionCall(0x6915D3, reinterpret_cast<UINT32>(CPledgeInitPledge));
+	NOPMemory(0x7D853E, 5);
+}
+
 void MyExt64::HookOnLoadEnd()
 {
 	WriteInstructionCall(0x6B278A, reinterpret_cast<UINT32>(OnLoadEnd));
 }
+
+void __cdecl MyExt64::CPledgeInitPledge()
+{
+	for (;;) {
+		Sleep(100);
+		ScopedLock lock(pledgeInitCS);
+		if (pledgeInitialized) {
+			break;
+		}
+	}
+	reinterpret_cast<void(*)()>(0x5F4EAC)();
+}
+
+void __cdecl MyExt64::CDominionInitDominion()
+{
+	reinterpret_cast<void(*)()>(0x5EA29C)();
+	reinterpret_cast<void(*)()>(0x7D831C)();
+	ScopedLock lock(pledgeInitCS);
+	pledgeInitialized = true;
+}
+

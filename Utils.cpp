@@ -79,24 +79,6 @@ unsigned char ReadMemoryBYTE(unsigned int address)
     return value;
 }
 
-void WriteChangeAddress(unsigned int address, unsigned int uFrom, unsigned int uTo)
-{
-	DWORD flOldProtect;
-	SIZE_T uNumberOfBytes;
-	HANDLE handle;
-    UINT32 buffer;
-	
-	if (handle = server) {
-		VirtualProtectEx(handle, (LPVOID)address, 4, PAGE_WRITECOPY, &flOldProtect);
-        ReadProcessMemory(handle, (LPVOID)address, (void*) &buffer, 4, &uNumberOfBytes);
-        buffer -= uFrom;
-        buffer += uTo;
-		WriteProcessMemory(handle, (LPVOID)address, (void*) &buffer, 4, &uNumberOfBytes);
-		FlushInstructionCache(handle, (LPVOID)address, 4);
-		VirtualProtectEx(handle, (LPVOID)address, 4, flOldProtect, &flOldProtect);
-	}
-}
-
 void NOPMemory(unsigned int address, unsigned int len)
 {
 	unsigned int dword_count = (len / 4), byte_count = (len % 4);
@@ -207,4 +189,12 @@ bool ReplaceString(unsigned int address, const wchar_t *from, const wchar_t *to)
     WriteMemoryWORD((UINT32)pos, 0);
     return true;
 }
+
+void WriteAddress(unsigned int uAddress, UINT32 absAddr)
+{
+	WriteMemoryDWORD(uAddress, absAddr - (uAddress + 4));
+}
+
+Assemble_t Assemble = reinterpret_cast<Assemble_t>(0x68F99C);
+Disassemble_t Disassemble = reinterpret_cast<Disassemble_t>(0x68ED10);
 

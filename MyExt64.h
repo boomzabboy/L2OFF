@@ -1,20 +1,24 @@
 
 #pragma once
 
-#include <windows.h>
+#include "CriticalSection.h"
 
 class MyExt64 {
 public:
-	static const int ProtocolVersionGraciaFinal;
-	static const int ProtocolVersionGraciaFinalUpdate1;
-	static const int ProtocolVersionGraciaEpilogue;
-	static const int ProtocolVersionGraciaEpilogueUpdate1;
+	enum ProtocolVersion {
+		ProtocolVersionGraciaFinal = 83,
+		ProtocolVersionGraciaFinalUpdate1 = 87,
+		ProtocolVersionGraciaEpilogue = 148,
+		ProtocolVersionGraciaEpilogueUpdate1 = 152
+	};
 
 	static void Init();
+	static void SetDebug(bool debug);
+	static bool IsDebug();
+	static void SetProtocolVersion(int version);
 	static int GetProtocolVersion();
 
 protected:
-	static void SetProtocolVersion(int version);
 	static void SetMaxIndex(const size_t index);
 	static void DeadlockTimeout(UINT32 timeout);
 	static void DisableNoAuthExit();
@@ -28,9 +32,16 @@ protected:
 	static void SetPledgeLoadTimeout(time_t timeout);
 	static void SetPledgeWarLoadTimeout(time_t timeout);
 	static void HookOnLoadEnd();
+	static void FixLoading();
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 
+	static void __cdecl CPledgeInitPledge();
+	static void __cdecl CDominionInitDominion();
+
 	static int protocolVersion;
+	static bool debug;
+	static CriticalSection pledgeInitCS;
+	static bool pledgeInitialized;
 };
 

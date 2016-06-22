@@ -2,19 +2,25 @@
 #include "CUserSocket.h"
 #include "CUser.h"
 #include "CLog.h"
-#include "SkillEnchantOperator.h"
 #include "Utils.h"
-#include "CSkillEnchantInfo.h"
-#include "CSkillEnchantDB.h"
-#include "EnchantDataInfo.h"
 #include "MyExt64.h"
+#include "GraciaEpilogue.h"
+#include <new>
 
-typedef bool (__cdecl *UserSocketPacketHandler)(CUserSocket*, const BYTE*, BYTE);
+CUserSocket::PacketHandler *CUserSocket::exHandlers = reinterpret_cast<CUserSocket::PacketHandler*>(0x121C0D60);
 
-UserSocketPacketHandler *exHandlers = reinterpret_cast<UserSocketPacketHandler*>(0x121C0D60);
+static WORD maxOpcodeEx = 0x68;
 
-CUserSocketAssemble_t CUserSocket::Assemble = reinterpret_cast<CUserSocketAssemble_t>(0x68F99C);
-CUserSocketDisassemble_t CUserSocket::Disassemble = reinterpret_cast<CUserSocketDisassemble_t>(0x68ED10);
+CUserSocket::IgnorePacket::IgnorePacket(const wchar_t *format, ...)
+: std::exception()
+{
+	if (MyExt64::IsDebug()) {
+		va_list va;
+		va_start(va, format);
+		CLog::AddV(CLog::Red, format, va);
+		va_end(va);
+	}
+}
 
 namespace {
 
@@ -26,13 +32,40 @@ void ReplaceOutExOpcode(unsigned int address, BYTE opcode)
 
 }
 
-void CUserSocket::HookPacketHandlers()
+void CUserSocket::Init()
 {
-	for (size_t i(0) ; i < 0x100 ; ++i) {
-		if (!exHandlers[i]) {
-			exHandlers[i] = DummyPacketEx;
-		}
+	WriteMemoryDWORD(0x91BFEE, sizeof(CUserSocket));
+	WriteMemoryDWORD(0x93CEC1, sizeof(CUserSocket));
+	WriteInstruction(0x93CEDC, reinterpret_cast<UINT32>(Constructor), 0xE8);
+	WriteInstruction(0x92E068, reinterpret_cast<UINT32>(Destructor), 0xE8);
+
+	WriteMemoryQWORD(0x92EAE0, 0x8B48D38B49C28B44);
+	WriteMemoryQWORD(0x92EAE8, 0x98248489482024CB);
+	WriteInstructionCallJmpEax(0x92EF0B, reinterpret_cast<UINT32>(OutGamePacketHandlerWrapper), 0x92EF17);
+	WriteInstructionCallJmpEax(0x92EDFE, reinterpret_cast<UINT32>(InGamePacketHandlerWrapper), 0x92EE0C);
+	WriteInstructionCall(0x92EAE9, reinterpret_cast<UINT32>(InGamePacketExHandlerWrapper), 0x92EB03);
+
+	switch (MyExt64::GetProtocolVersion()) {
+	case MyExt64::ProtocolVersionGraciaFinal:
+	case MyExt64::ProtocolVersionGraciaFinalUpdate1:
+		maxOpcodeEx = 0x68;
+		break;
+	case MyExt64::ProtocolVersionGraciaEpilogue:
+		maxOpcodeEx = 0x7D;
+		break;
+	case MyExt64::ProtocolVersionGraciaEpilogueUpdate1:
+		maxOpcodeEx = 0x80;
+		break;
+	default:
+		maxOpcodeEx = 0x68;
+		break;
 	}
+
+	WriteMemoryBYTES(0x5D4FA7, "\x80\xFB", 2);
+	WriteMemoryBYTES(0x5D4FAE, "\x75\xE3", 2);
+	WriteMemoryBYTE(0x5D4FA9, maxOpcodeEx + 1);
+	WriteMemoryBYTE(0x92EAC6, maxOpcodeEx + 1);
+
 	if (MyExt64::GetProtocolVersion() == MyExt64::ProtocolVersionGraciaFinalUpdate1) {
 		ReplaceOutExOpcode(0x7ED0D8, 0xA7); // FE:A6 -> FE:A7
 		ReplaceOutExOpcode(0x7ED213, 0xA7); // FE:A6 -> FE:A7
@@ -58,21 +91,7 @@ void CUserSocket::HookPacketHandlers()
 		ReplaceOutExOpcode(0x8CFBC3, 0xAD); // FE:AB -> FE:AD
 	}
 	if (MyExt64::GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
-		// client packets:
-		exHandlers[0x46] = RequestExSkillEnchantInfoDetailGraciaEpilogue;
-		exHandlers[0x78] = exHandlers[0x65];
-		exHandlers[0x79] = exHandlers[0x66];
-		exHandlers[0x7A] = exHandlers[0x67];
-		exHandlers[0x7B] = exHandlers[0x68];
-		exHandlers[0x65] = exHandlers[0x66] = exHandlers[0x67] = exHandlers[0x68] = DummyPacketEx;
-
 		// server packets:
-		WriteInstructionCall(0x8B0E7B, reinterpret_cast<UINT32>(AssembleInventoryUpdateItem1GraciaEpilogue));
-		WriteInstructionCall(0x8B133C, reinterpret_cast<UINT32>(AssembleInventoryUpdateItem2GraciaEpilogue));
-		WriteInstructionCall(0x8F2446, reinterpret_cast<UINT32>(AssembleSkillListItemGraciaEpilogue));
-		WriteInstructionCall(0x8E33BE, reinterpret_cast<UINT32>(AssembleItemListItem1GraciaEpilogue));
-		WriteInstructionCall(0x8E2A82, reinterpret_cast<UINT32>(AssembleItemListItem2GraciaEpilogue));
-		
 		ReplaceOutExOpcode(0x7ED0D8, 0xB8); // FE:A6 -> FE:B8
 		ReplaceOutExOpcode(0x7ED213, 0xB8); // FE:A6 -> FE:B8
 		ReplaceOutExOpcode(0x7ED3DB, 0xB8); // FE:A6 -> FE:B8
@@ -101,128 +120,29 @@ void CUserSocket::HookPacketHandlers()
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // ONLY FOR TESTING - DummyPacket not to disconnect user
 }
 
-bool __cdecl CUserSocket::DummyPacketEx(CUserSocket *self, const BYTE *packet, BYTE opcode)
+CUserSocket* __cdecl CUserSocket::Constructor(CUserSocket *self, SOCKET s)
 {
-	CLog::Add(CLog::Blue, L"[DummyPacketEx] %02X: %02X %02X %02X %02X %02X %02X %02X %02X",
-		opcode, packet[0], packet[1], packet[2], packet[3], packet[4], packet[5], packet[6], packet[7]);
-	return false;
+	typedef CUserSocket* (__cdecl *t)(CUserSocket*, SOCKET);
+	t f = reinterpret_cast<t>(0x93CADC);
+	CUserSocket *ret = f(self, s);
+	new (&ret->ext) Ext();
+	return ret;
 }
 
-bool __cdecl CUserSocket::RequestExSkillEnchantInfoDetailGraciaEpilogue(CUserSocket *self, const BYTE *packet, BYTE opcode)
+CUserSocket* __cdecl CUserSocket::Destructor(CUserSocket *self, bool isMemoryFreeUsed)
 {
-	(void) opcode;
-
-	UINT32 enchantType = 0;
-	UINT32 skillId = 0;
-	UINT32 skillLevel = 0;
-
-	Disassemble(packet, "ddd", &enchantType, &skillId, &skillLevel);
-
-	//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] enchantType=%d skillId=%d skillLevel=%d",
-	//	enchantType, skillId, skillLevel);
-
-	if (enchantType > 3) {
-		CLog::Add(CLog::Red, L"[RequestExSkillEnchantInfoDetail] exploit attempt, invalid enchant operator type [%d]", enchantType);
-		return true;
-	}
-
-	SkillEnchantOperator *op = SkillEnchantOperator::GetOperator(enchantType);
-
-	//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] SkillEnchantOperator %p", op);
-
-	if (op) {
-		if (!self->GetUser()) {
-			CLog::Add(CLog::Red, L"[RequestExSkillEnchantInfoDetail] user null at file %s line %d", __FILEW__, __LINE__);
-			return false;
-		}
-
-		CSkillEnchantInfo *info = 0;
-		if (enchantType == 2) {
-			int acquiredLevel = self->GetUser()->GetAcquiredSkillLevel(skillId);
-			if (acquiredLevel % 100 > 1) {
-				--acquiredLevel;
-			}
-			//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] GetSkillEnchantInfo(%d, %d)", skillId, acquiredLevel);
-			info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, acquiredLevel);
-		} else {
-			//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] GetSkillEnchantInfo(%d, %d)", skillId, skillLevel);
-			info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, skillLevel);
-		}
-
-		//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] CSkillEnchantInfo %p", info);
-
-		if (info) {
-			int probability = op->CalculateProb(info, self->GetUser()->GetLevel());
-
-			//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] probability %d", probability);
-
-			int index = info->newEnchantLevel - 1;
-
-			//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] index %d", index);
-
-			if (index >= 30 || index < 0) {
-				CLog::Add(CLog::Red,
-					L"[RequestExSkillEnchantInfoDetail] invalid index skillId=%d skillLevel=%d index=%d user [%s]",
-					skillId, skillLevel, index, self->GetUser()->GetName());
-				return false;
-			}
-
-			//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] index=%d", index);
-
-			int requiredSP = EnchantDataInfo::enchantRequirements[index].sp * op->requirementModifier;
-			INT64 requiredAdena = EnchantDataInfo::enchantRequirements[index].adena * op->requirementModifier;
-			if (op->operatorType == 1) {
-				requiredSP *= 5;
-				requiredAdena *= 5;
-			}
-
-			//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] requiredSP=%d requiredAdena=%d", requiredSP, requiredAdena);
-
-			int itemId = info->requiredItems[enchantType];
-			int itemCount = (int)info->requiredItemCounts[enchantType];
-
-			//CLog::Add(CLog::Blue, L"[RequestExSkillEnchantInfoDetail] itemId=%d itemCount=%d", itemId, itemCount);
-
-			self->Send("chdddddddddd", 0xFE, 0x5E, enchantType, skillId, skillLevel,
-				requiredSP, probability, 2, 57, requiredAdena, itemId, itemCount);
-			// 0x5e should be class ID but maybe it's not necessary
-		} else {
-			CLog::Add(CLog::Red, L"[RequestExSkillEnchantInfoDetail] null skill info for skillId=%d skillLevel=%d", skillId, skillLevel);
-		}
-	} else {
-		CLog::Add(CLog::Red, L"[RequestExSkillEnchantInfoDetail] null skill enchant operator");
-	}
-	return false;
+	typedef CUserSocket* (__cdecl *t)(CUserSocket*, bool);
+	t f = (t)0x0092DE7C;
+	self->ext.~Ext();
+	return f(self, isMemoryFreeUsed);
 }
 
-int __cdecl CUserSocket::AssembleInventoryUpdateItem1GraciaEpilogue(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
+CUserSocket::Ext::Ext()
 {
-	//                                abcdefghijklmnopqr000
-	return Assemble(buffer, maxSize, "dddQhhhdQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, 0, 0, 0);
 }
 
-int __cdecl CUserSocket::AssembleInventoryUpdateItem2GraciaEpilogue(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT64 j,	UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r)
+CUserSocket::Ext::~Ext()
 {
-	//                                abcdefghijklmnopq000
-	return Assemble(buffer, maxSize, "dddQhhhdQQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, 0, 0, 0);
-}
-
-int __cdecl CUserSocket::AssembleSkillListItemGraciaEpilogue(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT8 d)
-{
-	//                                abcd0
-	return Assemble(buffer, maxSize, "dddcc", a, b, c, d, 0);
-}
-
-int __cdecl CUserSocket::AssembleItemListItem1GraciaEpilogue(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT32 d, UINT64 e, UINT16 f, UINT16 g, UINT16 h, UINT32 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT32 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT16 u, UINT16 v, UINT32 w)
-{
-	//                                abcdefghijklmnopqrstuvw
-	return Assemble(buffer, maxSize, "hdddQhhhdhhhhdhhhhhhhhdhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, 0, 0, 0);
-}
-
-int __cdecl CUserSocket::AssembleItemListItem2GraciaEpilogue(char *buffer, int maxSize, const char *format, UINT16 a, UINT16 b, UINT32 c, UINT32 d, UINT32 e, UINT64 f, UINT16 g, UINT16 h, UINT16 i, UINT32 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT32 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT16 u, UINT16 v, UINT16 w, UINT32 x)
-{
-	//                                abcdefghijklmnopqrstuvwx
-	return Assemble(buffer, maxSize, "hhdddQhhhdhhhhdhhhhhhhhdhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, 0, 0, 0);
 }
 
 CUser* CUserSocket::GetUser()
@@ -244,4 +164,135 @@ void CUserSocket::SendV(const char *format, va_list va)
 	t f = reinterpret_cast<t>(0x859934);
 	f(this, format, va);
 }
+
+UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
+{
+	BYTE opcodeRemapped = opcode;
+
+	try {
+		return self->OutGamePacketHandler(packet, opcodeRemapped) ? 0x92F0BD : 0x92EF17;
+	} catch (const CUserSocket::IgnorePacket &e) {
+		return 0x92EE0C;
+	}
+}
+
+UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
+{
+	BYTE opcodeRemapped = opcode;
+
+	try {
+		return self->InGamePacketHandler(packet, opcodeRemapped) ? 0x92F08A : 0x92EE48;
+	} catch (const CUserSocket::IgnorePacket &e) {
+		return 0x92EE0C;
+	}
+}
+
+bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const BYTE* packet, WORD opcodeEx)
+{
+	if (opcodeEx > maxOpcodeEx) {
+		return true;
+	}
+
+	WORD opcodeExRemapped = opcodeEx;
+	if (MyExt64::GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
+		switch (opcodeEx) {
+		case 0x69: return false; // not implemented
+		case 0x6A: return false; // not implemented
+		case 0x6B: return false; // not implemented
+		case 0x6C: return false; // not implemented
+		case 0x6D: return false; // not implemented
+		case 0x6E: return false; // not implemented
+		case 0x6F: return false; // not implemented
+		case 0x70: return false; // not implemented
+		case 0x71: return false; // not implemented
+		case 0x72: return false; // not implemented
+		case 0x73: return false; // not implemented
+		case 0x74: return false; // not implemented
+		case 0x75: return false; // not implemented
+		case 0x76: return false; // not implemented
+		case 0x77: return false; // not implemented
+		case 0x78: opcodeExRemapped = 0x65; break;
+		case 0x79: opcodeExRemapped = 0x66; break;
+		case 0x7A: opcodeExRemapped = 0x67; break;
+		case 0x7B: opcodeExRemapped = 0x68; break;
+		case 0x7C: return false; // not implemented
+		case 0x7D: return false; // not implemented
+		case 0x7E: return false; // not implemented
+		case 0x7F: return false; // not implemented
+		default: break;
+		}
+	}
+
+	try {
+		//CLog::Add(CLog::Blue, L"InGamePacketExHandlerWrapper: call InGamePacketExHandler(packet, %02X)", opcodeExRemapped);
+		bool ret = self->InGamePacketExHandler(packet, static_cast<BYTE>(opcodeExRemapped));
+		//CLog::Add(CLog::Blue, L"InGamePacketExHandlerWrapper: InGamePacketExHandler(packet, %02X) returned %d", opcodeExRemapped, ret ? 1 : 0);
+		return ret;
+	} catch (const CUserSocket::IgnorePacket &e) {
+		//CLog::Add(CLog::Blue, L"InGamePacketExHandlerWrapper: InGamePacketExHandler(packet, %02X) raise IgnorePacket", opcodeExRemapped);
+		return true;
+	}
+}
+
+bool CUserSocket::CallPacketHandler(const BYTE opcode, const BYTE *packet)
+{
+	if (MyExt64::GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
+		switch (opcode) {
+		case 0x37: return GraciaEpilogue::BuyPacket(this, packet, opcode);
+		case 0x40: return GraciaEpilogue::SellPacket(this, packet, opcode);
+		default: break;
+		}
+	}
+	PacketHandler handler = packetTable[opcode];
+	if (!handler) {
+		//CLog::Add(CLog::Blue, L"CallPacketHandler %d: no handler", opcode);
+		return false;
+	}
+	bool ret = handler(this, packet, opcode);
+	//CLog::Add(CLog::Blue, L"CallPacketHandler %d %p: %d", opcode, handler, ret ? 1 : 0);
+	return ret;
+}
+
+bool CUserSocket::CallPacketExHandler(const BYTE opcode, const BYTE *packet)
+{
+	//CLog::Add(CLog::Blue, L"CallPacketHandlerEx %02X", opcode);
+	if (MyExt64::GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
+		switch (opcode) {
+		case 0x0E: return GraciaEpilogue::RequestExEnchantSkillInfo(this, packet, opcode);
+		case 0x33: return GraciaEpilogue::RequestExEnchantSkillUntrain(this, packet, opcode);
+		case 0x46: return GraciaEpilogue::RequestExEnchantSkillInfoDetail(this, packet, opcode);
+		default: break;
+		}
+	}
+	PacketHandler handler = exHandlers[opcode];
+	if (!handler) {
+		return false;
+	}
+	return handler(this, packet, opcode);
+}
+
+bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
+{
+	bool ret = CallPacketHandler(opcode, packet);
+	//CLog::Add(CLog::Blue, L"OutGamePacketHandler: %02X -> %d", opcode, ret ? 1 : 0);
+	return ret;
+}
+
+bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
+{
+	bool ret = CallPacketHandler(opcode, packet);
+	//CLog::Add(CLog::Blue, L"InGamePacketHandler: %02X -> %d", opcode, ret ? 1 : 0);
+	return ret;
+}
+
+bool CUserSocket::InGamePacketExHandler(const BYTE *packet, BYTE opcode)
+{
+	bool ret = CallPacketExHandler(opcode, packet);
+	//CLog::Add(CLog::Blue, L"InGamePacketExHandler: %02X -> %d", opcode, ret ? 1 : 0);
+	return ret;
+}
+
+CompileTimeOffsetCheck(CUserSocket, packetTable, 0x00C0);
+CompileTimeOffsetCheck(CUserSocket, user, 0x0528);
+CompileTimeOffsetCheck(CUserSocket, ext, 0x0FA0);
 

@@ -171,6 +171,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CriticalSection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CSkillEnchantDB.cpp"
 				>
 			</File>
@@ -187,7 +191,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CYieldLock.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\EnchantDataInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraciaEpilogue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraciaEpilogueBuySell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraciaEpilogueSkillEnchant.cpp"
 				>
 			</File>
 			<File
@@ -217,6 +237,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CriticalSection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CSharedCreatureData.h"
 				>
 			</File>
@@ -237,7 +261,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CYieldLock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EnchantDataInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraciaEpilogue.h"
 				>
 			</File>
 			<File

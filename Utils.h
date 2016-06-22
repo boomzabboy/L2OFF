@@ -13,6 +13,7 @@ void WriteMemoryDWORD(unsigned int uAddress, unsigned int value);
 void WriteMemoryWORD(unsigned int uAddress, unsigned short value);
 void WriteMemoryBYTE(unsigned int uAddress, unsigned char value);
 void ReadMemoryBYTES(unsigned int uAddress, void* bytes, unsigned int len);
+void WriteAddress(unsigned int uAddress, UINT32 absAddr);
 unsigned __int64 ReadMemoryQWORD(unsigned int uAddress);
 unsigned int ReadMemoryDWORD(unsigned int uAddress);
 unsigned short ReadMemoryWORD(unsigned int uAddress);
@@ -23,7 +24,6 @@ void WriteInstruction(unsigned int uAddress, unsigned int uDestination, unsigned
 void WriteInstructionCallJmpEax(unsigned int uAddress, unsigned int uDestination, unsigned int uNopEnd = NULL);
 void WriteInstructionCall(unsigned int uAddress, unsigned int uDestination, unsigned int uNopEnd = NULL);
 void WriteInstructionJmp(unsigned int uAddress, unsigned int uDestination, unsigned int uNopEnd = NULL);
-void WriteChangeAddress(unsigned int uAddress, unsigned int uFrom, unsigned int uTo);
 bool ReplaceString(unsigned int uAddress, const wchar_t *from, const wchar_t *to);
 
 template <typename Type, typename Member, int Offset, int RequiredOffset>
@@ -38,4 +38,10 @@ struct MemberOffsetCheck<Type, Member, Offset, Offset>
 	struct Type##__##Member##__OffsetCheck :										\
 	MemberOffsetCheck<Type, Type##__##Member##__, offsetof(Type, Member), Offset>	\
 	{}
+
+typedef int (__cdecl *Assemble_t)(char*, int, const char*, ...);
+typedef const unsigned char* (__cdecl *Disassemble_t)(const unsigned char*, const char*, ...);
+
+extern Assemble_t Assemble;
+extern Disassemble_t Disassemble;
 
