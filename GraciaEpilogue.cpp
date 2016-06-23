@@ -17,6 +17,14 @@ void GraciaEpilogue::Init()
 	WriteInstructionCall(0x5C46EA, reinterpret_cast<UINT32>(AssembleWarehouseWithdrawListItem));
 	WriteInstructionCall(0x5DBBBF, reinterpret_cast<UINT32>(AssembleWarehouseGMListItem));
 	WriteInstructionCall(0x88C7D0, reinterpret_cast<UINT32>(SendETCBuffStatusInfo));
+	WriteMemoryBYTES(0x8CFBCD, "\x48\x8B\xC8\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 14);
+	WriteInstructionCall(0x8CFBD0, reinterpret_cast<UINT32>(SendExBrBroadcastEventState));
+	WriteMemoryBYTES(0x907FF6, "\x48\x8B\xCF\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 13);
+	WriteInstructionCall(0x907FF9, reinterpret_cast<UINT32>(SendRelationChanged));
+	WriteMemoryBYTES(0x90835A, "\x48\x8B\xCB\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 13);
+	WriteInstructionCall(0x90835D, reinterpret_cast<UINT32>(SendRelationChanged));
+	WriteMemoryBYTES(0x90891E, "\x48\x8B\x4C\x24\x68\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 15);
+	WriteInstructionCall(0x908923, reinterpret_cast<UINT32>(SendRelationChanged));
 
 	// buy/sell
 	WriteAddress(0xA26CD0+3, reinterpret_cast<UINT32>(NpcShowBuySellPagePacket));
@@ -176,3 +184,16 @@ void __cdecl GraciaEpilogue::SendETCBuffStatusInfo(CUserSocket *socket, const ch
 	//             abcdxyfgh
 	socket->Send("cddddddddd", opcode, a, b, c, d, x, y, f, g, h);
 }
+
+void __cdecl GraciaEpilogue::SendExBrBroadcastEventState(CUserSocket *socket, void *unused, BYTE opcode, UINT16 opcodeEx, UINT32 a, UINT32 b)
+{
+	//              ab0000000, both h at end should be string (h = 0 is empty string)
+	socket->Send("chdddddddhh", opcode, opcodeEx, a, b, 0, 0, 0, 0, 0, 0, 0);
+}
+
+void __cdecl GraciaEpilogue::SendRelationChanged(CUserSocket *socket, void *unused, BYTE opcode, UINT32 a, UINT32 b, UINT32 c, UINT32 d, UINT32 e)
+{
+	//             1abcde
+	socket->Send("cdddddd", opcode, 1, a, b, c, d, e);
+}
+

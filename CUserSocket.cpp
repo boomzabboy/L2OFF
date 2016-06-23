@@ -113,8 +113,9 @@ void CUserSocket::Init()
 		ReplaceOutExOpcode(0x91257A, 0xBB); // FE:A9 -> FE:BB
 		ReplaceOutExOpcode(0x485364, 0xBC); // FE:AA -> FE:BC
 		ReplaceOutExOpcode(0x971667, 0xBC); // FE:AA -> FE:BC
-		ReplaceOutExOpcode(0x8CFBC3, 0xBE); // FE:AB -> FE:BE
-		ReplaceOutExOpcode(0x8ADEB8, 0xBE); // FE:AC -> FE:BD
+		ReplaceOutExOpcode(0x8CFBC3, 0xBD); // FE:AB -> FE:BD
+		ReplaceOutExOpcode(0x8ADEB8, 0xBE); // FE:AC -> FE:BE
+		WriteMemoryBYTE(0x8ADEF8, 0xBE); // FE:AC -> FE:BE
 	}
 
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // ONLY FOR TESTING - DummyPacket not to disconnect user
