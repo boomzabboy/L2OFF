@@ -16,6 +16,7 @@ void GraciaEpilogue::Init()
 	WriteInstructionCall(0x5B49B0, reinterpret_cast<UINT32>(AssembleWarehouseWithdrawListItem));
 	WriteInstructionCall(0x5C46EA, reinterpret_cast<UINT32>(AssembleWarehouseWithdrawListItem));
 	WriteInstructionCall(0x5DBBBF, reinterpret_cast<UINT32>(AssembleWarehouseGMListItem));
+	WriteInstructionCall(0x88C7D0, reinterpret_cast<UINT32>(SendETCBuffStatusInfo));
 
 	// buy/sell
 	WriteAddress(0xA26CD0+3, reinterpret_cast<UINT32>(NpcShowBuySellPagePacket));
@@ -150,3 +151,28 @@ int __cdecl GraciaEpilogue::AssembleWarehouseGMListItem(char *buffer, int maxSiz
 	return Assemble(buffer, maxSize, "hddQhhdhhhdddhhhhhhhhddhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, 0, 0, 0);
 }
 
+void __cdecl GraciaEpilogue::SendETCBuffStatusInfo(CUserSocket *socket, const char *format, BYTE opcode, UINT32 a, UINT32 b, UINT32 c, UINT32 d, UINT32 e, UINT32 f, UINT32 g, UINT32 h)
+{
+	(void) e;
+	if (!socket) {
+		return;
+	}
+	CUser *user = socket->user;
+	if (!user) {
+		return;
+	}
+	UINT32 x = reinterpret_cast<int(*)(CUser*)>(0x53A14C)(user);
+	double p = reinterpret_cast<double(*)(CUser*)>(0x536300)(user);
+	UINT32 y = 0;
+	if (p >= 1.9) { // p is in fact 2
+		y = 4;
+	} else if (p >= 1.7) { // p is in fact 1.728
+		y = 3;
+	} else if (p >= 1.4) { // p is in fact 1.44
+		y = 2;
+	} else if (p >= 1.1) { // p is in face 1.2
+		y = 1;
+	}
+	//             abcdxyfgh
+	socket->Send("cddddddddd", opcode, a, b, c, d, x, y, f, g, h);
+}

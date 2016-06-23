@@ -224,12 +224,9 @@ bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const 
 	}
 
 	try {
-		//CLog::Add(CLog::Blue, L"InGamePacketExHandlerWrapper: call InGamePacketExHandler(packet, %02X)", opcodeExRemapped);
 		bool ret = self->InGamePacketExHandler(packet, static_cast<BYTE>(opcodeExRemapped));
-		//CLog::Add(CLog::Blue, L"InGamePacketExHandlerWrapper: InGamePacketExHandler(packet, %02X) returned %d", opcodeExRemapped, ret ? 1 : 0);
 		return ret;
 	} catch (const CUserSocket::IgnorePacket &e) {
-		//CLog::Add(CLog::Blue, L"InGamePacketExHandlerWrapper: InGamePacketExHandler(packet, %02X) raise IgnorePacket", opcodeExRemapped);
 		return true;
 	}
 }
@@ -245,17 +242,14 @@ bool CUserSocket::CallPacketHandler(const BYTE opcode, const BYTE *packet)
 	}
 	PacketHandler handler = packetTable[opcode];
 	if (!handler) {
-		//CLog::Add(CLog::Blue, L"CallPacketHandler %d: no handler", opcode);
 		return false;
 	}
 	bool ret = handler(this, packet, opcode);
-	//CLog::Add(CLog::Blue, L"CallPacketHandler %d %p: %d", opcode, handler, ret ? 1 : 0);
 	return ret;
 }
 
 bool CUserSocket::CallPacketExHandler(const BYTE opcode, const BYTE *packet)
 {
-	//CLog::Add(CLog::Blue, L"CallPacketHandlerEx %02X", opcode);
 	if (MyExt64::GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
 		switch (opcode) {
 		case 0x0E: return GraciaEpilogue::RequestExEnchantSkillInfo(this, packet, opcode);
@@ -274,21 +268,18 @@ bool CUserSocket::CallPacketExHandler(const BYTE opcode, const BYTE *packet)
 bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
 {
 	bool ret = CallPacketHandler(opcode, packet);
-	//CLog::Add(CLog::Blue, L"OutGamePacketHandler: %02X -> %d", opcode, ret ? 1 : 0);
 	return ret;
 }
 
 bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 {
 	bool ret = CallPacketHandler(opcode, packet);
-	//CLog::Add(CLog::Blue, L"InGamePacketHandler: %02X -> %d", opcode, ret ? 1 : 0);
 	return ret;
 }
 
 bool CUserSocket::InGamePacketExHandler(const BYTE *packet, BYTE opcode)
 {
 	bool ret = CallPacketExHandler(opcode, packet);
-	//CLog::Add(CLog::Blue, L"InGamePacketExHandler: %02X -> %d", opcode, ret ? 1 : 0);
 	return ret;
 }
 

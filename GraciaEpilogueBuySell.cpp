@@ -34,15 +34,11 @@ CUserSocket *UserSocketFromBuySell(UINT32 a)
 bool IsEconomySell(void *economy)
 {
 	bool ret = __RTtypeid(economy) == reinterpret_cast<std::type_info*>(0xE588D8);
-	CLog::Add(CLog::Blue, L"IsEconomySell %p -> %p -> %d",
-		economy, __RTtypeid(economy), ret ? 1 : 0);
 	return ret;
 }
 bool IsEconomyBuy(void *economy)
 {
 	bool ret = __RTtypeid(economy) == reinterpret_cast<std::type_info*>(0xE588F8);
-	CLog::Add(CLog::Blue, L"IsEconomyBuy %p -> %p -> %d",
-		economy, __RTtypeid(economy), ret ? 1 : 0);
 	return ret;
 }
 }
@@ -75,8 +71,6 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 
 		user->sdLock->Leave(__FILEW__, __LINE__);
 
-		CLog::Add(CLog::Blue, L"Create buy list");
-
 		if (reinterpret_cast<t>(0x746318)(npcSocket, packet)) {
 			user->sdLock->Enter(__FILEW__, __LINE__);
 			CUserReleaseEconomy(user);
@@ -97,8 +91,6 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return false;
 		}
-
-		CLog::Add(CLog::Blue, L"Put buy list in economy2");
 
 		tmp = user->economy;
 		user->economy = user->ext.buySell.economy2;
@@ -147,8 +139,6 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 		}
 
 		user->sdLock->Leave(__FILEW__, __LINE__);
-
-		CLog::Add(CLog::Blue, L"Create sell list");
 
 		if (reinterpret_cast<t>(0x747184)(npcSocket, packet)) {
 			user->sdLock->Enter(__FILEW__, __LINE__);
@@ -218,13 +208,11 @@ void __cdecl GraciaEpilogue::SendBuySellWrapper(CUserSocket *socket, const unsig
 
 bool __cdecl GraciaEpilogue::CUserReleaseEconomy(CUser *self)
 {
-	CLog::Add(CLog::Blue, L"Release economy");
 	typedef bool (__cdecl *t)(CUser*);
 	t f = reinterpret_cast<t>(0x8D6A70);
 	bool result = false;
 	result = f(self);
 	if (self->ext.buySell.economy2) {
-		CLog::Add(CLog::Blue, L"Release economy2");
 		self->economy = self->ext.buySell.economy2;
 		self->ext.buySell.economy2 = 0;
 		result |= f(self);
