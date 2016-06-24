@@ -25,6 +25,10 @@ void GraciaEpilogue::Init()
 	WriteInstructionCall(0x90835D, reinterpret_cast<UINT32>(SendRelationChanged));
 	WriteMemoryBYTES(0x90891E, "\x48\x8B\x4C\x24\x68\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 15);
 	WriteInstructionCall(0x908923, reinterpret_cast<UINT32>(SendRelationChanged));
+	WriteInstructionCall(0x8730D3, reinterpret_cast<UINT32>(AssembleTradeStartItem));
+	WriteInstructionCall(0x8BA794, reinterpret_cast<UINT32>(AssemblePrivateStoreListSellItem));
+	WriteInstructionCall(0x8B2987, reinterpret_cast<UINT32>(AssemblePrivateStoreManageListBuyItem1));
+	WriteInstructionCall(0x8B25A7, reinterpret_cast<UINT32>(AssemblePrivateStoreManageListBuyItem2));
 
 	// buy/sell
 	WriteAddress(0xA26CD0+3, reinterpret_cast<UINT32>(NpcShowBuySellPagePacket));
@@ -195,5 +199,29 @@ void __cdecl GraciaEpilogue::SendRelationChanged(CUserSocket *socket, void *unus
 {
 	//             1abcde
 	socket->Send("cdddddd", opcode, 1, a, b, c, d, e);
+}
+
+int __cdecl GraciaEpilogue::AssembleTradeStartItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r)
+{
+	//                                abcdefghijklmnopqr000
+	return Assemble(buffer, maxSize, "hddQhhdhhhhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, 0, 0, 0);
+}
+
+int __cdecl GraciaEpilogue::AssemblePrivateStoreListSellItem(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT64 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r)
+{
+	//                                abcdefghijklmnopqr000
+	return Assemble(buffer, maxSize, "dddQhhhdQQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, 0, 0, 0);
+}
+
+int __cdecl GraciaEpilogue::AssemblePrivateStoreManageListBuyItem1(char *buffer, int maxSize, const char *format, UINT32 a, UINT16 b, UINT64 c, UINT64 d, UINT16 e, UINT32 f, UINT16 g, UINT64 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
+{
+	//                                abcdefghijklmnopq000
+	return Assemble(buffer, maxSize, "dhQQhdhQQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, 0, 0, 0);
+}
+
+int __cdecl GraciaEpilogue::AssemblePrivateStoreManageListBuyItem2(char *buffer, int maxSize, const char *format, UINT32 a, UINT16 b, UINT64 c, UINT64 d, UINT16 e, UINT32 f, UINT16 g, UINT16 h, UINT16 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o)
+{
+	//                                abcdefghijklmno000
+	return Assemble(buffer, maxSize, "dhQQhdhhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, 0, 0, 0);
 }
 
