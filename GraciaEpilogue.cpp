@@ -29,6 +29,9 @@ void GraciaEpilogue::Init()
 	WriteInstructionCall(0x8BA794, reinterpret_cast<UINT32>(AssemblePrivateStoreListSellItem));
 	WriteInstructionCall(0x8B2987, reinterpret_cast<UINT32>(AssemblePrivateStoreManageListBuyItem1));
 	WriteInstructionCall(0x8B25A7, reinterpret_cast<UINT32>(AssemblePrivateStoreManageListBuyItem2));
+	WriteInstructionCall(0x8B2E16, reinterpret_cast<UINT32>(DisassembleSetPrivateStoreListBuyItem1));
+	WriteInstructionCall(0x8B327A, reinterpret_cast<UINT32>(DisassembleSetPrivateStoreListBuyItem1));
+	WriteInstructionCall(0x8BB459, reinterpret_cast<UINT32>(AssemblePrivateStoreBuyList));
 
 	// buy/sell
 	WriteAddress(0xA26CD0+3, reinterpret_cast<UINT32>(NpcShowBuySellPagePacket));
@@ -223,5 +226,18 @@ int __cdecl GraciaEpilogue::AssemblePrivateStoreManageListBuyItem2(char *buffer,
 {
 	//                                abcdefghijklmno000
 	return Assemble(buffer, maxSize, "dhQQhdhhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, 0, 0, 0);
+}
+
+const unsigned char* __cdecl GraciaEpilogue::DisassembleSetPrivateStoreListBuyItem1(const unsigned char *data, const char *format, UINT32 *a, UINT16 *b, UINT16 *c, UINT64 *d, UINT64 *e)
+{
+	UINT32 f, g, h, i;
+	//                        abcde----
+	return Disassemble(data, "dhhQQdddd", a, b, c, d, e, &f, &g, &h, &i);
+}
+
+int __cdecl GraciaEpilogue::AssemblePrivateStoreBuyList(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT16 c, UINT64 d, UINT64 e, UINT16 f, UINT32 g, UINT16 h, UINT64 i, UINT64 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r)
+{
+	//                                abcdefghijklmnopqr000
+	return Assemble(buffer, maxSize, "ddhQQhdhQQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, 0, 0, 0);
 }
 
