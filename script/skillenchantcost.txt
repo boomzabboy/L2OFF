@@ -773,6 +773,37 @@ skill=58 levels=30
     level=28 adena=775170 sp=1895081
     level=29 adena=775170 sp=1895081
     level=30 adena=775170 sp=1895081
+skill=67 levels=30
+    level=1 adena=133650 sp=907164
+    level=2 adena=133650 sp=907164
+    level=3 adena=133650 sp=907164
+    level=4 adena=201690 sp=952146
+    level=5 adena=201690 sp=952146
+    level=6 adena=201690 sp=952146
+    level=7 adena=270540 sp=998586
+    level=8 adena=270540 sp=998586
+    level=9 adena=270540 sp=998586
+    level=10 adena=340200 sp=1071036
+    level=11 adena=340200 sp=1071036
+    level=12 adena=340200 sp=1071036
+    level=13 adena=410670 sp=1281402
+    level=14 adena=410670 sp=1281402
+    level=15 adena=410670 sp=1281402
+    level=16 adena=481950 sp=1370772
+    level=17 adena=481950 sp=1370772
+    level=18 adena=481950 sp=1370772
+    level=19 adena=554040 sp=1432602
+    level=20 adena=554040 sp=1432602
+    level=21 adena=554040 sp=1432602
+    level=22 adena=626940 sp=1528794
+    level=23 adena=626940 sp=1528794
+    level=24 adena=626940 sp=1528794
+    level=25 adena=700650 sp=1708536
+    level=26 adena=700650 sp=1708536
+    level=27 adena=700650 sp=1708536
+    level=28 adena=775170 sp=1895081
+    level=29 adena=775170 sp=1895081
+    level=30 adena=775170 sp=1895081
 skill=69 levels=30
     level=1 adena=133650 sp=907164
     level=2 adena=133650 sp=907164

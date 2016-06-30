@@ -95,3 +95,17 @@ wchar_t* CUser::GetName()
 	return sd->name;
 }
 
+UINT64 CUser::GetItemCount(UINT32 itemId)
+{
+	return reinterpret_cast<UINT64(*)(void*, UINT32, int)>(0x6864B4)(
+		reinterpret_cast<void*>(reinterpret_cast<char*>(this) + 0xaa8), itemId, 0);
+}
+
+void CUser::TakeItem(UINT32 itemId, UINT64 count)
+{
+	reinterpret_cast<void(*)(CUser*, UINT32, UINT64, int)>(
+		*reinterpret_cast<void**>(
+			reinterpret_cast<char*>(*reinterpret_cast<void**>(this)) + 0x830))(
+				this, itemId, count, 0);
+}
+

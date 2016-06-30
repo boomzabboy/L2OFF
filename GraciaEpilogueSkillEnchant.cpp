@@ -64,6 +64,39 @@ void GraciaEpilogue::InitSkillEnchant()
 	WriteMemoryQWORD(0xC01B58, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateSafe));
 	WriteMemoryQWORD(0xC01BB8, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateUntrain));
 	WriteMemoryQWORD(0xC01D78, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateRouteChange));
+
+	WriteMemoryBYTES(0x827BA3, "\x48\x89\xE9\x48\xC7\xC2\x00\x00\x00\x00\x45\x89\xF8\x45\x89\xF1"
+	                           "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
+							   "\x90\x90\x90\x90\x90\x90\x84\xC0\x75\x3E", 42);
+	WriteInstructionCall(0x827BA3 + 0x10, reinterpret_cast<UINT32>(CheckEnchantItems));
+	WriteMemoryBYTES(0x827C0F, "\x48\x89\xE9\x48\xC7\xC2\x00\x00\x00\x00\x45\x89\xF8\x45\x89\xF1"
+	                           "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90", 26);
+	WriteInstructionCall(0x827C0F + 0x10, reinterpret_cast<UINT32>(TakeEnchantItems));
+	WriteMemoryQWORD(0xC01B20, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateSP));
+	WriteMemoryQWORD(0xC01B18, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateEXP));
+
+	WriteMemoryBYTES(0x828421, "\x48\x89\xF1\x48\xC7\xC2\x01\x00\x00\x00\x45\x89\xF8\x45\x89\xF1"
+	                           "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
+							   "\x90\x90\x90\x90\x90\x90\x84\xC0\x75\x3F", 42);
+	WriteInstructionCall(0x828421 + 0x10, reinterpret_cast<UINT32>(CheckEnchantItems));
+	WriteMemoryBYTES(0x82848E, "\x48\x89\xF1\x48\xC7\xC2\x01\x00\x00\x00\x45\x89\xF8\x45\x89\xF1"
+		                       "\x90\x90\x90\x90\x90\x90\x90\x90\x90", 25);
+	WriteInstructionCall(0x82848E + 0x10, reinterpret_cast<UINT32>(TakeEnchantItems));
+	WriteMemoryQWORD(0xC01B80, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateSP));
+	WriteMemoryQWORD(0xC01B78, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateEXP));
+
+	WriteMemoryQWORD(0xC01BE0, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateSP));
+	WriteMemoryQWORD(0xC01BD8, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateEXP));
+
+	WriteMemoryBYTES(0x828EEB, "\x48\x89\xF1\x48\xC7\xC2\x03\x00\x00\x00\x45\x89\xF9\x45\x89\xF0"
+		                       "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
+							   "\x90\x90\x90\x90\x90\x90\x84\xC0\x75\x3E", 42);
+	WriteInstructionCall(0x828EEB + 0x10, reinterpret_cast<UINT32>(CheckEnchantItems));
+	WriteMemoryBYTES(0x828F57, "\x48\x89\xF1\x48\xC7\xC2\x03\x00\x00\x00\x45\x89\xF9\x45\x89\xF0"
+		                       "\x90\x90\x90\x90\x90\x90\x90\x90\x90", 25);
+	WriteInstructionCall(0x828F57 + 0x10, reinterpret_cast<UINT32>(TakeEnchantItems));
+	WriteMemoryQWORD(0xC01DA0, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateSP));
+	WriteMemoryQWORD(0xC01D98, reinterpret_cast<UINT64>(SkillEnchantOperatorCalculateEXP));
 }
 
 void GraciaEpilogue::LoadSkillEnchant()
@@ -74,6 +107,94 @@ void GraciaEpilogue::LoadSkillEnchant()
 	} else {
 		CLog::Add(CLog::Blue, L"Loaded %d skills from ..\\Script\\skillenchantcost.txt", enchantCosts.size());
 	}
+}
+
+std::pair<int, INT64> GraciaEpilogue::GetEnchantSpAdena(CUser *user, UINT32 &enchantType, int skillId, int skillLevel, CSkillEnchantInfo **info_)
+{
+	if (enchantType > 3) {
+		return std::make_pair(-1, -1);
+	}
+
+	int acquiredLevel = -1;
+	if (user) {
+		acquiredLevel = user->GetAcquiredSkillLevel(skillId);
+		if (acquiredLevel < 101) {
+			if (enchantType > 1) {
+				enchantType = 0;
+			}
+		} else {
+			if (skillLevel == acquiredLevel + 1) {
+				if (enchantType > 1) {
+					enchantType = 0;
+				}
+			} else if (skillLevel == acquiredLevel - 1) {
+				if (enchantType != 2) {
+					enchantType = 2;
+				}
+			} else if (skillLevel == acquiredLevel) {
+				return std::make_pair(-1, -1);
+			} else if (skillLevel % 100 == acquiredLevel % 100) {
+				if (enchantType != 3) {
+					enchantType = 3;
+				}
+			} else {
+				return std::make_pair(-1, -1);
+			}
+		}
+	}
+
+	SkillEnchantOperator *op = SkillEnchantOperator::GetOperator(enchantType);
+	if (!op) {
+		return std::make_pair(-1, -1);
+	}
+
+	CSkillEnchantInfo *info = 0;
+
+	if (acquiredLevel < 0) {
+		if (skillLevel % 100 > 1) {
+			acquiredLevel = skillLevel - 1;
+		} else {
+			info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, 101);
+			if (!info) {
+				return std::make_pair(-1, -1);
+			}
+			acquiredLevel = info->requiredSkillLevel;
+		}
+	}
+
+	if (enchantType == 2) {
+		info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, acquiredLevel);
+	} else {
+		info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, skillLevel);
+	}
+	if (!info) {
+		return std::make_pair(-1, -1);
+	}
+
+	if (info_) {
+		*info_ = info;
+	}
+
+	int index = (info->newEnchantLevel - 1) % 100;
+	if (index >= 30 || index < 0) {
+		return std::make_pair(-1, -1);
+	}
+
+	std::map<UINT32, EnchantCost>::const_iterator ienchantCosts = enchantCosts.find(skillId);
+	if (ienchantCosts == enchantCosts.end()) {
+		return std::make_pair(-1, -1);
+	}
+	int requiredSP = ienchantCosts->second.levels[index].sp * op->requirementModifier;
+	INT64 requiredAdena = ienchantCosts->second.levels[index].adena * op->requirementModifier;
+	if (op->operatorType == 1) {
+		requiredSP *= 5;
+		requiredAdena *= 5;
+	} else if (op->operatorType == 2) {
+		requiredAdena = 0;
+		requiredSP *= 0.8;
+	}
+
+	return std::make_pair(requiredSP, requiredAdena);
 }
 
 bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfo(CUserSocket *self, const BYTE *packet, BYTE opcode)
@@ -146,67 +267,16 @@ bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfoDetail(CUserSocket *self, 
 		return true;
 	}
 
-	int acquiredLevel = self->GetUser()->GetAcquiredSkillLevel(skillId);
-	if (acquiredLevel < 101) {
-		if (enchantType > 1) {
-			enchantType = 0;
-		}
-	} else {
-		if (skillLevel == acquiredLevel + 1) {
-			if (enchantType > 1) {
-				enchantType = 0;
-			}
-		} else if (skillLevel == acquiredLevel - 1) {
-			if (enchantType != 2) {
-				enchantType = 2;
-			}
-		} else if (skillLevel == acquiredLevel) {
-			self->Send("ch", 0xFE, 0x5E);
-			return false;
-		} else if (skillLevel % 100 == acquiredLevel % 100) {
-			if (enchantType != 3) {
-				enchantType = 3;
-			}
-		} else {
-			self->Send("ch", 0xFE, 0x5E);
-			return false;
-		}
-	}
-
-	SkillEnchantOperator *op = SkillEnchantOperator::GetOperator(enchantType);
-	if (!op) {
-		return false;
-	}
-
 	CSkillEnchantInfo *info = 0;
-	if (enchantType == 2) {
-		info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, acquiredLevel);
-	} else {
-		info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, skillLevel);
-	}
-	if (!info) {
+	std::pair<int, INT64> spAdena = GetEnchantSpAdena(user, enchantType, skillId, skillLevel, &info);
+	if (spAdena.first < 0) {
 		return false;
-	}
-
-	int probability = op->CalculateProb(info, self->GetUser()->GetLevel());
-	int index = (info->newEnchantLevel - 1) % 100;
-	if (index >= 30 || index < 0) {
-		return false;
-	}
-
-	std::map<UINT32, EnchantCost>::const_iterator ienchantCosts = enchantCosts.find(skillId);
-	if (ienchantCosts == enchantCosts.end()) {
-		return false;
-	}
-	int requiredSP = ienchantCosts->second.levels[index].sp * op->requirementModifier;
-	INT64 requiredAdena = ienchantCosts->second.levels[index].adena * op->requirementModifier;
-	if (op->operatorType == 1) {
-		requiredSP *= 5;
-		requiredAdena *= 5;
 	}
 
 	int itemId = info->requiredItems[enchantType];
 	int itemCount = info->requiredItemCounts[enchantType];
+
+	int acquiredLevel = user->GetAcquiredSkillLevel(skillId);
 
 	int outSkillLevel = skillLevel;
 	if (enchantType == 2) {
@@ -217,8 +287,10 @@ bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfoDetail(CUserSocket *self, 
 		}
 	}
 
+	int probability = SkillEnchantOperator::GetOperator(enchantType)->CalculateProb(info, user->GetLevel());
+
 	self->Send("chdddddddddd", 0xFE, 0x5E, enchantType, skillId, outSkillLevel,
-		requiredSP, probability, 2, 57, requiredAdena, itemId, itemCount);
+		spAdena.first, probability, 2, 57, spAdena.second, itemId, itemCount);
 
 	return false;
 }
@@ -355,5 +427,65 @@ bool GraciaEpilogue::SkillEnchantOperatorOperateRouteChange(SkillEnchantOperator
 	Assemble(buffer, sizeof(buffer), "dd", id, acquiredLevel);
 	RequestExEnchantSkillInfo(socket, reinterpret_cast<const BYTE*>(buffer), 0x0E);
 	return true;
+}
+
+bool __cdecl GraciaEpilogue::CheckEnchantItems(CUser *user, UINT32 enchantType, int skillId, int skillLevel)
+{
+	CSkillEnchantInfo *info = 0;
+	std::pair<int, INT64> spAdena = GetEnchantSpAdena(user, enchantType, skillId, skillLevel, &info);
+	if (spAdena.first < 0) {
+		return false;
+	}
+
+	int itemId = info->requiredItems[enchantType];
+	int itemCount = info->requiredItemCounts[enchantType];
+
+	if (itemId && itemCount) {
+		if (user->GetItemCount(itemId) < itemCount) {
+			return false;
+		}
+	}
+
+	if (spAdena.second) {
+		if (user->GetItemCount(57) < spAdena.second) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void __cdecl GraciaEpilogue::TakeEnchantItems(CUser *user, UINT32 enchantType, int skillId, int skillLevel)
+{
+	CSkillEnchantInfo *info = 0;
+	std::pair<int, INT64> spAdena = GetEnchantSpAdena(user, enchantType, skillId, skillLevel, &info);
+	if (spAdena.first < 0) {
+		return;
+	}
+
+	int itemId = info->requiredItems[enchantType];
+	int itemCount = info->requiredItemCounts[enchantType];
+
+	if (itemId && itemCount) {
+		user->TakeItem(itemId, itemCount);
+	}
+
+	if (spAdena.second) {
+		user->TakeItem(57, spAdena.second);
+	}
+}
+
+INT64 __cdecl GraciaEpilogue::SkillEnchantOperatorCalculateEXP(SkillEnchantOperator *self, class CSkillEnchantInfo *info, int level)
+{
+	return 0;
+}
+
+int __cdecl GraciaEpilogue::SkillEnchantOperatorCalculateSP(SkillEnchantOperator *self, class CSkillEnchantInfo *info, int level)
+{
+	std::pair<int, INT64> spAdena = GetEnchantSpAdena(0, self->operatorType, info->skillId, info->newEnchantLevel, 0);
+	if (spAdena.first < 0) {
+		return 0;
+	}
+	return spAdena.first;
 }
 

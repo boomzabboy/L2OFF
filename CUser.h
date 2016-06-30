@@ -60,6 +60,8 @@ public:
 	int GetAcquiredSkillLevel(int skillId);
 	int GetLevel();
 	wchar_t* GetName();
+	UINT64 GetItemCount(UINT32 itemId);
+	void TakeItem(UINT32 itemId, UINT64 count);
 
 	/* 0x0000 */ unsigned char padding0x0000[0x18];
 	/* 0x0018 */ UINT32 objectId;

@@ -43,6 +43,7 @@ public:
 	// skill enchant
 	static void InitSkillEnchant();
 	static void LoadSkillEnchant();
+	static std::pair<int, INT64> GetEnchantSpAdena(CUser *user, UINT32 &enchantType, int skillId, int skillLevel, CSkillEnchantInfo **info_);
 	static void __cdecl SkillEnchantOperatorOperateSuccess(class CUser *user);
 	static void __cdecl SkillEnchantOperatorOperateFail(class CUser *user);
 	static bool __cdecl SkillEnchantOperatorOperateNormal(SkillEnchantOperator *self, class CUser *user, int id, int level);
@@ -52,5 +53,9 @@ public:
 	static bool __cdecl RequestExEnchantSkillInfo(CUserSocket *self, const BYTE *packet, BYTE opcode);
 	static bool __cdecl RequestExEnchantSkillInfoDetail(CUserSocket *self, const BYTE *packet, BYTE opcode);
 	static bool __cdecl RequestExEnchantSkillUntrain(CUserSocket *self, const BYTE *packet, BYTE opcode);
+	static bool __cdecl CheckEnchantItems(CUser *user, UINT32 enchantType, int skillId, int skillLevel);
+	static void __cdecl TakeEnchantItems(CUser *user, UINT32 enchantType, int skillId, int skillLevel);
+	static INT64 __cdecl SkillEnchantOperatorCalculateEXP(SkillEnchantOperator *self, class CSkillEnchantInfo *info, int level);
+	static int __cdecl SkillEnchantOperatorCalculateSP(SkillEnchantOperator *self, class CSkillEnchantInfo *info, int level);
 };
 
