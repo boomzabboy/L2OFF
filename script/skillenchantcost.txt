@@ -13727,6 +13727,22 @@ skill=1448 levels=30
     level=28 adena=775170 sp=1895081
     level=29 adena=775170 sp=1895081
     level=30 adena=775170 sp=1895081
+skill=1450 levels=15
+    level=1 adena=374850 sp=1066156
+    level=2 adena=374850 sp=1066156
+    level=3 adena=374850 sp=1066156
+    level=4 adena=430920 sp=1114246
+    level=5 adena=430920 sp=1114246
+    level=6 adena=430920 sp=1114246
+    level=7 adena=487620 sp=1189062
+    level=8 adena=487620 sp=1189062
+    level=9 adena=487620 sp=1189062
+    level=10 adena=544320 sp=1266156
+    level=11 adena=544320 sp=1266156
+    level=12 adena=544320 sp=1266156
+    level=13 adena=601020 sp=1314246
+    level=14 adena=601020 sp=1314246
+    level=15 adena=601020 sp=1314246
 skill=1451 levels=15
     level=1 adena=374850 sp=1066156
     level=2 adena=374850 sp=1066156
