@@ -4,8 +4,77 @@
 #include "CSkillEnchantInfo.h"
 #include "CSkillEnchantDB.h"
 #include "SkillEnchantOperator.h"
-#include "EnchantDataInfo.h"
 #include "CLog.h"
+#include "DataParser.h"
+#include <fstream>
+#include <map>
+
+namespace {
+
+class EnchantCost {
+public:
+	class Level {
+	public:
+		UINT32 adena;
+		UINT32 sp;
+	};
+
+	Level levels[30];
+};
+
+std::map<UINT32, EnchantCost> enchantCosts;
+
+class Parser : public DataParser {
+public:
+	Parser() : skillId(-1) { }
+
+	int skillId;
+    int levels;
+
+	virtual void OnData(const std::map<std::string, std::string> &data)
+    {
+        if (Exists(data, "skill")) {
+            skillId = Get<int>(data, "skill");
+            levels = Get<int>(data, "levels", 0);
+        } else if (skillId >= 0 && Exists(data, "level")) {
+            int level = Get<int>(data, "level");
+            if (level < 1 || level > min(levels, 30)) {
+				CLog::Add(CLog::Red, L"Invalid skill level %d for skill %d", level, skillId);
+                return;
+            }
+			std::pair<std::map<UINT32, EnchantCost>::iterator, bool> i = enchantCosts.insert(std::make_pair(skillId, EnchantCost()));
+			i.first->second.levels[level-1].adena = Get<int>(data, "adena", 0);
+			i.first->second.levels[level-1].sp = Get<int>(data, "sp", 0);
+        }
+    }
+};
+
+} // namespace
+
+void GraciaEpilogue::InitSkillEnchant()
+{
+	WriteMemoryBYTE(0x82509F, 0xEB); // don't require NPC for RequestExEnchantSkillInfo
+	WriteMemoryBYTE(0x827239, 0xEB); // don't require NPC for RequestExEnchantSkill
+	WriteMemoryBYTE(0x8248C2, 0xEB); // don't require NPC for RequestExEnchantSkillRouteChange
+	WriteMemoryBYTE(0x824916, 0xEB); // don't require NPC for RequestExEnchantSkillRouteChange
+	WriteInstructionCall(0x827D60, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSuccess));
+	WriteInstructionCall(0x827FAE, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateFail));
+	WriteMemoryQWORD(0xC01AF8, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateNormal));
+	WriteInstructionCall(0x8285DE, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSuccess));
+	WriteMemoryQWORD(0xC01B58, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateSafe));
+	WriteMemoryQWORD(0xC01BB8, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateUntrain));
+	WriteMemoryQWORD(0xC01D78, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateRouteChange));
+}
+
+void GraciaEpilogue::LoadSkillEnchant()
+{
+	CLog::Add(CLog::Blue, L"Reading ..\\Script\\skillenchantcost.txt");
+	if (!Parser().parse("..\\Script\\skillenchantcost.txt")) {
+		CLog::Add(CLog::Red, L"Failed to load skillenchantcost.txt");
+	} else {
+		CLog::Add(CLog::Blue, L"Loaded %d skills from ..\\Script\\skillenchantcost.txt", enchantCosts.size());
+	}
+}
 
 bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfo(CUserSocket *self, const BYTE *packet, BYTE opcode)
 {
@@ -125,8 +194,12 @@ bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfoDetail(CUserSocket *self, 
 		return false;
 	}
 
-	int requiredSP = EnchantDataInfo::enchantRequirements[index].sp * op->requirementModifier;
-	INT64 requiredAdena = EnchantDataInfo::enchantRequirements[index].adena * op->requirementModifier;
+	std::map<UINT32, EnchantCost>::const_iterator ienchantCosts = enchantCosts.find(skillId);
+	if (ienchantCosts == enchantCosts.end()) {
+		return false;
+	}
+	int requiredSP = ienchantCosts->second.levels[index].sp * op->requirementModifier;
+	INT64 requiredAdena = ienchantCosts->second.levels[index].adena * op->requirementModifier;
 	if (op->operatorType == 1) {
 		requiredSP *= 5;
 		requiredAdena *= 5;

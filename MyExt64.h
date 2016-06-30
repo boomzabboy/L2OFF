@@ -19,6 +19,7 @@ public:
 	static int GetProtocolVersion();
 
 protected:
+	static void Load();
 	static void SetMaxIndex(const size_t index);
 	static void DeadlockTimeout(UINT32 timeout);
 	static void DisableNoAuthExit();
@@ -31,6 +32,11 @@ protected:
 	static void MountUnmountKeepBuffs();
 	static void SetPledgeLoadTimeout(time_t timeout);
 	static void SetPledgeWarLoadTimeout(time_t timeout);
+	static void HookStart();
+	static void StartHook(void *logger, int level, const wchar_t *fmt, const wchar_t *build);
+	static HWND CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam);
+	static void HookLoad();
+	static void LoadHook(void *x);
 	static void HookOnLoadEnd();
 	static void FixLoading();
 

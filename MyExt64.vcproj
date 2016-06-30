@@ -195,7 +195,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\EnchantDataInfo.cpp"
+				RelativePath=".\DataParser.cpp"
 				>
 			</File>
 			<File
@@ -204,6 +204,10 @@
 			</File>
 			<File
 				RelativePath=".\GraciaEpilogueBuySell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraciaEpiloguePackets.cpp"
 				>
 			</File>
 			<File
@@ -265,7 +269,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\EnchantDataInfo.h"
+				RelativePath=".\DataParser.h"
 				>
 			</File>
 			<File

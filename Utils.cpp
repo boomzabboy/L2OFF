@@ -1,5 +1,6 @@
 
 #include "Utils.h"
+#include <algorithm>
 
 HANDLE server = NULL;
 
@@ -198,3 +199,9 @@ void WriteAddress(unsigned int uAddress, UINT32 absAddr)
 Assemble_t Assemble = reinterpret_cast<Assemble_t>(0x68F99C);
 Disassemble_t Disassemble = reinterpret_cast<Disassemble_t>(0x68ED10);
 
+std::basic_string<wchar_t> Widen(const std::string &s)
+{
+	std::wstring result;
+	std::copy(s.begin(), s.end(), std::back_inserter(result));
+	return result;
+}

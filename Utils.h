@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <yvals.h>
 #include <cstddef>
+#include <string>
 
 extern HANDLE server;
 
@@ -44,4 +45,6 @@ typedef const unsigned char* (__cdecl *Disassemble_t)(const unsigned char*, cons
 
 extern Assemble_t Assemble;
 extern Disassemble_t Disassemble;
+
+std::basic_string<wchar_t> Widen(const std::string &s);
 

@@ -5,6 +5,7 @@
 #include "CUserSocket.h"
 #include "SkillEnchantOperator.h"
 #include "GraciaEpilogue.h"
+#include "CLog.h"
 #include <stdio.h>
 
 int MyExt64::protocolVersion = MyExt64::ProtocolVersionGraciaFinal;
@@ -26,6 +27,8 @@ void MyExt64::Init()
 	MountUnmountKeepBuffs();
 	SetPledgeLoadTimeout(60);
 	SetPledgeWarLoadTimeout(30);
+	HookStart();
+	HookLoad();
 	HookOnLoadEnd();
 	FixLoading();
 	CUser::Init();
@@ -33,6 +36,13 @@ void MyExt64::Init()
 	SkillEnchantOperator::Init();
 	if (GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
 		GraciaEpilogue::Init();
+	}
+}
+
+void MyExt64::Load()
+{
+	if (GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
+		GraciaEpilogue::Load();
 	}
 }
 
@@ -109,7 +119,8 @@ void MyExt64::OnLoadEnd(UINT64 classBase)
 {
 	typedef UINT32 (__thiscall *t)(UINT64);
 	t f = reinterpret_cast<t>(0x470544);
-	if (f(classBase) == 0xF) {
+	int res = f(classBase);
+	if (res == 0xF) {
 		// ...
 	}
 }
@@ -156,6 +167,34 @@ void MyExt64::FixLoading()
 	WriteInstructionCall(0x6B24B9, reinterpret_cast<UINT32>(CDominionInitDominion));
 	WriteInstructionCall(0x6915D3, reinterpret_cast<UINT32>(CPledgeInitPledge));
 	NOPMemory(0x7D853E, 5);
+}
+
+void MyExt64::HookStart()
+{
+	WriteInstructionCall(0x6B354E, reinterpret_cast<UINT32>(StartHook));
+	WriteInstructionCall(0x6B2C2F, reinterpret_cast<UINT32>(CreateWindowEx), 0x6B2C2F + 6);
+}
+
+HWND MyExt64::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
+{
+	return ::CreateWindowEx(dwExStyle, lpClassName, L"L2Server - patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)", dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+}
+
+void MyExt64::StartHook(void *logger, int level, const wchar_t *fmt, const wchar_t *build)
+{
+	reinterpret_cast<void(*)(void*, int, const wchar_t*, const wchar_t*)>(0x6B9EBC)(logger, level, fmt, build);
+	CLog::Add(CLog::Blue, L"Patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)");
+}
+
+void MyExt64::HookLoad()
+{
+	WriteInstructionCall(0x6B1B71, reinterpret_cast<UINT32>(LoadHook));
+}
+
+void MyExt64::LoadHook(void *x)
+{
+	reinterpret_cast<void(*)(void*)>(0x80E030)(x);
+	Load();
 }
 
 void MyExt64::HookOnLoadEnd()
