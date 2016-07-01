@@ -68,10 +68,19 @@ public:
 	void StartOfflineTrade();
 	INT64 ExpInc(const INT64 exp, const bool b);
 	void AddVitalityPoint(const int points, const int type, const bool b);
+	class CParty* GetParty();
+	void ResetNicknameAndColor();
+	void SendCharInfo(class CUserSocket *socket, const bool b);
+	void EnterWorld();
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
 	static void __cdecl AddVitalityPointWrapper(CUser *self, const int points, const int type, const bool b);
+	static void* __cdecl OfflineTradePartyInvite(void *a, void *b, void *c);
+	static void __cdecl SendCharInfoWrapper(CUser *self, class CUserSocket *socket, const bool b);
+	static void __cdecl EnterWorldWrapper(CUser *self);
+
+	static CUser* IsUser(void *ptr);
 
 	static CriticalSection counterCS;
 	static size_t counterTotal;
@@ -87,12 +96,15 @@ public:
 	/* 0x2248 */ void *economy;
 	/* 0x2250 */ unsigned char padding0x2250[0x1108];
 	/* 0x3358 */ class CUserSocket *socket;
-	/* 0x3360 */ unsigned char padding0x3360[0x550];
+	/* 0x3360 */ unsigned char padding0x3360[0x278];
+	/* 0x35D8 */ bool acceptPM;
+	/* 0x35D9 */ unsigned char padding0x35D9[0x19F];
+	/* 0x3778 */ UINT32 nickColor;
+	/* 0x377C */ unsigned char padding0x377C[0x134];
 	/* 0x38B0 */ unsigned int isVitalityReplenishing;
 	/* 0x38B4 */ unsigned char padding0x38B4[0x15C];
 
 	/* EXT DATA BEGIN AT 0x3A10 */
 	/* 0x3A10 */ Ext ext;
-
 };
 

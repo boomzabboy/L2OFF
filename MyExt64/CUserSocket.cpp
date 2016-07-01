@@ -8,6 +8,7 @@
 #include <new>
 
 CUserSocket::PacketHandler *CUserSocket::exHandlers = reinterpret_cast<CUserSocket::PacketHandler*>(0x121C0D60);
+void *CUserSocket::offlineTradeVtable[0x16];
 
 static WORD maxOpcodeEx = 0x68;
 
@@ -118,6 +119,26 @@ void CUserSocket::Init()
 		WriteMemoryBYTE(0x8ADEF8, 0xBE); // FE:AC -> FE:BE
 	}
 
+	WriteMemoryQWORD(0xc74720, reinterpret_cast<UINT64>(SendWrapper));
+
+	memcpy(reinterpret_cast<void*>(offlineTradeVtable), reinterpret_cast<void*>(0xC746B8), sizeof(offlineTradeVtable));
+	offlineTradeVtable[0x04] = reinterpret_cast<void*>(OfflineTradeDummyTimerExpired);
+	offlineTradeVtable[0x0D] = reinterpret_cast<void*>(OfflineTradeDummySend);
+	offlineTradeVtable[0x0E] = reinterpret_cast<void*>(OfflineTradeDummySendV);
+	offlineTradeVtable[0x10] = reinterpret_cast<void*>(OfflineTradeDummyOnClose);
+	offlineTradeVtable[0x11] = reinterpret_cast<void*>(OfflineTradeDummyOnRead);
+	WriteInstructionCall(0x5E1B30, reinterpret_cast<UINT32>(BindUserWrapper));
+	WriteMemoryDWORD(0x975586 + 0x3, offsetof(CUserSocket, ext) + offsetof(Ext, offlineSocketHandleCopy)); // user report socket handle
+	WriteInstructionCall(0x459F50+0x1E7, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x459F50+0x36F, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x92CA6C+0x3BF, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x92CA6C+0x538, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x92CA6C+0x640, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x95BC18+0xFA0, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x95D6B4+0xE1B, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x95F6E0+0x835, reinterpret_cast<UINT32>(KickOfflineWrapper));
+	WriteInstructionCall(0x9602C8+0x968, reinterpret_cast<UINT32>(KickOfflineWrapper));
+
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // ONLY FOR TESTING - DummyPacket not to disconnect user
 }
 
@@ -135,6 +156,8 @@ CUserSocket* __cdecl CUserSocket::Destructor(CUserSocket *self, bool isMemoryFre
 }
 
 CUserSocket::Ext::Ext()
+  : offlineUser(0),
+    offlineSocketHandleCopy(0)
 {
 }
 
@@ -168,6 +191,86 @@ void CUserSocket::SendSystemMessage(UINT32 id)
 void CUserSocket::SendSystemMessage(const wchar_t *sender, const wchar_t *message)
 {
 	reinterpret_cast<void(*)(CUserSocket*, const wchar_t*, const wchar_t*)>(0x9244F0)(this, sender, message);
+}
+
+void CUserSocket::Close()
+{
+	status = 2;
+	reinterpret_cast<void(*)(CUserSocket*)>(0x4564D8)(this);
+}
+
+void CUserSocket::OnClose()
+{
+	reinterpret_cast<void(*)(CUserSocket*)>(0x93E5E0)(this);
+}
+
+void __cdecl CUserSocket::SendWrapper(CUserSocket *self, const char *format, ...)
+{
+	va_list args;
+    va_start(args, format);
+
+	if (!self->user) {
+		self->SendV(format, args);
+		va_end(args);
+		return;
+	}
+
+	UINT64 *p = reinterpret_cast<UINT64*>(args);
+	std::string f = format;
+	BYTE o = *reinterpret_cast<BYTE*>(&p[0]);
+
+	if (f == "cdddQdd" && o == 0x62 && p[1] == 0x5F && self->user->ext.isExpOff) {
+		*reinterpret_cast<UINT32*>(&p[4]) = 0;
+	}
+
+	self->SendV(format, args);
+	va_end(args);
+}
+
+void __cdecl CUserSocket::OfflineTradeDummyTimerExpired(CUserSocket*, int)
+{
+}
+
+void __cdecl CUserSocket::OfflineTradeDummySend(CUserSocket*, const char*, ...)
+{
+}
+
+void __cdecl CUserSocket::OfflineTradeDummySendV(CUserSocket*, const char*, va_list)
+{
+}
+
+void __cdecl CUserSocket::OfflineTradeDummyOnClose(CUserSocket*)
+{
+}
+
+void __cdecl CUserSocket::OfflineTradeDummyOnRead(CUserSocket*)
+{
+}
+
+void __cdecl CUserSocket::BindUserWrapper(CUserSocket *self, CUser *user)
+{
+	self->ext.offlineSocketHandleCopy = self->socketHandleCopy;
+	self->BindUser(user);
+}
+
+void CUserSocket::BindUser(CUser *user)
+{
+	return reinterpret_cast<void(*)(CUserSocket*, CUser*)>(0x9246DC)(this, user);
+}
+
+void __cdecl CUserSocket::KickOfflineWrapper(CUserSocket *self)
+{
+	if (!self) {
+		return;
+	}
+	CUser *user = self->ext.offlineUser;
+	self->ext.offlineUser = 0;
+	if (user) {
+		self->user = user;
+		self->OnClose();
+	} else {
+		reinterpret_cast<void(*)(CUserSocket*)>(0x456738)(self);
+    }
 }
 
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)

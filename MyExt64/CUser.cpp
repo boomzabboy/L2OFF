@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Config.h"
 #include "CUserSocket.h"
+#include "CParty.h"
 #include <new>
 #include <time.h>
 
@@ -30,6 +31,9 @@ void CUser::Init()
 	WriteInstructionCall(0x8A191F, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
 	WriteInstructionCall(0x8CFE24, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
 
+	WriteMemoryQWORD(0xC546F8, reinterpret_cast<UINT64>(SendCharInfoWrapper));
+	WriteInstructionCall(0x93A05C, reinterpret_cast<UINT32>(OfflineTradePartyInvite));
+	WriteMemoryQWORD(0xC54400, reinterpret_cast<UINT64>(EnterWorldWrapper));
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -142,6 +146,16 @@ void CUser::TakeItem(UINT32 itemId, UINT64 count)
 				this, itemId, count, 0);
 }
 
+CParty* CUser::GetParty()
+{
+	return reinterpret_cast<CParty*(*)(CUser*)>(0x8A1C40)(this);
+}
+
+void CUser::ResetNicknameAndColor()
+{
+	reinterpret_cast<void(*)(CUser*)>(0x89F354)(this);
+}
+
 void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 {
 	if (message[0] != L'.' || !config->voiceCommands.enabled) {
@@ -242,5 +256,98 @@ void CUser::AddVitalityPoint(const int points, const int type, const bool b)
 
 void CUser::StartOfflineTrade()
 {
+	switch (sd->storeMode) {
+	case 1:	case 3:	case 5:	case 8: break;
+	default:
+		socket->SendSystemMessage(config->server.name.c_str(), L"You can use offline store only when trading");
+		return;
+	}
+
+	CParty *party = GetParty();
+	if (party) {
+		party->Withdraw(this, true);
+	}
+
+	*reinterpret_cast<void**>(socket) = CUserSocket::offlineTradeVtable;
+
+	Sleep(500);
+
+	socket->ext.offlineUser = this;
+	socket->Close();
+	socket->user = this;
+	socket->ext.offlineSocketHandleCopy = 0;
+
+	acceptPM = false;
+	nickColor = 0x7f7f7f;
+	ResetNicknameAndColor();
+	ext.isOffline = true;
+
+	{
+		ScopedLock lock(counterCS);
+		++counterOffline;
+	}
 }
 
+void* __cdecl CUser::OfflineTradePartyInvite(void *a, void *b, void *c)
+{
+	void *ret = reinterpret_cast<void*(*)(void*, void*, void*)>(0x4CEDAC)(a, b, c);
+	if (ret && *reinterpret_cast<UINT64*>(ret) && **reinterpret_cast<UINT64**>(ret) == 0xC53BB8) {
+		CUser **user = reinterpret_cast<CUser**>(ret);
+		if ((*user)->ext.isOffline) {
+			*user = 0; // invalid target
+		}
+	}
+	return ret;
+}
+
+CUser* CUser::IsUser(void *ptr)
+{
+	if (!ptr || *reinterpret_cast<void**>(ptr) != reinterpret_cast<void*>(0xC53BB8)) {
+		return 0;
+	}
+	return reinterpret_cast<CUser*>(ptr);
+}
+
+void __cdecl CUser::SendCharInfoWrapper(CUser *self, CUserSocket *socket, const bool b)
+{
+	self->SendCharInfo(socket, b);
+	if (self->ext.isOffline) {
+		switch (self->sd->storeMode) {
+		case 1:	case 3:	case 5:	case 8:
+			return;
+		default:
+			break;
+		}
+
+		CUserSocket *socket2 = self->socket;
+		socket2->ext.offlineUser = 0;
+		socket2->user = self;
+		socket2->OnClose();
+	}
+}
+
+void CUser::SendCharInfo(CUserSocket *socket, const bool b)
+{
+	reinterpret_cast<void(*)(CUser*, CUserSocket*, const bool)>(0x90C3E0)(this, socket, b);
+}
+
+void __cdecl CUser::EnterWorldWrapper(CUser *self)
+{
+	self->EnterWorld();
+	if (self->sd->builder) {
+		self->nickColor = 0xff00;
+		self->ResetNicknameAndColor();
+		reinterpret_cast<bool(*)(CUserSocket*, CUser*, wchar_t*)>(0x48A8EC)(self->socket, self, L"//gmon");
+	}
+}
+
+void CUser::EnterWorld()
+{
+	reinterpret_cast<void(*)(CUser*)>(0x8CF0E4)(this);
+}
+
+CompileTimeOffsetCheck(CUser, sdLock, 0x0AA0);
+CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
+CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);
+CompileTimeOffsetCheck(CUser, isVitalityReplenishing, 0x38B0);
+CompileTimeOffsetCheck(CUser, ext, 0x3A10);

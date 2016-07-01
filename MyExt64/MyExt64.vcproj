@@ -177,7 +177,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CParty.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CriticalSection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CSharedCreatureData.cpp"
 				>
 			</File>
 			<File
@@ -248,6 +256,10 @@
 			</File>
 			<File
 				RelativePath=".\Config.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CParty.h"
 				>
 			</File>
 			<File

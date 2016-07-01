@@ -20,6 +20,10 @@ public:
 	private:
 		Ext();
 		~Ext();
+
+	public:
+		class CUser *offlineUser;
+		UINT64 offlineSocketHandleCopy;
 	};
 
 	static CUserSocket* __cdecl Constructor(CUserSocket *self, SOCKET s);
@@ -41,12 +45,31 @@ public:
 	void SendV(const char *format, va_list va);
 	void SendSystemMessage(UINT32 id);
 	void SendSystemMessage(const wchar_t *sender, const wchar_t *message);
+	void Close();
+	void OnClose();
+	void BindUser(class CUser *user);
 
-	/* 0x0000 */ unsigned char padding0x0000[0xC0];
+	static void __cdecl SendWrapper(CUserSocket *self, const char *format, ...);
+	static void __cdecl OfflineTradeDummyTimerExpired(CUserSocket*, int);
+	static void __cdecl OfflineTradeDummySend(CUserSocket*, const char*, ...);
+	static void __cdecl OfflineTradeDummySendV(CUserSocket*, const char*, va_list);
+	static void __cdecl OfflineTradeDummyOnClose(CUserSocket*);
+	static void __cdecl OfflineTradeDummyOnRead(CUserSocket*);
+	static void __cdecl BindUserWrapper(CUserSocket *self, class CUser* user);
+	static void __cdecl KickOfflineWrapper(CUserSocket *self);
+
+	static void *offlineTradeVtable[0x16];
+
+	/* 0x0000 */ unsigned char padding0x0000[0xB0];
+	/* 0x00B0 */ UINT64 socketHandleCopy;
+	/* 0x00B8 */ unsigned char padding0x00B8[0x8];
 	/* 0x00C0 */ PacketHandler *packetTable;
-	/* 0x00C8 */ unsigned char padding0x00C8[0x460];
+	/* 0x00C8 */ unsigned char padding0x00C8[0x4];
+	/* 0x00CC */ UINT32 status;
+	/* 0x00D0 */ unsigned char padding0x00D0[0x458];
 	/* 0x0528 */ class CUser *user;
 	/* 0x0530 */ unsigned char padding0x0530[0xA70];
+
 	/* EXT DATA BEGIN AT 0x0FA0 */
 	/* 0x0FA0 */ Ext ext;
 
