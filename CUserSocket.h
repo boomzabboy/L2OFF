@@ -39,6 +39,8 @@ public:
 	class CUser* GetUser();
 	void Send(const char *format, ...);
 	void SendV(const char *format, va_list va);
+	void SendSystemMessage(UINT32 id);
+	void SendSystemMessage(const wchar_t *sender, const wchar_t *message);
 
 	/* 0x0000 */ unsigned char padding0x0000[0xC0];
 	/* 0x00C0 */ PacketHandler *packetTable;

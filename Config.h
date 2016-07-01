@@ -9,6 +9,7 @@ public:
 	static void Init();
 
 	struct {
+		std::wstring name;
 		int protocolVersion;
 		bool debug;
 		size_t maxIndex;
@@ -21,8 +22,21 @@ public:
 		bool allowAirshipSkills;
 		time_t pledgeLoadTimeout;
 		time_t pledgeWarLoadTimeout;
+		double vitalityMultiplier;
 		std::wstring loadDlls;
 	} server;
+
+	struct {
+		bool enabled;
+		bool expOnOff;
+		bool online;
+		bool offline;
+		bool time;
+	} voiceCommands;
+
+	struct {
+		int maxReplenishedVitalityPoints;
+	} fixes;
 
 protected:
 	Config(const wchar_t *filename);

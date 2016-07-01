@@ -55,6 +55,8 @@ public:
 		};
 
 		BuySell buySell;
+		bool isExpOff;
+		bool isOffline;
 	};
 
 	int GetAcquiredSkillLevel(int skillId);
@@ -62,6 +64,18 @@ public:
 	wchar_t* GetName();
 	UINT64 GetItemCount(UINT32 itemId);
 	void TakeItem(UINT32 itemId, UINT64 count);
+	void Say(const wchar_t *message);
+	void StartOfflineTrade();
+	INT64 ExpInc(const INT64 exp, const bool b);
+	void AddVitalityPoint(const int points, const int type, const bool b);
+
+	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
+	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
+	static void __cdecl AddVitalityPointWrapper(CUser *self, const int points, const int type, const bool b);
+
+	static CriticalSection counterCS;
+	static size_t counterTotal;
+	static size_t counterOffline;
 
 	/* 0x0000 */ unsigned char padding0x0000[0x18];
 	/* 0x0018 */ UINT32 objectId;
@@ -73,8 +87,12 @@ public:
 	/* 0x2248 */ void *economy;
 	/* 0x2250 */ unsigned char padding0x2250[0x1108];
 	/* 0x3358 */ class CUserSocket *socket;
-	/* 0x3360 */ unsigned char padding0x3360[0x6B0];
+	/* 0x3360 */ unsigned char padding0x3360[0x550];
+	/* 0x38B0 */ unsigned int isVitalityReplenishing;
+	/* 0x38B4 */ unsigned char padding0x38B4[0x15C];
+
 	/* EXT DATA BEGIN AT 0x3A10 */
 	/* 0x3A10 */ Ext ext;
+
 };
 

@@ -9,6 +9,7 @@ Config *config = 0;
 Config::Config(const wchar_t *filename)
   : filename(filename)
 {
+	server.name = GetString(L"server", L"Name", L"Server");
 	server.protocolVersion = GetInt(L"server", L"ProtocolVersion", MyExt64::ProtocolVersionGraciaEpilogueUpdate1);
 	server.debug = GetBool(L"server", L"Debug", false);
 	server.maxIndex = GetInt(L"server", L"MaxIndex", 10000);
@@ -21,7 +22,16 @@ Config::Config(const wchar_t *filename)
 	server.allowAirshipSkills = GetBool(L"server", L"AllowAirshipSkills", true);
 	server.pledgeLoadTimeout = GetInt(L"server", L"PledgeLoadTimeout", 60);
 	server.pledgeWarLoadTimeout = GetInt(L"server", L"PledgeWarLoadTimeout", 30);
+	server.vitalityMultiplier = GetDouble(L"server", L"VitalityMultiplier", 1.0);
 	server.loadDlls = GetString(L"server", L"LoadDlls", L"");
+
+	voiceCommands.enabled = GetBool(L"voicecommands", L"Enabled", true);
+	voiceCommands.expOnOff = GetBool(L"voicecommands", L"ExpOnOff", true);
+	voiceCommands.online = GetBool(L"voicecommands", L"Online", true);
+	voiceCommands.offline = GetBool(L"voicecommands", L"Offline", true);
+	voiceCommands.time = GetBool(L"voicecommands", L"Time", true);
+
+	fixes.maxReplenishedVitalityPoints = GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50);
 }
 
 void Config::Init()

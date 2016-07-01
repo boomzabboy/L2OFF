@@ -123,19 +123,15 @@ void CUserSocket::Init()
 
 CUserSocket* __cdecl CUserSocket::Constructor(CUserSocket *self, SOCKET s)
 {
-	typedef CUserSocket* (__cdecl *t)(CUserSocket*, SOCKET);
-	t f = reinterpret_cast<t>(0x93CADC);
-	CUserSocket *ret = f(self, s);
+	CUserSocket *ret = reinterpret_cast<CUserSocket*(*)(CUserSocket*, SOCKET)>(0x93CADC)(self, s);
 	new (&ret->ext) Ext();
 	return ret;
 }
 
 CUserSocket* __cdecl CUserSocket::Destructor(CUserSocket *self, bool isMemoryFreeUsed)
 {
-	typedef CUserSocket* (__cdecl *t)(CUserSocket*, bool);
-	t f = (t)0x0092DE7C;
 	self->ext.~Ext();
-	return f(self, isMemoryFreeUsed);
+	return reinterpret_cast<CUserSocket*(*)(CUserSocket*, bool)>(0x92DE7C)(self, isMemoryFreeUsed);
 }
 
 CUserSocket::Ext::Ext()
@@ -161,9 +157,17 @@ void CUserSocket::Send(const char *format, ...)
 
 void CUserSocket::SendV(const char *format, va_list va)
 {
-	typedef void (__thiscall *t)(CUserSocket*, const char*, va_list);
-	t f = reinterpret_cast<t>(0x859934);
-	f(this, format, va);
+	reinterpret_cast<void(*)(CUserSocket*, const char*, va_list)>(0x859934)(this, format, va);
+}
+
+void CUserSocket::SendSystemMessage(UINT32 id)
+{
+	reinterpret_cast<void(*)(CUserSocket*, UINT32)>(0x40D10C)(this, id);
+}
+
+void CUserSocket::SendSystemMessage(const wchar_t *sender, const wchar_t *message)
+{
+	reinterpret_cast<void(*)(CUserSocket*, const wchar_t*, const wchar_t*)>(0x9244F0)(this, sender, message);
 }
 
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)

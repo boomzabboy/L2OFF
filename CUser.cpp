@@ -2,7 +2,14 @@
 #include "CUser.h"
 #include "CSharedCreatureData.h"
 #include "Utils.h"
+#include "Config.h"
+#include "CUserSocket.h"
 #include <new>
+#include <time.h>
+
+CriticalSection CUser::counterCS;
+size_t CUser::counterTotal = 0;
+size_t CUser::counterOffline = 0;
 
 void CUser::Init()
 {
@@ -10,6 +17,19 @@ void CUser::Init()
 	WriteMemoryDWORD(0x5E1869, sizeof(CUser));
 	WriteInstruction(0x5E1ACA, reinterpret_cast<UINT32>(Constructor), 0xE8);
 	WriteInstruction(0x8D4340, reinterpret_cast<UINT32>(Destructor), 0xE8);
+	WriteMemoryQWORD(0xC54088, reinterpret_cast<UINT64>(SayWrapper));
+	WriteMemoryQWORD(0xC54128, reinterpret_cast<UINT64>(ExpIncWrapper));
+	WriteInstructionCall(0x487FCE, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x73731E, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x75CAF2, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x75EBB6, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x75ECFA, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x760700, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x83AE20, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x89EE61, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x8A191F, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x8CFE24, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -43,11 +63,22 @@ CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* 
 		pUnkBuff, uUnk10, uUnk11, uUnk12, uUnk13, uUnk14, uUnk15, uUnk16, uUnk17,
 		uUnk18, uUnk19, uUnk20, uUnk21, uUnk22, bUnk23);
 	new (&ret->ext) Ext();
+	{
+		ScopedLock lock(counterCS);
+		++counterTotal;
+	}
 	return ret;
 }
 
 CUser* __cdecl CUser::Destructor(CUser *self, bool isMemoryFreeUsed)
 {
+	{
+		ScopedLock lock(counterCS);
+		--counterTotal;
+		if (self->ext.isOffline) {
+			--counterOffline;
+		}
+	}
 	self->ext.~Ext();
 	typedef CUser* (__cdecl *t)(CUser*, bool);
 	t f = reinterpret_cast<t>(0x8D33C0);
@@ -55,6 +86,8 @@ CUser* __cdecl CUser::Destructor(CUser *self, bool isMemoryFreeUsed)
 }
 
 CUser::Ext::Ext()
+  : isExpOff(false),
+    isOffline(false)
 {
 }
 
@@ -107,5 +140,107 @@ void CUser::TakeItem(UINT32 itemId, UINT64 count)
 		*reinterpret_cast<void**>(
 			reinterpret_cast<char*>(*reinterpret_cast<void**>(this)) + 0x830))(
 				this, itemId, count, 0);
+}
+
+void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
+{
+	if (message[0] != L'.' || !config->voiceCommands.enabled) {
+		self->Say(message);
+		return;
+	}
+
+	std::wstring command = message + 1;
+	if (command == L"expoff" && config->voiceCommands.expOnOff) {
+		if (!self->ext.isExpOff) {
+			self->ext.isExpOff = true;
+			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain turned off");
+		} else {
+			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain already turned off");
+		}
+	} else if (command == L"expon" && config->voiceCommands.expOnOff) {
+		if (self->ext.isExpOff) {
+			self->ext.isExpOff = false;
+			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain turned on");
+		} else {
+			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain already turned on");
+		}
+	} else if (command == L"online" && config->voiceCommands.online) {
+		wchar_t buffer[1024];
+		if (config->voiceCommands.offline) {
+			swprintf_s(buffer, 1024, L"There are %d characters online (%d on offline trade)", counterTotal, counterOffline);
+		} else {
+			swprintf_s(buffer, 1024, L"There are %d characters online", counterTotal);
+		}
+		self->socket->SendSystemMessage(config->server.name.c_str(), buffer);
+	} else if (command == L"offline" && config->voiceCommands.offline) {
+		self->StartOfflineTrade();
+	} else if (command == L"time" && config->voiceCommands.time) {
+		wchar_t buffer[1024];
+		time_t now;
+		time(&now);
+		struct tm t;
+		localtime_s(&t, &now);
+		wcsftime(buffer, 1024, L"Current date and time is %Y-%m-%d %H:%M:%S", &t);
+		self->socket->SendSystemMessage(config->server.name.c_str(), buffer);
+	} else {
+		self->socket->SendSystemMessage(config->server.name.c_str(), L"Available voice commands:");
+		if (config->voiceCommands.expOnOff) {
+			self->socket->SendSystemMessage(config->server.name.c_str(), L".expon - turns experience gain on");
+			self->socket->SendSystemMessage(config->server.name.c_str(), L".expoff - turns experience gain off");
+		}
+		if (config->voiceCommands.online) {
+			self->socket->SendSystemMessage(config->server.name.c_str(), L".online - shows online player count");
+		}
+		if (config->voiceCommands.offline) {
+			self->socket->SendSystemMessage(config->server.name.c_str(), L".offline - start offline trade mode");
+		}
+		if (config->voiceCommands.time) {
+			self->socket->SendSystemMessage(config->server.name.c_str(), L".time - show current server time");
+		}
+	}
+}
+
+void CUser::Say(const wchar_t *message)
+{
+	reinterpret_cast<void(*)(CUser*, const wchar_t*)>(0x8AB200)(this, message);
+}
+
+INT64 __cdecl CUser::ExpIncWrapper(CUser *self, const INT64 exp, const bool b)
+{
+	return self->ExpInc((exp < 0 || !self->ext.isExpOff) ? exp : 0, b);
+}
+
+INT64 CUser::ExpInc(const INT64 exp, const bool b)
+{
+	return reinterpret_cast<INT64(*)(CUser*, const INT64, const bool)>(0x88BF30)(this, exp, b);
+}
+
+void __cdecl CUser::AddVitalityPointWrapper(CUser *self, const int points, const int type, const bool b)
+{
+	int points_ = points;
+	if (points_ < 0) {
+		if (!self->ext.isExpOff) {
+			points_ = static_cast<int>(points * config->server.vitalityMultiplier);
+		} else {
+			points_ = 0;
+		}
+	}
+
+	if (config->fixes.maxReplenishedVitalityPoints >= 0 && type == 6 && points < 0 && self->isVitalityReplenishing > 0) {
+		if (points_ < -config->fixes.maxReplenishedVitalityPoints) {
+			points_ = -config->fixes.maxReplenishedVitalityPoints;
+		}
+	}
+
+	self->AddVitalityPoint(points_, type, b);
+}
+
+void CUser::AddVitalityPoint(const int points, const int type, const bool b)
+{
+	reinterpret_cast<void(*)(CUser*, const int, const int, const bool)>(0x89C918)(this, points, type, b);
+}
+
+void CUser::StartOfflineTrade()
+{
 }
 
