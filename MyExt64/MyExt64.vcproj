@@ -97,6 +97,8 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				CommandLine="xcopy /Y $(IntDir)\MyExt64.dll ..\server\&#x0D;&#x0A;xcopy /Y $(IntDir)\MyExt64.pdb ..\server\&#x0D;&#x0A;"
+				Outputs="..\server\MyExt64.dll;..\server\MyExt64.pdb"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
