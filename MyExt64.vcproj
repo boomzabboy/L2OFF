@@ -171,6 +171,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Config.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CriticalSection.cpp"
 				>
 			</File>
@@ -238,6 +242,10 @@
 			>
 			<File
 				RelativePath=".\CLog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Config.h"
 				>
 			</File>
 			<File

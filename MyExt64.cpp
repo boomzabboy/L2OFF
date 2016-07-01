@@ -1,5 +1,6 @@
 
 #include "MyExt64.h"
+#include "Config.h"
 #include "Utils.h"
 #include "CUser.h"
 #include "CUserSocket.h"
@@ -16,17 +17,17 @@ bool MyExt64::pledgeInitialized = false;
 
 void MyExt64::Init()
 {
-	SetMaxIndex(10000);
-	DeadlockTimeout(5 * 60000 * 1000);
+	SetMaxIndex(config->server.maxIndex);
+	DeadlockTimeout(config->server.deadlockTimeout * 1000 * 1000);
 	DisableNoAuthExit();
 	DisableSendMail();
 	HideWarnings();
-	SetShutdownSeconds(180);
+	SetShutdownSeconds(config->server.shutdownDuration);
 	EnableLoadNpcSettingsAnytime();
 	AllowAirshipSkills();
 	MountUnmountKeepBuffs();
-	SetPledgeLoadTimeout(60);
-	SetPledgeWarLoadTimeout(30);
+	SetPledgeLoadTimeout(config->server.pledgeLoadTimeout);
+	SetPledgeWarLoadTimeout(config->server.pledgeWarLoadTimeout);
 	HookStart();
 	HookLoad();
 	HookOnLoadEnd();
@@ -132,24 +133,34 @@ void MyExt64::SetShutdownSeconds(const int seconds)
 
 void MyExt64::EnableLoadNpcSettingsAnytime()
 {
-	WriteMemoryBYTE(0x644DC5, 0x30);
+	if (config->server.allowLoadNpcSettingsAnyTime) {
+		WriteMemoryBYTE(0x644DC5, 0x30);
+	}
 }
 
 void MyExt64::EnableGlobalShout()
 {
-	WriteMemoryBYTES(0x8abc3a, "\x31\xDB\x89\x5C\x24\x3C\x90", 7);
-	WriteMemoryBYTES(0x8abc4a, "\x8D\x74\x24\xA0\x31\xFF", 6);
+	if (config->server.globalShout) {
+		WriteMemoryBYTES(0x8abc3a, "\x31\xDB\x89\x5C\x24\x3C\x90", 7);
+		WriteMemoryBYTES(0x8abc4a, "\x8D\x74\x24\xA0\x31\xFF", 6);
+	}
 }
 
 void MyExt64::AllowAirshipSkills()
 {
-	WriteMemoryBYTE(0x5310F3, 0x30);
+	if (config->server.allowAirshipSkills) {
+		WriteMemoryBYTE(0x5310F3, 0x30);
+	}
 }
 
 void MyExt64::MountUnmountKeepBuffs()
 {
-	NOPMemory(0x8FD944, 5);
-	NOPMemory(0x8FE172, 5);
+	if (config->server.mountKeepBuffs) {
+		NOPMemory(0x8FD944, 5);
+	}
+	if (config->server.dismountKeepBuffs) {
+		NOPMemory(0x8FE172, 5);
+	}
 }
 
 void MyExt64::SetPledgeLoadTimeout(time_t timeout)

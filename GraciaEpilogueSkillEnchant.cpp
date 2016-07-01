@@ -216,6 +216,10 @@ bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfo(CUserSocket *self, const 
 		return false;
 	}
 
+	if (enchantCosts.find(skillId) == enchantCosts.end()) {
+		return false;
+	}
+
 	CSkillEnchantInfo *info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(skillId, 101);
 	if (!info || info->requiredSkillLevel > skillLevel) {
 		self->Send("chddddd", 0xFE, 0x2A, skillId, skillLevel, 0, 0, 0);

@@ -1,8 +1,4 @@
 MyExt64.ncb
 MyExt64.suo
 MyExt64.vcproj.*.user
-!x64/
-x64/*
-!x64/Release/
-x64/Release/*
-!x64/Release/MyExt64.dll
+x64
