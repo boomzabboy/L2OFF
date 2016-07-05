@@ -19,11 +19,11 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
         PROCESS_ALL_ACCESS | PROCESS_VM_READ | PROCESS_VM_WRITE,
         FALSE, GetCurrentProcessId());
 
-	Config::Init();
+	Config::Instance();
 
 	{
 		std::wstringstream ss;
-		ss << config->server.loadDlls;
+		ss << Config::Instance()->server->loadDlls;
 		while (ss) {
 			std::wstring line;
 			std::wstring filename;
@@ -39,8 +39,8 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
 		}
 	}
 
-	MyExt64::SetProtocolVersion(config->server.protocolVersion);
-	MyExt64::SetDebug(config->server.debug);
+	MyExt64::SetProtocolVersion(Config::Instance()->server->protocolVersion);
+	MyExt64::SetDebug(Config::Instance()->server->debug);
 	MyExt64::Init();
 
 	return TRUE;

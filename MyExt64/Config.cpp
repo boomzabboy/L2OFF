@@ -4,42 +4,72 @@
 #include <windows.h>
 #include <sstream>
 
-Config *config = 0;
+Config *Config::instance = 0;
 
 Config::Config(const wchar_t *filename)
-  : filename(filename)
+  : filename(filename),
+    server(0),
+	voiceCommands(0),
+	fixes(0),
+	rate(0)
 {
-	server.name = GetString(L"server", L"Name", L"Server");
-	server.protocolVersion = GetInt(L"server", L"ProtocolVersion", MyExt64::ProtocolVersionGraciaEpilogueUpdate1);
-	server.debug = GetBool(L"server", L"Debug", false);
-	server.maxIndex = GetInt(L"server", L"MaxIndex", 10000);
-	server.deadlockTimeout = GetInt(L"server", L"DeadlockTimeout", 300);
-	server.shutdownDuration = GetInt(L"server", L"ShutdownDuration", 180);
-	server.globalShout = GetBool(L"server", L"GlobalShout", false);
-	server.allowLoadNpcSettingsAnyTime = GetBool(L"server", L"AllowLoadNpcSettingsAnyTime", true);
-	server.mountKeepBuffs = GetBool(L"server", L"MountKeepBuffs", true);
-	server.dismountKeepBuffs = GetBool(L"server", L"DismountKeepBuffs", true);
-	server.allowAirshipSkills = GetBool(L"server", L"AllowAirshipSkills", true);
-	server.pledgeLoadTimeout = GetInt(L"server", L"PledgeLoadTimeout", 60);
-	server.pledgeWarLoadTimeout = GetInt(L"server", L"PledgeWarLoadTimeout", 30);
-	server.vitalityMultiplier = GetDouble(L"server", L"VitalityMultiplier", 1.0);
-	server.loadDlls = GetString(L"server", L"LoadDlls", L"");
-
-	voiceCommands.enabled = GetBool(L"voicecommands", L"Enabled", true);
-	voiceCommands.expOnOff = GetBool(L"voicecommands", L"ExpOnOff", true);
-	voiceCommands.online = GetBool(L"voicecommands", L"Online", true);
-	voiceCommands.offline = GetBool(L"voicecommands", L"Offline", true);
-	voiceCommands.time = GetBool(L"voicecommands", L"Time", true);
-
-	fixes.maxReplenishedVitalityPoints = GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50);
+	server = new Server(this);
+	voiceCommands = new VoiceCommands(this);
+	fixes = new Fixes(this);
+	rate = new Rate(this);
 }
 
-void Config::Init()
+Config::Server::Server(Config *config)
+  : name(config->GetString(L"server", L"Name", L"Server")),
+    protocolVersion(config->GetInt(L"server", L"ProtocolVersion", MyExt64::ProtocolVersionGraciaEpilogueUpdate1)),
+	debug(config->GetBool(L"server", L"Debug", false)),
+	maxIndex(config->GetInt(L"server", L"MaxIndex", 10000)),
+	deadlockTimeout(config->GetInt(L"server", L"DeadlockTimeout", 300)),
+	shutdownDuration(config->GetInt(L"server", L"ShutdownDuration", 180)),
+	globalShout(config->GetBool(L"server", L"GlobalShout", false)),
+	allowLoadNpcSettingsAnyTime(config->GetBool(L"server", L"AllowLoadNpcSettingsAnyTime", true)),
+	mountKeepBuffs(config->GetBool(L"server", L"MountKeepBuffs", true)),
+	dismountKeepBuffs(config->GetBool(L"server", L"DismountKeepBuffs", true)),
+	allowAirshipSkills(config->GetBool(L"server", L"AllowAirshipSkills", true)),
+	pledgeLoadTimeout(config->GetInt(L"server", L"PledgeLoadTimeout", 60)),
+	pledgeWarLoadTimeout(config->GetInt(L"server", L"PledgeWarLoadTimeout", 30)),
+	vitalityMultiplier(config->GetDouble(L"server", L"VitalityMultiplier", 1.0)),
+	loadDlls(config->GetString(L"server", L"LoadDlls", L""))
 {
-	if (config) {
-		return;
+}
+
+Config::VoiceCommands::VoiceCommands(Config *config)
+  : enabled(config->GetBool(L"voicecommands", L"Enabled", true)),
+	expOnOff(config->GetBool(L"voicecommands", L"ExpOnOff", true)),
+	online(config->GetBool(L"voicecommands", L"Online", true)),
+	offline(config->GetBool(L"voicecommands", L"Offline", true)),
+	time(config->GetBool(L"voicecommands", L"Time", true))
+{
+}
+
+Config::Fixes::Fixes(Config *config)
+  : maxReplenishedVitalityPoints(config->GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50))
+{
+}
+
+Config::Rate::Rate(Config *config)
+  : adenaRate(config->GetDouble(L"rate", L"AdenaRate", 1.0)),
+	dropRate(config->GetDouble(L"rate", L"DropRate", 1.0)),
+	spoilRate(config->GetDouble(L"rate", L"SpoilRate", 1.0)),
+	bossDropRate(config->GetDouble(L"rate", L"BossDropRate", 1.0)),
+	herbRate(config->GetDouble(L"rate", L"HerbRate", 1.0)),
+	fixupLowLevel(config->GetBool(L"rate", L"FixupLowLevel", false)),
+	ignoredItems(config->GetIntSet(L"rate", L"IgnoredItems", std::set<INT64>())),
+	dump(config->GetBool(L"rate", L"Dump", false))
+{
+}
+
+Config* Config::Instance()
+{
+	if (!instance) {
+		instance = new Config(L"MyExt64.ini");
 	}
-	config = new Config(L"MyExt64.ini");
+	return instance;
 }
 
 const wchar_t* Config::GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue)
@@ -96,3 +126,40 @@ double Config::GetDouble(const wchar_t *section, const wchar_t *name, const doub
 	}
 	return ret;
 }
+
+std::set<INT64> Config::GetIntSet(const wchar_t *section, const wchar_t *name, const std::set<INT64> &defaultValue)
+{
+	return defaultValue;
+	std::wstring s(GetString(section, name, L""));
+	if (s.empty()) {
+		return defaultValue;
+	}
+	if (s == L"-" || s == L"null") {
+		return std::set<INT64>();
+	}
+	std::set<INT64> result;
+	std::wstring part;
+	for (size_t i(0) ; i < s.size() ; ++i) {
+		if (s[i] == L' ' || s[i] == L',' || s[i] == L';') {
+			if (!part.empty()) {
+				std::wstringstream ss;
+				INT64 i;
+				ss << part;
+				ss >> i;
+				result.insert(i);
+				part.clear();
+			} else if (s[i] >= '0' && s[i] <= '9') {
+				part.push_back(s[i]);
+			}
+		}
+	}
+	if (!part.empty()) {
+		std::wstringstream ss;
+		INT64 i;
+		ss << part;
+		ss >> i;
+		result.insert(i);
+	}
+	return result;
+}
+

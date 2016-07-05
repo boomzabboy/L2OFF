@@ -2,10 +2,11 @@
 #pragma once
 
 #include <windows.h>
+#include "CCreature.h"
 #include "CriticalSection.h"
 #include <string>
 
-class CUser {
+class CUser : public CCreature {
 public:
 	static void Init();
 
@@ -59,9 +60,6 @@ public:
 		bool isOffline;
 	};
 
-	int GetAcquiredSkillLevel(int skillId);
-	int GetLevel();
-	wchar_t* GetName();
 	UINT64 GetItemCount(UINT32 itemId);
 	void TakeItem(UINT32 itemId, UINT64 count);
 	void Say(const wchar_t *message);
@@ -80,19 +78,13 @@ public:
 	static void __cdecl SendCharInfoWrapper(CUser *self, class CUserSocket *socket, const bool b);
 	static void __cdecl EnterWorldWrapper(CUser *self);
 
-	static CUser* IsUser(void *ptr);
+	static CUser* IsUser(CCreature *ptr);
 
 	static CriticalSection counterCS;
 	static size_t counterTotal;
 	static size_t counterOffline;
 
-	/* 0x0000 */ unsigned char padding0x0000[0x18];
-	/* 0x0018 */ UINT32 objectId;
-	/* 0x001C */ unsigned char padding0x001C[0xA74];
-	/* 0x0A90 */ class CSharedCreatureData *sd;
-	/* 0x0A98 */ unsigned char padding0x0A98[0x8];
-	/* 0x0AA0 */ class CYieldLock *sdLock;
-	/* 0x0AA8 */ unsigned char padding0xAA8[0x17A0];
+	/* 0x1CB0 */ unsigned char padding0x1CB0[0x598];
 	/* 0x2248 */ void *economy;
 	/* 0x2250 */ unsigned char padding0x2250[0x1108];
 	/* 0x3358 */ class CUserSocket *socket;

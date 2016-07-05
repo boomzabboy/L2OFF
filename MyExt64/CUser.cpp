@@ -115,23 +115,6 @@ CUser::Ext::BuySell::BuySellList::BuySellList()
 {
 }
 
-int CUser::GetAcquiredSkillLevel(int skillId)
-{
-	typedef int (__thiscall *t)(CUser*, int);
-	t f = reinterpret_cast<t>(0x5502D8);
-	return f(this, skillId);
-}
-
-int CUser::GetLevel()
-{
-	return sd->level;
-}
-
-wchar_t* CUser::GetName()
-{
-	return sd->name;
-}
-
 UINT64 CUser::GetItemCount(UINT32 itemId)
 {
 	return reinterpret_cast<UINT64(*)(void*, UINT32, int)>(0x6864B4)(
@@ -158,58 +141,58 @@ void CUser::ResetNicknameAndColor()
 
 void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 {
-	if (message[0] != L'.' || !config->voiceCommands.enabled) {
+	if (message[0] != L'.' || !Config::Instance()->voiceCommands->enabled) {
 		self->Say(message);
 		return;
 	}
 
 	std::wstring command = message + 1;
-	if (command == L"expoff" && config->voiceCommands.expOnOff) {
+	if (command == L"expoff" && Config::Instance()->voiceCommands->expOnOff) {
 		if (!self->ext.isExpOff) {
 			self->ext.isExpOff = true;
-			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain turned off");
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Experience gain turned off");
 		} else {
-			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain already turned off");
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Experience gain already turned off");
 		}
-	} else if (command == L"expon" && config->voiceCommands.expOnOff) {
+	} else if (command == L"expon" && Config::Instance()->voiceCommands->expOnOff) {
 		if (self->ext.isExpOff) {
 			self->ext.isExpOff = false;
-			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain turned on");
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Experience gain turned on");
 		} else {
-			self->socket->SendSystemMessage(config->server.name.c_str(), L"Experience gain already turned on");
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Experience gain already turned on");
 		}
-	} else if (command == L"online" && config->voiceCommands.online) {
+	} else if (command == L"online" && Config::Instance()->voiceCommands->online) {
 		wchar_t buffer[1024];
-		if (config->voiceCommands.offline) {
+		if (Config::Instance()->voiceCommands->offline) {
 			swprintf_s(buffer, 1024, L"There are %d characters online (%d on offline trade)", counterTotal, counterOffline);
 		} else {
 			swprintf_s(buffer, 1024, L"There are %d characters online", counterTotal);
 		}
-		self->socket->SendSystemMessage(config->server.name.c_str(), buffer);
-	} else if (command == L"offline" && config->voiceCommands.offline) {
+		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
+	} else if (command == L"offline" && Config::Instance()->voiceCommands->offline) {
 		self->StartOfflineTrade();
-	} else if (command == L"time" && config->voiceCommands.time) {
+	} else if (command == L"time" && Config::Instance()->voiceCommands->time) {
 		wchar_t buffer[1024];
 		time_t now;
 		time(&now);
 		struct tm t;
 		localtime_s(&t, &now);
 		wcsftime(buffer, 1024, L"Current date and time is %Y-%m-%d %H:%M:%S", &t);
-		self->socket->SendSystemMessage(config->server.name.c_str(), buffer);
+		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
 	} else {
-		self->socket->SendSystemMessage(config->server.name.c_str(), L"Available voice commands:");
-		if (config->voiceCommands.expOnOff) {
-			self->socket->SendSystemMessage(config->server.name.c_str(), L".expon - turns experience gain on");
-			self->socket->SendSystemMessage(config->server.name.c_str(), L".expoff - turns experience gain off");
+		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Available voice commands:");
+		if (Config::Instance()->voiceCommands->expOnOff) {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".expon - turns experience gain on");
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".expoff - turns experience gain off");
 		}
-		if (config->voiceCommands.online) {
-			self->socket->SendSystemMessage(config->server.name.c_str(), L".online - shows online player count");
+		if (Config::Instance()->voiceCommands->online) {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".online - shows online player count");
 		}
-		if (config->voiceCommands.offline) {
-			self->socket->SendSystemMessage(config->server.name.c_str(), L".offline - start offline trade mode");
+		if (Config::Instance()->voiceCommands->offline) {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".offline - start offline trade mode");
 		}
-		if (config->voiceCommands.time) {
-			self->socket->SendSystemMessage(config->server.name.c_str(), L".time - show current server time");
+		if (Config::Instance()->voiceCommands->time) {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".time - show current server time");
 		}
 	}
 }
@@ -234,15 +217,15 @@ void __cdecl CUser::AddVitalityPointWrapper(CUser *self, const int points, const
 	int points_ = points;
 	if (points_ < 0) {
 		if (!self->ext.isExpOff) {
-			points_ = static_cast<int>(points * config->server.vitalityMultiplier);
+			points_ = static_cast<int>(points * Config::Instance()->server->vitalityMultiplier);
 		} else {
 			points_ = 0;
 		}
 	}
 
-	if (config->fixes.maxReplenishedVitalityPoints >= 0 && type == 6 && points < 0 && self->isVitalityReplenishing > 0) {
-		if (points_ < -config->fixes.maxReplenishedVitalityPoints) {
-			points_ = -config->fixes.maxReplenishedVitalityPoints;
+	if (Config::Instance()->fixes->maxReplenishedVitalityPoints >= 0 && type == 6 && points < 0 && self->isVitalityReplenishing > 0) {
+		if (points_ < -Config::Instance()->fixes->maxReplenishedVitalityPoints) {
+			points_ = -Config::Instance()->fixes->maxReplenishedVitalityPoints;
 		}
 	}
 
@@ -259,7 +242,7 @@ void CUser::StartOfflineTrade()
 	switch (sd->storeMode) {
 	case 1:	case 3:	case 5:	case 8: break;
 	default:
-		socket->SendSystemMessage(config->server.name.c_str(), L"You can use offline store only when trading");
+		socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"You can use offline store only when trading");
 		return;
 	}
 
@@ -300,7 +283,7 @@ void* __cdecl CUser::OfflineTradePartyInvite(void *a, void *b, void *c)
 	return ret;
 }
 
-CUser* CUser::IsUser(void *ptr)
+CUser* CUser::IsUser(CCreature *ptr)
 {
 	if (!ptr || *reinterpret_cast<void**>(ptr) != reinterpret_cast<void*>(0xC53BB8)) {
 		return 0;
@@ -346,7 +329,6 @@ void CUser::EnterWorld()
 	reinterpret_cast<void(*)(CUser*)>(0x8CF0E4)(this);
 }
 
-CompileTimeOffsetCheck(CUser, sdLock, 0x0AA0);
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
 CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);
 CompileTimeOffsetCheck(CUser, isVitalityReplenishing, 0x38B0);

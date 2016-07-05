@@ -6,6 +6,7 @@
 #include "CUserSocket.h"
 #include "SkillEnchantOperator.h"
 #include "GraciaEpilogue.h"
+#include "DropRate.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -17,17 +18,17 @@ bool MyExt64::pledgeInitialized = false;
 
 void MyExt64::Init()
 {
-	SetMaxIndex(config->server.maxIndex);
-	DeadlockTimeout(config->server.deadlockTimeout * 1000 * 1000);
+	SetMaxIndex(Config::Instance()->server->maxIndex);
+	DeadlockTimeout(Config::Instance()->server->deadlockTimeout * 1000 * 1000);
 	DisableNoAuthExit();
 	DisableSendMail();
 	HideWarnings();
-	SetShutdownSeconds(config->server.shutdownDuration);
+	SetShutdownSeconds(Config::Instance()->server->shutdownDuration);
 	EnableLoadNpcSettingsAnytime();
 	AllowAirshipSkills();
 	MountUnmountKeepBuffs();
-	SetPledgeLoadTimeout(config->server.pledgeLoadTimeout);
-	SetPledgeWarLoadTimeout(config->server.pledgeWarLoadTimeout);
+	SetPledgeLoadTimeout(Config::Instance()->server->pledgeLoadTimeout);
+	SetPledgeWarLoadTimeout(Config::Instance()->server->pledgeWarLoadTimeout);
 	HookStart();
 	HookLoad();
 	HookOnLoadEnd();
@@ -38,6 +39,7 @@ void MyExt64::Init()
 	if (GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
 		GraciaEpilogue::Init();
 	}
+	DropRate::Init();
 }
 
 void MyExt64::Load()
@@ -133,14 +135,14 @@ void MyExt64::SetShutdownSeconds(const int seconds)
 
 void MyExt64::EnableLoadNpcSettingsAnytime()
 {
-	if (config->server.allowLoadNpcSettingsAnyTime) {
+	if (Config::Instance()->server->allowLoadNpcSettingsAnyTime) {
 		WriteMemoryBYTE(0x644DC5, 0x30);
 	}
 }
 
 void MyExt64::EnableGlobalShout()
 {
-	if (config->server.globalShout) {
+	if (Config::Instance()->server->globalShout) {
 		WriteMemoryBYTES(0x8abc3a, "\x31\xDB\x89\x5C\x24\x3C\x90", 7);
 		WriteMemoryBYTES(0x8abc4a, "\x8D\x74\x24\xA0\x31\xFF", 6);
 	}
@@ -148,17 +150,17 @@ void MyExt64::EnableGlobalShout()
 
 void MyExt64::AllowAirshipSkills()
 {
-	if (config->server.allowAirshipSkills) {
+	if (Config::Instance()->server->allowAirshipSkills) {
 		WriteMemoryBYTE(0x5310F3, 0x30);
 	}
 }
 
 void MyExt64::MountUnmountKeepBuffs()
 {
-	if (config->server.mountKeepBuffs) {
+	if (Config::Instance()->server->mountKeepBuffs) {
 		NOPMemory(0x8FD944, 5);
 	}
-	if (config->server.dismountKeepBuffs) {
+	if (Config::Instance()->server->dismountKeepBuffs) {
 		NOPMemory(0x8FE172, 5);
 	}
 }
