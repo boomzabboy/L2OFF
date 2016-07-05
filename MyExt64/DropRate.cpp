@@ -22,6 +22,18 @@ void DropRate::Init()
 	WriteMemoryQWORD(0xC39AE8, reinterpret_cast<UINT64>(CNPCSetDrop));
 	WriteMemoryQWORD(0xC3B988, reinterpret_cast<UINT64>(CNPCSetDrop));
 	WriteMemoryQWORD(0xC8C568, reinterpret_cast<UINT64>(CNPCSetDrop));
+	WriteMemoryQWORD(0xA73A98, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xAB99A8, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xB1FD58, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xB7D5F8, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xB94228, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xBCBBD8, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xBCD308, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xC322B8, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xC39628, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xC3A1A8, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xC3C048, reinterpret_cast<UINT64>(CNPCSetDropMulti));
+	WriteMemoryQWORD(0xC8CC28, reinterpret_cast<UINT64>(CNPCSetDropMulti));
 
 	if (Config::Instance()->rate->dump) {
 		std::ofstream("..\\dump\\dropspoil.txt").close();
