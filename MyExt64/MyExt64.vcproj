@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CNPC.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Config.cpp"
 				>
 			</File>
@@ -219,6 +223,10 @@
 			</File>
 			<File
 				RelativePath=".\DropRate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EventDrop.cpp"
 				>
 			</File>
 			<File
@@ -268,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CNPC.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Config.h"
 				>
 			</File>
@@ -309,6 +321,10 @@
 			</File>
 			<File
 				RelativePath=".\DropRate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EventDrop.h"
 				>
 			</File>
 			<File

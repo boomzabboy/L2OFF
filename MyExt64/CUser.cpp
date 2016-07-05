@@ -283,14 +283,6 @@ void* __cdecl CUser::OfflineTradePartyInvite(void *a, void *b, void *c)
 	return ret;
 }
 
-CUser* CUser::IsUser(CCreature *ptr)
-{
-	if (!ptr || *reinterpret_cast<void**>(ptr) != reinterpret_cast<void*>(0xC53BB8)) {
-		return 0;
-	}
-	return reinterpret_cast<CUser*>(ptr);
-}
-
 void __cdecl CUser::SendCharInfoWrapper(CUser *self, CUserSocket *socket, const bool b)
 {
 	self->SendCharInfo(socket, b);

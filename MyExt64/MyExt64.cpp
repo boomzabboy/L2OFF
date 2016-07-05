@@ -7,6 +7,8 @@
 #include "SkillEnchantOperator.h"
 #include "GraciaEpilogue.h"
 #include "DropRate.h"
+#include "EventDrop.h"
+#include "CNPC.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -40,6 +42,8 @@ void MyExt64::Init()
 		GraciaEpilogue::Init();
 	}
 	DropRate::Init();
+	EventDrop::Init();
+	CNPC::Init();
 }
 
 void MyExt64::Load()
@@ -47,6 +51,7 @@ void MyExt64::Load()
 	if (GetProtocolVersion() >= MyExt64::ProtocolVersionGraciaEpilogue) {
 		GraciaEpilogue::Load();
 	}
+	EventDrop::Load();
 }
 
 bool MyExt64::IsDebug()

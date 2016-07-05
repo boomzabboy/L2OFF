@@ -9,6 +9,10 @@ public:
 	int GetLevel();
 	wchar_t* GetName();
 	bool IsBoss() const;
+	bool IsUser() const;
+	bool IsSummon() const;
+	bool IsPet() const;
+	bool AddItemToInventory(int itemId, UINT64 count);
 
 	/* 0x0000 */ unsigned char padding0x0000[0x18];
 	/* 0x0018 */ UINT32 objectId;
