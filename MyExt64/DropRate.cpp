@@ -115,7 +115,7 @@ void DropRate::CNPCSetDropMulti(CCreature *npc, UINT32 type, std::vector<ItemDro
 			drop.chance = (*iidata)->chance;
 			oldItems.push_back(drop);
 
-			if ((*iidata)->itemId == 57) { // adena
+			if ((*iidata)->itemId == 57) {
 				(*iidata)->countMin = UINT32(max(1, double((*iidata)->countMin) * Config::Instance()->rate->adenaRate));
 				(*iidata)->countMax = UINT32(max(1, double((*iidata)->countMax) * Config::Instance()->rate->adenaRate));
                 stopGroup = true;
@@ -155,7 +155,7 @@ void DropRate::CNPCSetDropMulti(CCreature *npc, UINT32 type, std::vector<ItemDro
 				std::vector<ItemDrop>::iterator ioldItems(oldItems.begin());
 				for (std::vector<ItemDrop*>::iterator iidata((*idata)->items->begin()) ;
 					 iidata != (*idata)->items->end() ;
-					 ++iidata) {
+					 ++iidata, ++ioldItems) {
 
 					if (ioldItems->chance > threshold) {
 						(*iidata)->chance *= (100.0 - s2) / s1;

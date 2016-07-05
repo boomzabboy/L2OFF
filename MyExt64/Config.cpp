@@ -67,16 +67,16 @@ Config::Rate::Rate(Config *config)
 Config* Config::Instance()
 {
 	if (!instance) {
-		instance = new Config(L"MyExt64.ini");
+		instance = new Config(L".\\MyExt64.ini");
 	}
 	return instance;
 }
 
-const wchar_t* Config::GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue)
+std::wstring Config::GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue)
 {
     static wchar_t buffer[16384];
 	GetPrivateProfileString(section, name, defaultValue, buffer, sizeof(buffer), filename.c_str());
-	return buffer;
+	return std::wstring(buffer);
 }
 
 INT64 Config::GetInt(const wchar_t *section, const wchar_t *name, const INT64 defaultValue)
@@ -129,7 +129,6 @@ double Config::GetDouble(const wchar_t *section, const wchar_t *name, const doub
 
 std::set<INT64> Config::GetIntSet(const wchar_t *section, const wchar_t *name, const std::set<INT64> &defaultValue)
 {
-	return defaultValue;
 	std::wstring s(GetString(section, name, L""));
 	if (s.empty()) {
 		return defaultValue;
@@ -148,9 +147,9 @@ std::set<INT64> Config::GetIntSet(const wchar_t *section, const wchar_t *name, c
 				ss >> i;
 				result.insert(i);
 				part.clear();
-			} else if (s[i] >= '0' && s[i] <= '9') {
-				part.push_back(s[i]);
 			}
+		} else if (s[i] >= L'0' && s[i] <= L'9') {
+			part.push_back(s[i]);
 		}
 	}
 	if (!part.empty()) {

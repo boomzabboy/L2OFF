@@ -60,7 +60,7 @@ public:
 
 protected:
 	Config(const wchar_t *filename);
-	const wchar_t* GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue);
+	std::wstring GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue);
 	INT64 GetInt(const wchar_t *section, const wchar_t *name, const INT64 defaultValue);
 	bool GetBool(const wchar_t *section, const wchar_t *name, const bool defaultValue);
 	double GetDouble(const wchar_t *section, const wchar_t *name, const double defaultValue);
