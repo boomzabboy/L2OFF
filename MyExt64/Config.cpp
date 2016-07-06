@@ -48,7 +48,8 @@ Config::VoiceCommands::VoiceCommands(Config *config)
 }
 
 Config::Fixes::Fixes(Config *config)
-  : maxReplenishedVitalityPoints(config->GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50))
+  : maxReplenishedVitalityPoints(config->GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50)),
+    commandChannelFriendly(config->GetBool(L"fixes", L"CommandChannelFriendly", true))
 {
 }
 

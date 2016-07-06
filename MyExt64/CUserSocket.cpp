@@ -5,6 +5,9 @@
 #include "Utils.h"
 #include "MyExt64.h"
 #include "GraciaEpilogue.h"
+#include "Config.h"
+#include "CParty.h"
+#include "CMultiPartyCommandChannel.h"
 #include <new>
 
 CUserSocket::PacketHandler *CUserSocket::exHandlers = reinterpret_cast<CUserSocket::PacketHandler*>(0x121C0D60);
@@ -221,6 +224,49 @@ void __cdecl CUserSocket::SendWrapper(CUserSocket *self, const char *format, ...
 
 	if (f == "cdddQdd" && o == 0x62 && p[1] == 0x5F && self->user->ext.isExpOff) {
 		*reinterpret_cast<UINT32*>(&p[4]) = 0;
+	}
+
+	if (Config::Instance()->fixes->commandChannelFriendly) {
+		CUser *user = self->user;
+		if (user) {
+			CParty *party = user->GetParty();
+			if (party && party->GetMaster() == user) {
+				if (f == "cdd" && o == 0x62) {
+					switch (p[1]) {
+					case 0x62e: // you have joined the command channel
+						{
+							CMultiPartyCommandChannel *channel = user->GetMPCC();
+							if (channel) {
+								channel->SendRelationUpdates();
+							}
+						}
+						break;
+					case 0x62f: // you were dismissed from the command channel
+					case 0x632: // you have quit the command channel
+						party->SendRelationChanged();
+						break;
+					default:
+						break;
+					}
+				} else if (f == "cdddS" && o == 0x62) {
+					switch (p[1]) {
+					case 0x630: // %s's party has been dismissed
+					case 0x633: // %s's party has left the Command Channel.
+						{
+							CMultiPartyCommandChannel *channel = user->GetMPCC();
+							if (channel) {
+								channel->SendRelationUpdates();
+							} else {
+								party->SendRelationChanged();
+							}
+						}
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	self->SendV(format, args);

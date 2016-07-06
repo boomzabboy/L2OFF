@@ -11,6 +11,8 @@
 #include "CNPC.h"
 #include "ShutdownChecker.h"
 #include "EnchantItem.h"
+#include "CMultiPartyCommandChannel.h"
+#include "CSummon.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -48,6 +50,8 @@ void MyExt64::Init()
 	CNPC::Init();
 	ShutdownChecker::Init();
 	EnchantItem::Init();
+	CMultiPartyCommandChannel::Init();
+	CSummon::Init();
 }
 
 void MyExt64::Load()

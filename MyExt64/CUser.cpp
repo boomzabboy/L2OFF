@@ -5,6 +5,7 @@
 #include "Config.h"
 #include "CUserSocket.h"
 #include "CParty.h"
+#include "CSummon.h"
 #include <new>
 #include <time.h>
 
@@ -34,6 +35,19 @@ void CUser::Init()
 	WriteMemoryQWORD(0xC546F8, reinterpret_cast<UINT64>(SendCharInfoWrapper));
 	WriteInstructionCall(0x93A05C, reinterpret_cast<UINT32>(OfflineTradePartyInvite));
 	WriteMemoryQWORD(0xC54400, reinterpret_cast<UINT64>(EnterWorldWrapper));
+
+	WriteMemoryQWORD(0xc53f58, reinterpret_cast<UINT64>(IsEnemyToWrapper));
+	WriteInstructionCall(0x52E43C + 0x164, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x569908 + 0x4DB, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x8CCEAC + 0x18D, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x8CD084 + 0x1E3, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x8CE2A4 + 0x9, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x8CFECC + 0x3C5, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x8D03B8 + 0x1EF, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x907EF0 + 0xC0, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x907EF0 + 0x40F, reinterpret_cast<UINT32>(GetRelationToWrapper));
+	WriteInstructionCall(0x9084FC + 0x3C7, reinterpret_cast<UINT32>(GetRelationToWrapper));
+
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -320,6 +334,88 @@ void CUser::EnterWorld()
 {
 	reinterpret_cast<void(*)(CUser*)>(0x8CF0E4)(this);
 }
+
+CMultiPartyCommandChannel* CUser::GetMPCC()
+{
+	return reinterpret_cast<CMultiPartyCommandChannel*(*)(CUser*)>(0x8A600C)(this);
+}
+
+void CUser::SendRelationChanged(CUserSocket *socket)
+{
+	reinterpret_cast<void(*)(CUser*, CUserSocket*)>(0x907EF0)(this, socket);
+}
+
+bool __cdecl CUser::IsEnemyToWrapper(CUser *self, CCreature *creature)
+{
+	return self->IsEnemyTo(creature);
+}
+
+bool CUser::IsEnemyTo(CCreature *creature)
+{
+	bool ret = reinterpret_cast<bool(*)(CUser*, CCreature*)>(0x8CD084)(this, creature);
+
+	if (!Config::Instance()->fixes->commandChannelFriendly) {
+		return ret;
+	}
+
+	CParty *party = GetParty();
+	CMultiPartyCommandChannel *channel = GetMPCC();
+
+	if (creature->IsUser()) {
+		CUser *targetUser = reinterpret_cast<CUser*>(creature);
+		if (targetUser == this) {
+			ret = false;
+		} else if (party && targetUser->GetParty() == party) {
+			ret = false;
+		} else if (channel && targetUser->GetMPCC() == channel) {
+			ret = false;
+		}
+		return ret;
+	}
+
+	if (creature->IsSummon()) {
+		CSummon *summon = reinterpret_cast<CSummon*>(creature);
+		CUser *owner = summon->GetUserOrMaster();
+		if (owner) {
+			if (owner == this) {
+				ret = false;
+			} else if (party && owner->GetParty() == party) {
+				ret = false;
+			} else if (channel && owner->GetMPCC() == channel) {
+				ret = false;
+			}
+		}
+		return ret;
+	}
+
+	return ret;
+}
+
+int CUser::GetRelationTo(CUser *user)
+{
+	int ret = reinterpret_cast<int(*)(CUser*, CUser*)>(0x8CC944)(this, user);
+
+	if (!Config::Instance()->fixes->commandChannelFriendly) {
+		return ret;
+	}
+
+	if (!(ret & 0x20)) {
+		if (GetParty()) {
+			CMultiPartyCommandChannel *channel = GetMPCC();
+			if (channel && user->GetMPCC() == channel) {
+				ret |= 0x20;
+			}
+		}
+	}
+
+	return ret;
+}
+
+int __cdecl CUser::GetRelationToWrapper(CUser *self, CUser *user)
+{
+	return self->GetRelationTo(user);
+}
+
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
 CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);

@@ -70,6 +70,10 @@ public:
 	void ResetNicknameAndColor();
 	void SendCharInfo(class CUserSocket *socket, const bool b);
 	void EnterWorld();
+	class CMultiPartyCommandChannel* GetMPCC();
+	void SendRelationChanged(class CUserSocket *socket);
+	bool IsEnemyTo(CCreature *creature);
+	int GetRelationTo(CUser *user);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -77,8 +81,8 @@ public:
 	static void* __cdecl OfflineTradePartyInvite(void *a, void *b, void *c);
 	static void __cdecl SendCharInfoWrapper(CUser *self, class CUserSocket *socket, const bool b);
 	static void __cdecl EnterWorldWrapper(CUser *self);
-
-	static CUser* IsUser(CCreature *ptr);
+	static bool __cdecl IsEnemyToWrapper(CUser *self, CCreature *creature);
+	static int __cdecl GetRelationToWrapper(CUser *self, CUser *user);
 
 	static CriticalSection counterCS;
 	static size_t counterTotal;

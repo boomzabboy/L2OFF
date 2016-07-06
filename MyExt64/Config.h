@@ -43,6 +43,7 @@ public:
 		Fixes(Config *config);
 
 		int maxReplenishedVitalityPoints;
+		bool commandChannelFriendly;
 	} *fixes;
 
 	struct Rate {

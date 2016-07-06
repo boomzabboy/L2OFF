@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CMultiPartyCommandChannel.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CNPC.cpp"
 				>
 			</File>
@@ -203,6 +207,10 @@
 			</File>
 			<File
 				RelativePath=".\CSkillEnchantInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CSummon.cpp"
 				>
 			</File>
 			<File
@@ -284,6 +292,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CMultiPartyCommandChannel.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CNPC.h"
 				>
 			</File>
@@ -309,6 +321,10 @@
 			</File>
 			<File
 				RelativePath=".\CSkillEnchantInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CSummon.h"
 				>
 			</File>
 			<File
@@ -357,6 +373,10 @@
 			</File>
 			<File
 				RelativePath=".\Utils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\xvector.h"
 				>
 			</File>
 		</Filter>
