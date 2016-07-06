@@ -10,6 +10,7 @@
 #include "EventDrop.h"
 #include "CNPC.h"
 #include "ShutdownChecker.h"
+#include "EnchantItem.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -46,6 +47,7 @@ void MyExt64::Init()
 	EventDrop::Init();
 	CNPC::Init();
 	ShutdownChecker::Init();
+	EnchantItem::Init();
 }
 
 void MyExt64::Load()
@@ -54,6 +56,7 @@ void MyExt64::Load()
 		GraciaEpilogue::Load();
 	}
 	EventDrop::Load();
+	EnchantItem::Load();
 }
 
 bool MyExt64::IsDebug()

@@ -226,6 +226,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EnchantItem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\EventDrop.cpp"
 				>
 			</File>
@@ -325,6 +329,10 @@
 			</File>
 			<File
 				RelativePath=".\DropRate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnchantItem.h"
 				>
 			</File>
 			<File
