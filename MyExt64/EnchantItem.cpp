@@ -17,8 +17,8 @@ public:
 	int state;
 
 	virtual void OnData(const std::map<std::string, std::string> &data)
-    {
-        if (Exists(data, "weapon")) {
+	{
+		if (Exists(data, "weapon")) {
 			if (Get<std::string>(data, "weapon") == "fighter") {
 				state = 0;
 			} else if (Get<std::string>(data, "weapon") == "mage") {
@@ -35,7 +35,7 @@ public:
 				state = -1;
 			}
 		} else if (state >= 0) {
-            int level = Get<int>(data, "level");
+			int level = Get<int>(data, "level");
 			double chance = Get<double>(data, "chance");
 			switch (state) {
 			case 0: chancesFighterWeapon[level - 1] = chance; break;
@@ -44,8 +44,8 @@ public:
 			case 3: chancesOnePieceArmor[level - 1] = chance; break;
 			default: break;
 			}
-        }
-    }
+		}
+	}
 };
 
 } // namespace
