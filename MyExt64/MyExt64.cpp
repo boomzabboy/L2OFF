@@ -9,6 +9,7 @@
 #include "DropRate.h"
 #include "EventDrop.h"
 #include "CNPC.h"
+#include "ShutdownChecker.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -44,6 +45,7 @@ void MyExt64::Init()
 	DropRate::Init();
 	EventDrop::Init();
 	CNPC::Init();
+	ShutdownChecker::Init();
 }
 
 void MyExt64::Load()
@@ -129,7 +131,7 @@ void MyExt64::OnLoadEnd(UINT64 classBase)
 	t f = reinterpret_cast<t>(0x470544);
 	int res = f(classBase);
 	if (res == 0xF) {
-		// ...
+		ShutdownChecker::StartChecking();
 	}
 }
 

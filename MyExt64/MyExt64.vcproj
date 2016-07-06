@@ -254,6 +254,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ShutdownChecker.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SkillEnchantOperator.cpp"
 				>
 			</File>
@@ -333,6 +337,10 @@
 			</File>
 			<File
 				RelativePath=".\MyExt64.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ShutdownChecker.h"
 				>
 			</File>
 			<File
