@@ -55,5 +55,16 @@ bool CCreature::AddItemToInventory(int itemId, UINT64 count)
 		this, itemId, count, false, 0, 0, 0, reinterpret_cast<void*>(itemOptionKey), 0, reinterpret_cast<void*>(baseAttribute));
 }
 
+CCreature* CCreature::GetTarget()
+{
+	CCreature *result = 0;
+	UINT32 targetId_ = targetId;
+	if (targetId_ && (targetId_ & 0xF8000000) == 0x48000000) {
+		return reinterpret_cast<CCreature*(*)(UINT64, UINT32)>(0x41A3A4)(0xF1B250, targetId_);
+	}
+	return 0;
+}
+
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);
+CompileTimeOffsetCheck(CCreature, padding0x1464, 0x1464);
 

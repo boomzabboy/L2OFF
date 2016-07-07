@@ -13,6 +13,7 @@
 #include "EnchantItem.h"
 #include "CMultiPartyCommandChannel.h"
 #include "CSummon.h"
+#include "BuilderCmd2Handler.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -52,6 +53,7 @@ void MyExt64::Init()
 	EnchantItem::Init();
 	CMultiPartyCommandChannel::Init();
 	CSummon::Init();
+	BuilderCmd2Handler::Init();
 }
 
 void MyExt64::Load()
