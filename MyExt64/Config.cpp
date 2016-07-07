@@ -50,7 +50,8 @@ Config::VoiceCommands::VoiceCommands(Config *config) :
 Config::Fixes::Fixes(Config *config) :
 	maxReplenishedVitalityPoints(config->GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50)),
 	commandChannelFriendly(config->GetBool(L"fixes", L"CommandChannelFriendly", true)),
-	repeatSkillOnDistanceFailSeconds(config->GetInt(L"fixes", L"RepeatSkillOnDistanceFailSeconds", -1))
+	repeatSkillOnDistanceFailSeconds(config->GetInt(L"fixes", L"RepeatSkillOnDistanceFailSeconds", -1)),
+	disallowTradeInOlympiad(config->GetBool(L"fixes", L"DisallowTradeInOlympiad", true))
 {
 }
 

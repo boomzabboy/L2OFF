@@ -51,6 +51,8 @@ void CUser::Init()
 	WriteMemoryQWORD(0xC545D0, reinterpret_cast<UINT64>(OnMagicSkillUsePacketWrapper));
 	WriteMemoryBYTES(0x711CA8, "\x48\x89\xF9", 3);
 	WriteInstructionCall(0x711CAB, reinterpret_cast<UINT32>(FixPendingSkill), 0x711CB9);
+
+	WriteInstructionCall(0x8BD015, reinterpret_cast<UINT32>(IsInBlockListWrapper));
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -468,6 +470,37 @@ void __cdecl CUser::FixPendingSkill(CUser *user)
 	} else if (user->ext.lastSkill.firstFail <= now - Config::Instance()->fixes->repeatSkillOnDistanceFailSeconds * 1000) {
 		user->ext.lastSkill.skillId = 0;
 	}
+}
+
+bool __cdecl CUser::IsInBlockListWrapper(CUser *self, int id)
+{
+	return self->IsInBlockList(id);
+}
+
+bool CUser::IsInBlockList(int id)
+{
+	if (IsInBlockListOriginal(id)) {
+		return true;
+	}
+	if (Config::Instance()->fixes->disallowTradeInOlympiad && IsInOlympiad()) {
+		return true;
+	}
+	return false;
+}
+
+bool CUser::IsInBlockListOriginal(int id)
+{
+	return reinterpret_cast<bool(*)(CUser*, int)>(0x8B4864)(this, id);
+}
+
+bool CUser::IsWaitingForOlympiad() const
+{
+	return olympiadStatus == 5;
+}
+
+bool CUser::IsInOlympiad() const
+{
+	return olympiadStatus == 1 || olympiadStatus == 2;
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

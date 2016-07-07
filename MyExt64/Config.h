@@ -45,6 +45,7 @@ public:
 		int maxReplenishedVitalityPoints;
 		bool commandChannelFriendly;
 		int repeatSkillOnDistanceFailSeconds;
+		bool disallowTradeInOlympiad;
 	} *fixes;
 
 	struct Rate {

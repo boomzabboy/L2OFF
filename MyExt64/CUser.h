@@ -87,6 +87,10 @@ public:
 	int GetRelationTo(CUser *user);
 	bool OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift);
 	bool OnMagicSkillUsePacketOriginal(int skillId, bool ctrl, bool shift);
+	bool IsInBlockList(int id);
+	bool IsInBlockListOriginal(int id);
+	bool IsWaitingForOlympiad() const;
+	bool IsInOlympiad() const;
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -98,6 +102,7 @@ public:
 	static int __cdecl GetRelationToWrapper(CUser *self, CUser *user);
 	static bool __cdecl OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool ctrl, bool shift);
 	static void __cdecl FixPendingSkill(CUser *user);
+	static bool __cdecl IsInBlockListWrapper(CUser *self, int id);
 
 	static CriticalSection counterCS;
 	static size_t counterTotal;
@@ -105,7 +110,9 @@ public:
 
 	/* 0x1CB0 */ unsigned char padding0x1CB0[0x598];
 	/* 0x2248 */ void *economy;
-	/* 0x2250 */ unsigned char padding0x2250[0x1108];
+	/* 0x2250 */ unsigned char padding0x2250[0x1048];
+	/* 0x3298 */ unsigned int olympiadStatus;
+	/* 0x329C */ unsigned char padding0x329C[0xBC];
 	/* 0x3358 */ class CUserSocket *socket;
 	/* 0x3360 */ unsigned char padding0x3360[0x278];
 	/* 0x35D8 */ bool acceptPM;
