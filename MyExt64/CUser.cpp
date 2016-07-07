@@ -48,6 +48,9 @@ void CUser::Init()
 	WriteInstructionCall(0x907EF0 + 0x40F, reinterpret_cast<UINT32>(GetRelationToWrapper));
 	WriteInstructionCall(0x9084FC + 0x3C7, reinterpret_cast<UINT32>(GetRelationToWrapper));
 
+	WriteMemoryQWORD(0xC545D0, reinterpret_cast<UINT64>(OnMagicSkillUsePacketWrapper));
+	WriteMemoryBYTES(0x711CA8, "\x48\x89\xF9", 3);
+	WriteInstructionCall(0x711CAB, reinterpret_cast<UINT32>(FixPendingSkill), 0x711CB9);
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -103,9 +106,9 @@ CUser* __cdecl CUser::Destructor(CUser *self, bool isMemoryFreeUsed)
 	return f(self, isMemoryFreeUsed);
 }
 
-CUser::Ext::Ext()
-  : isExpOff(false),
-    isOffline(false)
+CUser::Ext::Ext() :
+	isExpOff(false),
+	isOffline(false)
 {
 }
 
@@ -113,8 +116,8 @@ CUser::Ext::~Ext()
 {
 }
 
-CUser::Ext::BuySell::BuySell()
-  : economy2(0),
+CUser::Ext::BuySell::BuySell() :
+	economy2(0),
 	storedNpcSdIndex(0),
 	storedReply(-1),
 	firstBuySell(true),
@@ -122,10 +125,18 @@ CUser::Ext::BuySell::BuySell()
 {
 }
 
-CUser::Ext::BuySell::BuySellList::BuySellList()
-  : adena(0),
-    id(0),
+CUser::Ext::BuySell::BuySellList::BuySellList() :
+	adena(0),
+	id(0),
 	itemCount(0)
+{
+}
+
+CUser::Ext::LastSkill::LastSkill() :
+	skillId(0),
+	firstFail(0),
+	ctrl(false),
+	shift(false)
 {
 }
 
@@ -416,6 +427,48 @@ int __cdecl CUser::GetRelationToWrapper(CUser *self, CUser *user)
 	return self->GetRelationTo(user);
 }
 
+bool __cdecl CUser::OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool ctrl, bool shift)
+{
+	return self->OnMagicSkillUsePacket(skillId, ctrl, shift);
+}
+
+bool CUser::OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift)
+{
+	ext.lastSkill.skillId = skillId;
+	ext.lastSkill.ctrl = ctrl;
+	ext.lastSkill.shift = shift;
+	ext.lastSkill.firstFail = 0;
+	return OnMagicSkillUsePacketOriginal(skillId, ctrl, shift);
+}
+
+bool CUser::OnMagicSkillUsePacketOriginal(int skillId, bool ctrl, bool shift)
+{
+	return reinterpret_cast<bool(*)(CUser*, int, bool, bool)>(0x8AD2E8)(this, skillId, ctrl, shift);
+}
+
+void __cdecl CUser::FixPendingSkill(CUser *user)
+{
+	if (Config::Instance()->fixes->repeatSkillOnDistanceFailSeconds < 0 || !user->ext.lastSkill.skillId) {
+		CUserSocket *socket = user->socket;
+		if (socket) {
+			socket->SendSystemMessage(0x2EC);
+		}
+		return;
+	}
+
+	user->OnMagicSkillUsePacketOriginal(
+		user->ext.lastSkill.skillId,
+		user->ext.lastSkill.ctrl,
+		user->ext.lastSkill.shift);
+
+	UINT32 now = GetTickCount();
+
+	if (!user->ext.lastSkill.firstFail) {
+		user->ext.lastSkill.firstFail = now;
+	} else if (user->ext.lastSkill.firstFail <= now - Config::Instance()->fixes->repeatSkillOnDistanceFailSeconds * 1000) {
+		user->ext.lastSkill.skillId = 0;
+	}
+}
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
 CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);

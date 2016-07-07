@@ -55,9 +55,20 @@ public:
 			bool buySellSwitched;
 		};
 
+		class LastSkill {
+		public:
+			LastSkill();
+
+			int skillId;
+			UINT32 firstFail;
+			bool ctrl;
+			bool shift;
+		};
+
 		BuySell buySell;
 		bool isExpOff;
 		bool isOffline;
+		LastSkill lastSkill;
 	};
 
 	UINT64 GetItemCount(UINT32 itemId);
@@ -74,6 +85,8 @@ public:
 	void SendRelationChanged(class CUserSocket *socket);
 	bool IsEnemyTo(CCreature *creature);
 	int GetRelationTo(CUser *user);
+	bool OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift);
+	bool OnMagicSkillUsePacketOriginal(int skillId, bool ctrl, bool shift);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -83,6 +96,8 @@ public:
 	static void __cdecl EnterWorldWrapper(CUser *self);
 	static bool __cdecl IsEnemyToWrapper(CUser *self, CCreature *creature);
 	static int __cdecl GetRelationToWrapper(CUser *self, CUser *user);
+	static bool __cdecl OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool ctrl, bool shift);
+	static void __cdecl FixPendingSkill(CUser *user);
 
 	static CriticalSection counterCS;
 	static size_t counterTotal;

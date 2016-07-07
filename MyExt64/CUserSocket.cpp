@@ -16,7 +16,6 @@ void *CUserSocket::offlineTradeVtable[0x16];
 static WORD maxOpcodeEx = 0x68;
 
 CUserSocket::IgnorePacket::IgnorePacket(const wchar_t *format, ...)
-: std::exception()
 {
 	if (MyExt64::IsDebug()) {
 		va_list va;
@@ -158,9 +157,9 @@ CUserSocket* __cdecl CUserSocket::Destructor(CUserSocket *self, bool isMemoryFre
 	return reinterpret_cast<CUserSocket*(*)(CUserSocket*, bool)>(0x92DE7C)(self, isMemoryFreeUsed);
 }
 
-CUserSocket::Ext::Ext()
-  : offlineUser(0),
-    offlineSocketHandleCopy(0)
+CUserSocket::Ext::Ext() :
+	offlineUser(0),
+	offlineSocketHandleCopy(0)
 {
 }
 

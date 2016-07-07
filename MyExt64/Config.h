@@ -44,6 +44,7 @@ public:
 
 		int maxReplenishedVitalityPoints;
 		bool commandChannelFriendly;
+		int repeatSkillOnDistanceFailSeconds;
 	} *fixes;
 
 	struct Rate {

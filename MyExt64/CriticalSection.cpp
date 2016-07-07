@@ -25,8 +25,8 @@ void CriticalSection::UnLock()
 	LeaveCriticalSection(&cs);
 }
 
-ScopedLock::ScopedLock(const ScopedLock &other)
-  : cs(other.cs)
+ScopedLock::ScopedLock(const ScopedLock &other) :
+	cs(other.cs)
 {
 }
 
@@ -35,8 +35,8 @@ ScopedLock& ScopedLock::operator=(const ScopedLock &other)
 	return *this;
 }
 
-ScopedLock::ScopedLock(CriticalSection &cs)
- : cs(cs)
+ScopedLock::ScopedLock(CriticalSection &cs) :
+	cs(cs)
 {
 	cs.Lock();
 }

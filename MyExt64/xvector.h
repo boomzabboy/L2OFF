@@ -6,8 +6,8 @@
 template<class T>
 class xvector {
 public:
-	xvector()
-		: reserved_(0), begin_(0), end_(0), reservedEnd_(0)
+	xvector() :
+		reserved_(0), begin_(0), end_(0), reservedEnd_(0)
 	{
 	}
 

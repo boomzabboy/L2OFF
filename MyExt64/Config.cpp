@@ -6,9 +6,9 @@
 
 Config *Config::instance = 0;
 
-Config::Config(const wchar_t *filename)
-  : filename(filename),
-    server(0),
+Config::Config(const wchar_t *filename) :
+	filename(filename),
+	server(0),
 	voiceCommands(0),
 	fixes(0),
 	rate(0)
@@ -19,9 +19,9 @@ Config::Config(const wchar_t *filename)
 	rate = new Rate(this);
 }
 
-Config::Server::Server(Config *config)
-  : name(config->GetString(L"server", L"Name", L"Server")),
-    protocolVersion(config->GetInt(L"server", L"ProtocolVersion", MyExt64::ProtocolVersionGraciaEpilogueUpdate1)),
+Config::Server::Server(Config *config) :
+	name(config->GetString(L"server", L"Name", L"Server")),
+	protocolVersion(config->GetInt(L"server", L"ProtocolVersion", MyExt64::ProtocolVersionGraciaEpilogueUpdate1)),
 	debug(config->GetBool(L"server", L"Debug", false)),
 	maxIndex(config->GetInt(L"server", L"MaxIndex", 10000)),
 	deadlockTimeout(config->GetInt(L"server", L"DeadlockTimeout", 300)),
@@ -38,8 +38,8 @@ Config::Server::Server(Config *config)
 {
 }
 
-Config::VoiceCommands::VoiceCommands(Config *config)
-  : enabled(config->GetBool(L"voicecommands", L"Enabled", true)),
+Config::VoiceCommands::VoiceCommands(Config *config) :
+	enabled(config->GetBool(L"voicecommands", L"Enabled", true)),
 	expOnOff(config->GetBool(L"voicecommands", L"ExpOnOff", true)),
 	online(config->GetBool(L"voicecommands", L"Online", true)),
 	offline(config->GetBool(L"voicecommands", L"Offline", true)),
@@ -47,14 +47,15 @@ Config::VoiceCommands::VoiceCommands(Config *config)
 {
 }
 
-Config::Fixes::Fixes(Config *config)
-  : maxReplenishedVitalityPoints(config->GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50)),
-    commandChannelFriendly(config->GetBool(L"fixes", L"CommandChannelFriendly", true))
+Config::Fixes::Fixes(Config *config) :
+	maxReplenishedVitalityPoints(config->GetInt(L"fixes", L"MaxReplenishedVitalityPoints", 50)),
+	commandChannelFriendly(config->GetBool(L"fixes", L"CommandChannelFriendly", true)),
+	repeatSkillOnDistanceFailSeconds(config->GetInt(L"fixes", L"RepeatSkillOnDistanceFailSeconds", -1))
 {
 }
 
-Config::Rate::Rate(Config *config)
-  : adenaRate(config->GetDouble(L"rate", L"AdenaRate", 1.0)),
+Config::Rate::Rate(Config *config) :
+	adenaRate(config->GetDouble(L"rate", L"AdenaRate", 1.0)),
 	dropRate(config->GetDouble(L"rate", L"DropRate", 1.0)),
 	spoilRate(config->GetDouble(L"rate", L"SpoilRate", 1.0)),
 	bossDropRate(config->GetDouble(L"rate", L"BossDropRate", 1.0)),
