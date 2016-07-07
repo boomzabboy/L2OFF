@@ -114,7 +114,8 @@ public:
 	/* 0x3298 */ unsigned int olympiadStatus;
 	/* 0x329C */ unsigned char padding0x329C[0xBC];
 	/* 0x3358 */ class CUserSocket *socket;
-	/* 0x3360 */ unsigned char padding0x3360[0x278];
+	/* 0x3360 */ UINT32 tradeId;
+	/* 0x3364 */ unsigned char padding0x3360[0x274];
 	/* 0x35D8 */ bool acceptPM;
 	/* 0x35D9 */ unsigned char padding0x35D9[0x19F];
 	/* 0x3778 */ UINT32 nickColor;

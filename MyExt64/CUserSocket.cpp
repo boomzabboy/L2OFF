@@ -8,6 +8,9 @@
 #include "Config.h"
 #include "CParty.h"
 #include "CMultiPartyCommandChannel.h"
+#include "CTradeManager.h"
+#include "CTrade.h"
+#include "SmartPtr.h"
 #include <new>
 
 CUserSocket::PacketHandler *CUserSocket::exHandlers = reinterpret_cast<CUserSocket::PacketHandler*>(0x121C0D60);
@@ -426,8 +429,28 @@ bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
 
 bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 {
-	bool ret = CallPacketHandler(opcode, packet);
-	return ret;
+	switch (opcode) {
+	case 0x55: // AnswerTradeRequest
+	{
+		if (!user) {
+			throw IgnorePacket(L"AnswerTradeRequest without user");
+		}
+		int response = *reinterpret_cast<const UINT32*>(packet);
+		if (response == 1) {
+			SmartPtr<CTrade> trade = CTradeManager::Instance()->GetTrade(user->tradeId);
+			if (trade && trade->starterId == user->objectId) {
+				throw IgnorePacket(L"AnswerTradeRequest for own request");
+			}
+		} else if (response) {
+			throw IgnorePacket(L"Invalid response %d for AnswerTradeRequest", response);
+		}
+		break;
+	}
+	default:
+		break;
+	}
+
+	return CallPacketHandler(opcode, packet);
 }
 
 bool CUserSocket::InGamePacketExHandler(const BYTE *packet, BYTE opcode)

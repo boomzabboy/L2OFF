@@ -214,6 +214,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CTrade.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CTradeManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CUser.cpp"
 				>
 			</File>
@@ -328,6 +336,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CTrade.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CTradeManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CUser.h"
 				>
 			</File>
@@ -369,6 +385,10 @@
 			</File>
 			<File
 				RelativePath=".\SkillEnchantOperator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SmartPtr.h"
 				>
 			</File>
 			<File
