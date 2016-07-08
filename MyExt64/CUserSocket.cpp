@@ -12,6 +12,7 @@
 #include "CTrade.h"
 #include "SmartPtr.h"
 #include <new>
+#include <sstream>
 
 CUserSocket::PacketHandler *CUserSocket::exHandlers = reinterpret_cast<CUserSocket::PacketHandler*>(0x121C0D60);
 void *CUserSocket::offlineTradeVtable[0x16];
@@ -150,6 +151,15 @@ void CUserSocket::Init()
 		"\x3C\x00\x75\x09\x48\xC7\xC0\xEE"
 		"\xF8\x93\x00\xFF\xE0\x48\xC7\xC0"
 		"\xE5\xF8\x93\x00\xFF\xE0", 0x16);
+
+	WriteMemoryBYTES(0x933A5E,
+		"\x41\x89\xC8"      // mov r8d, ecx (const UINT32 protocolVersion)
+		"\x48\x89\xC2"      // mov rdx, rax (const BYTE *packet)
+		"\x48\x89\xF9", 9); // mov rcx, rdi (CUserSocket *self)
+	WriteInstructionCall(0x933A67, reinterpret_cast<UINT32>(ProtocolVersionPacketWrapper));
+	WriteMemoryBYTES(0x933A6C,
+		"\x31\xDB"      // xor ebx, ebx
+		"\xFF\xE0", 4); // jmp eax
 
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // DummyPacket not to disconnect user
 }
@@ -348,6 +358,61 @@ bool CUserSocket::CheckCharacterName(const wchar_t *name)
 		}
 	}
 	return true;
+}
+
+UINT64 __cdecl CUserSocket::ProtocolVersionPacketWrapper(CUserSocket *self, const BYTE *packet, const UINT32 protocolId, BYTE *buff)
+{
+	return self->ProtocolVersionPacket(packet, protocolId, buff);
+}
+
+UINT64 CUserSocket::ProtocolVersionPacket(const BYTE *packet, const UINT32 protocolId, BYTE *buff)
+{
+	if (*reinterpret_cast<const UINT16*>(packet - 7) != 267) {
+		CLog::Add(CLog::Red, L"Client %s: Invalid packet length (%d, expected %d)",
+			GetIP().c_str(), *reinterpret_cast<const UINT16*>(packet - 7), 267);
+		return 0x933B2F; // close connection
+	}
+
+	UINT32 clientCRC = 0;
+	Disassemble(packet, "bd", 0x100, buff, &clientCRC);
+
+	if (protocolId != MyExt64::GetProtocolVersion()) {
+		CLog::Add(CLog::Red, L"Client %s: Invalid client protocol (%d, expected %d)",
+			GetIP().c_str(), protocolId, MyExt64::GetProtocolVersion());
+		return 0x933A9C; // fail
+	}
+
+	if (memcmp(buff, reinterpret_cast<const void*>(0x121C1360), 0x100)) {
+		CLog::Add(CLog::Red, L"Client %s: Invalid key block", GetIP().c_str());
+		return 0x933A9C; // fail
+	}
+
+	UINT32 serverCRC = 0;
+	switch (MyExt64::GetProtocolVersion()){
+		case MyExt64::ProtocolVersionGraciaFinal: serverCRC = 0x601F5D11; break;
+		case MyExt64::ProtocolVersionGraciaFinalUpdate1: serverCRC = 0; break; // unknown by now
+		case MyExt64::ProtocolVersionGraciaEpilogue: serverCRC = 0; break; // unknown by now
+		case MyExt64::ProtocolVersionGraciaEpilogueUpdate1: serverCRC = 0xFEF423A6; break;
+		default: serverCRC = 0; break;
+	};
+
+	if (serverCRC && serverCRC != clientCRC) {
+		CLog::Add(CLog::Red, L"Client %s: Invalid CRC (%x, expected %x)",
+			GetIP().c_str(), clientCRC, serverCRC);
+		return 0x933B2F; // close connection
+	}
+
+	return 0x933B5D; // ok
+}
+
+std::wstring CUserSocket::GetIP()
+{
+	std::wstringstream ws;
+	ws << static_cast<int>(clientIP.S_un.S_un_b.s_b1)
+		<< "." << static_cast<int>(clientIP.S_un.S_un_b.s_b1)
+		<< "." << static_cast<int>(clientIP.S_un.S_un_b.s_b2)
+		<< "." << static_cast<int>(clientIP.S_un.S_un_b.s_b3);
+	return ws.str();
 }
 
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)

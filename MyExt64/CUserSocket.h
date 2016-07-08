@@ -49,6 +49,8 @@ public:
 	void OnClose();
 	void BindUser(class CUser *user);
 	bool CheckCharacterName(const wchar_t *name);
+	UINT64 ProtocolVersionPacket(const BYTE *packet, const UINT32 protocolId, BYTE *buff);
+	std::wstring GetIP();
 
 	static void __cdecl SendWrapper(CUserSocket *self, const char *format, ...);
 	static void __cdecl OfflineTradeDummyTimerExpired(CUserSocket*, int);
@@ -59,12 +61,13 @@ public:
 	static void __cdecl BindUserWrapper(CUserSocket *self, class CUser* user);
 	static void __cdecl KickOfflineWrapper(CUserSocket *self);
 	static bool __cdecl CheckCharacterNameWrapper(CUserSocket *self, const wchar_t *name);
+	static UINT64 __cdecl ProtocolVersionPacketWrapper(CUserSocket *self, const BYTE *packet, const UINT32 protocolId, BYTE *buff);
 
 	static void *offlineTradeVtable[0x16];
 
 	/* 0x0000 */ unsigned char padding0x0000[0xB0];
 	/* 0x00B0 */ UINT64 socketHandleCopy;
-	/* 0x00B8 */ unsigned char padding0x00B8[0x8];
+	/* 0x00B8 */ in_addr clientIP;
 	/* 0x00C0 */ PacketHandler *packetTable;
 	/* 0x00C8 */ unsigned char padding0x00C8[0x4];
 	/* 0x00CC */ UINT32 status;

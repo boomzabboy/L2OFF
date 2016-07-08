@@ -174,7 +174,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BuilderCmd2Handler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CCreature.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CCreature.h"
 				>
 			</File>
 			<File
@@ -182,7 +190,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CHTMLCacheManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CLog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CLog.h"
 				>
 			</File>
 			<File
@@ -190,7 +206,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CMultiPartyCommandChannel.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CNPC.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CNPC.h"
 				>
 			</File>
 			<File
@@ -198,7 +222,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Config.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CParty.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CParty.h"
 				>
 			</File>
 			<File
@@ -206,7 +238,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CriticalSection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CSharedCreatureData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CSharedCreatureData.h"
 				>
 			</File>
 			<File
@@ -214,7 +254,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CSkillEnchantDB.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CSkillEnchantInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CSkillEnchantInfo.h"
 				>
 			</File>
 			<File
@@ -222,7 +270,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CSummon.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CTrade.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CTrade.h"
 				>
 			</File>
 			<File
@@ -230,7 +286,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CTradeManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CUser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CUser.h"
 				>
 			</File>
 			<File
@@ -238,7 +302,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CUserSocket.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CYieldLock.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CYieldLock.h"
 				>
 			</File>
 			<File
@@ -246,7 +318,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataParser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DropRate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DropRate.h"
 				>
 			</File>
 			<File
@@ -254,11 +334,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EnchantItem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\EventDrop.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\EventDrop.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GraciaEpilogue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraciaEpilogue.h"
 				>
 			</File>
 			<File
@@ -282,121 +374,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ShutdownChecker.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkillEnchantOperator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Utils.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\BuilderCmd2Handler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CCreature.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CHTMLCacheManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CLog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CMultiPartyCommandChannel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CNPC.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Config.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CParty.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CriticalSection.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSharedCreatureData.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillEnchantDB.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillEnchantInfo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSummon.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CTrade.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CTradeManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CUser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CUserSocket.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CYieldLock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DataParser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DropRate.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnchantItem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EventDrop.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraciaEpilogue.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MyExt64.h"
 				>
 			</File>
 			<File
+				RelativePath=".\ShutdownChecker.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ShutdownChecker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkillEnchantOperator.cpp"
 				>
 			</File>
 			<File
@@ -405,6 +395,10 @@
 			</File>
 			<File
 				RelativePath=".\SmartPtr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utils.cpp"
 				>
 			</File>
 			<File
