@@ -144,7 +144,14 @@ void CUserSocket::Init()
 	WriteInstructionCall(0x95F6E0+0x835, reinterpret_cast<UINT32>(KickOfflineWrapper));
 	WriteInstructionCall(0x9602C8+0x968, reinterpret_cast<UINT32>(KickOfflineWrapper));
 
-	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // ONLY FOR TESTING - DummyPacket not to disconnect user
+	WriteMemoryBYTES(0x93F892, "\x48\x8B\xCE", 3); // mov rcx, rsi (CUserSocket*)
+	WriteInstructionCall(0x93F895, reinterpret_cast<UINT32>(CheckCharacterNameWrapper));
+	WriteMemoryBYTES(0x93F89A, // cmp al, 0 + apropriate jumps
+		"\x3C\x00\x75\x09\x48\xC7\xC0\xEE"
+		"\xF8\x93\x00\xFF\xE0\x48\xC7\xC0"
+		"\xE5\xF8\x93\x00\xFF\xE0", 0x16);
+
+	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // DummyPacket not to disconnect user
 }
 
 CUserSocket* __cdecl CUserSocket::Constructor(CUserSocket *self, SOCKET s)
@@ -319,6 +326,28 @@ void __cdecl CUserSocket::KickOfflineWrapper(CUserSocket *self)
 	} else {
 		reinterpret_cast<void(*)(CUserSocket*)>(0x456738)(self);
     }
+}
+
+bool CUserSocket::CheckCharacterNameWrapper(CUserSocket *self, const wchar_t *name)
+{
+	return self->CheckCharacterName(name);
+}
+
+bool CUserSocket::CheckCharacterName(const wchar_t *name)
+{
+	std::wstring name_(name);
+	if (name_.empty() || name_.size() >= 15) {
+		return false;
+	}
+	for (std::wstring::const_iterator i(name_.begin()) ; i != name_.end() ; ++i) {
+		if ((*i < 'A' || *i > 'Z')
+			&& (*i < 'a' || *i > 'z')
+			&& (*i < '0' || *i > '9')) {
+
+			return false;
+		}
+	}
+	return true;
 }
 
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)

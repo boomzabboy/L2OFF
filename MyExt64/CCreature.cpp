@@ -4,6 +4,14 @@
 #include "CYieldLock.h"
 #include "Utils.h"
 
+CCreature::CCreature()
+{
+}
+
+CCreature::~CCreature()
+{
+}
+
 int CCreature::GetAcquiredSkillLevel(int skillId)
 {
 	typedef int (__thiscall *t)(CCreature*, int);

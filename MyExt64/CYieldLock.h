@@ -4,11 +4,9 @@
 #include <windows.h>
 
 class CYieldLock {
-protected:
+public:
 	CYieldLock();
 	~CYieldLock();
-
-public:
 	void Enter(const wchar_t *filename, const unsigned int line);
 	void Leave(const wchar_t *filename, const unsigned int line);
 

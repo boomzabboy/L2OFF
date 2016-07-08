@@ -4,6 +4,10 @@
 #include <windows.h>
 
 class CCreature {
+protected:
+	CCreature();
+	~CCreature();
+
 public:
 	int GetAcquiredSkillLevel(int skillId);
 	int GetLevel();

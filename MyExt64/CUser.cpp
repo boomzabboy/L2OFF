@@ -13,6 +13,14 @@ CriticalSection CUser::counterCS;
 size_t CUser::counterTotal = 0;
 size_t CUser::counterOffline = 0;
 
+CUser::CUser()
+{
+}
+
+CUser::~CUser()
+{
+}
+
 void CUser::Init()
 {
 	WriteMemoryDWORD(0x5AEF0E, sizeof(CUser));

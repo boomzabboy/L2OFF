@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CHTMLCacheManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CLog.cpp"
 				>
 			</File>
@@ -301,6 +305,10 @@
 			</File>
 			<File
 				RelativePath=".\CCreature.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CHTMLCacheManager.h"
 				>
 			</File>
 			<File

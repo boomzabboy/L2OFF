@@ -48,6 +48,7 @@ public:
 	void Close();
 	void OnClose();
 	void BindUser(class CUser *user);
+	bool CheckCharacterName(const wchar_t *name);
 
 	static void __cdecl SendWrapper(CUserSocket *self, const char *format, ...);
 	static void __cdecl OfflineTradeDummyTimerExpired(CUserSocket*, int);
@@ -57,6 +58,7 @@ public:
 	static void __cdecl OfflineTradeDummyOnRead(CUserSocket*);
 	static void __cdecl BindUserWrapper(CUserSocket *self, class CUser* user);
 	static void __cdecl KickOfflineWrapper(CUserSocket *self);
+	static bool __cdecl CheckCharacterNameWrapper(CUserSocket *self, const wchar_t *name);
 
 	static void *offlineTradeVtable[0x16];
 

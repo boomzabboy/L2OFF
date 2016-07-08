@@ -4,9 +4,14 @@
 #include <windows.h>
 #include "CCreature.h"
 #include "CriticalSection.h"
+#include "CYieldLock.h"
 #include <string>
 
 class CUser : public CCreature {
+protected:
+	CUser();
+	~CUser();
+
 public:
 	static void Init();
 
@@ -110,7 +115,9 @@ public:
 
 	/* 0x1CB0 */ unsigned char padding0x1CB0[0x598];
 	/* 0x2248 */ void *economy;
-	/* 0x2250 */ unsigned char padding0x2250[0x1048];
+	/* 0x2250 */ unsigned char padding0x2250[0x1014];
+	/* 0x3264 */ CYieldLock htmlLock;
+	/* 0x3270 */ unsigned char padding0x3270[0x28];
 	/* 0x3298 */ unsigned int olympiadStatus;
 	/* 0x329C */ unsigned char padding0x329C[0xBC];
 	/* 0x3358 */ class CUserSocket *socket;
