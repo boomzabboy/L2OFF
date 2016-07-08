@@ -152,6 +152,14 @@ CUser::Ext::LastSkill::LastSkill() :
 {
 }
 
+CUser::Ext::Guard::Guard() :
+	lastDropItem(0),
+	lastChangeItem(0),
+	isEnchanting(false),
+	hasEnteredWorld(false)
+{
+}
+
 UINT64 CUser::GetItemCount(UINT32 itemId)
 {
 	return reinterpret_cast<UINT64(*)(void*, UINT32, int)>(0x6864B4)(

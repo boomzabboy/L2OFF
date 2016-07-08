@@ -247,6 +247,13 @@ void __cdecl CUserSocket::SendWrapper(CUserSocket *self, const char *format, ...
 		*reinterpret_cast<UINT32*>(&p[4]) = 0;
 	}
 
+	if (f == "cd" && o == 0x7C) {
+		CUser *user_ = self->user;
+		if (user_) {
+			user_->ext.guard.isEnchanting = true;
+		}
+	}
+
 	if (Config::Instance()->fixes->commandChannelFriendly) {
 		CUser *user = self->user;
 		if (user) {
@@ -430,6 +437,22 @@ bool CUserSocket::HtmlCmdObserver(CUser *user, const wchar_t *s1, const wchar_t 
 	return reinterpret_cast<bool(*)(CUserSocket*, CUser*, const wchar_t*, const wchar_t*)>(0x948444)(this, user, s1, s2);
 }
 
+void CUserSocket::SetGuard(UINT32 &i)
+{
+	CUser *user_ = user;
+	if (user_) {
+		i = GetTickCount() + 2000;
+	}
+}
+
+void CUserSocket::CheckGuard(const UINT32 &i) const
+{
+	CUser *user_ = user;
+	if (!user_ || i >= GetTickCount()) {
+		throw IgnorePacket(L"CheckGuard prevented packet");
+	}
+}
+
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
 {
 	BYTE opcodeRemapped = opcode;
@@ -539,6 +562,82 @@ bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
 bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 {
 	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
+
+	switch (opcode) {
+	case 0x19: // UseItem
+	case 0x23: // RequestBypassToServer
+	case 0x22: // RequestLinkHtml
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (user_->ext.guard.isEnchanting) throw IgnorePacket(L"User is enchanting item");
+		if (user_->IsNowTrade()) throw IgnorePacket(L"User is in trade");
+		CheckGuard(user_->ext.guard.lastDropItem);
+		break;
+	}
+	case 0x95: // RequestGiveItemToPet
+	case 0x17: // RequestDropItem
+	case 0x3B: // SendWareHouseDepositList
+	case 0xA8: // RequestPackageSend
+	case 0x9F: // RequestPrivateStoreSell
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (user_->ext.guard.isEnchanting) throw IgnorePacket(L"User is enchanting item");
+		if (user_->IsNowTrade()) throw IgnorePacket(L"User is in trade");
+		CheckGuard(user_->ext.guard.lastChangeItem);
+		SetGuard(user_->ext.guard.lastDropItem);
+		break;
+	}
+	case 0x5F: // RequestEnchantItem
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (!user_->ext.guard.isEnchanting) throw IgnorePacket(L"User is not enchanting item");
+		if (user_->IsNowTrade()) throw IgnorePacket(L"User is in trade");
+		CheckGuard(user_->ext.guard.lastDropItem);
+		SetGuard(user_->ext.guard.lastChangeItem);
+		user_->ext.guard.isEnchanting = false;
+		break;
+	}
+	case 0x56: // RequestActionUse
+	case 0x2C: // RequestGetItemFromPet
+	case 0x3C: // SendWareHouseWithDrawList
+	case 0xA7: // RequestPackageSendableItemList
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (!user_->ext.guard.isEnchanting) throw IgnorePacket(L"User is not enchanting item");
+		if (user_->IsNowTrade()) throw IgnorePacket(L"User is in trade");
+		break;
+	}
+	case 0x11: // EnterWorld
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (user_->ext.guard.hasEnteredWorld) throw IgnorePacket(L"Already entered world");
+		user_->ext.guard.hasEnteredWorld = true;
+		break;
+	}
+	case 0x3A: // Appearing
+	case 0x7D: // RequestRestartPoint
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (!user_->ext.guard.hasEnteredWorld) throw IgnorePacket(L"Not entered world");
+		break;
+	}
+	case 0x1B: // AddTradeItem
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (!user_->IsNowTrade()) throw IgnorePacket(L"User not in trade");
+		break;
+	}
+	default:
+		break;
+	}
+
 	switch (opcode) {
 	case 0x23: // RequestBypassToServer
 	{
@@ -595,8 +694,32 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 
 bool CUserSocket::InGamePacketExHandler(const BYTE *packet, BYTE opcode)
 {
-	bool ret = CallPacketExHandler(opcode, packet);
-	return ret;
+	switch (opcode) {
+	case 0x41: // RequestRefine
+	case 0x42: // RequestConfirmCancelItem
+	case 0x32: // ExEnchantSkillSafe
+	case 0x0F: // ExEnchantSkill
+	case 0x36: // RequestGotoLobby
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		if (user_->ext.guard.isEnchanting) throw IgnorePacket(L"User is enchanting item");
+		if (user_->IsNowTrade()) throw IgnorePacket(L"User is in trade");
+		CheckGuard(user_->ext.guard.lastDropItem);
+		SetGuard(user_->ext.guard.lastChangeItem);
+		break;
+	}
+	case 0x4E: // RequestExCancelEnchantItem
+	{
+		CUser *user_ = user;
+		if (!user_) throw IgnorePacket(L"Packet without user");
+		user_->ext.guard.isEnchanting = false;
+		break;
+	}
+	default:
+		break;
+	}
+	return CallPacketExHandler(opcode, packet);
 }
 
 CompileTimeOffsetCheck(CUserSocket, packetTable, 0x00C0);

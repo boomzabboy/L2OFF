@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <stdexcept>
 
+class CUser;
+
 class CUserSocket {
 public:
 	typedef bool (__cdecl *PacketHandler)(CUserSocket*, const BYTE*, BYTE);
@@ -52,6 +54,9 @@ public:
 	UINT64 ProtocolVersionPacket(const BYTE *packet, const UINT32 protocolId, BYTE *buff);
 	std::wstring GetIP();
 	bool HtmlCmdObserver(class CUser *user, const wchar_t *s1, const wchar_t *s2);
+
+	void SetGuard(UINT32 &i);
+	void CheckGuard(const UINT32 &i) const;
 
 	static void __cdecl SendWrapper(CUserSocket *self, const char *format, ...);
 	static void __cdecl OfflineTradeDummyTimerExpired(CUserSocket*, int);

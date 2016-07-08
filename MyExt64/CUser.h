@@ -70,10 +70,21 @@ public:
 			bool shift;
 		};
 
+		class Guard {
+		public:
+			Guard();
+
+			UINT32 lastDropItem;
+			UINT32 lastChangeItem;
+			bool isEnchanting;
+			bool hasEnteredWorld;
+		};
+
 		BuySell buySell;
 		bool isExpOff;
 		bool isOffline;
 		LastSkill lastSkill;
+		Guard guard;
 	};
 
 	UINT64 GetItemCount(UINT32 itemId);
