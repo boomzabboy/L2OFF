@@ -24,6 +24,8 @@ Config::Server::Server(Config *config) :
 	protocolVersion(config->GetInt(L"server", L"ProtocolVersion", MyExt64::ProtocolVersionGraciaEpilogueUpdate1)),
 	debug(config->GetBool(L"server", L"Debug", false)),
 	maxIndex(config->GetInt(L"server", L"MaxIndex", 10000)),
+	maxLevelMain(config->GetInt(L"server", L"MaxLevelMain", 85)),
+	maxLevelSubclass(config->GetInt(L"server", L"MaxLevelSubclass", 80)),
 	deadlockTimeout(config->GetInt(L"server", L"DeadlockTimeout", 300)),
 	shutdownDuration(config->GetInt(L"server", L"ShutdownDuration", 180)),
 	globalShout(config->GetBool(L"server", L"GlobalShout", false)),

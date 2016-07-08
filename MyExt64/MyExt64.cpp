@@ -29,6 +29,7 @@ bool MyExt64::pledgeInitialized = false;
 void MyExt64::Init()
 {
 	SetMaxIndex(Config::Instance()->server->maxIndex);
+	SetMaxLevel(Config::Instance()->server->maxLevelMain, Config::Instance()->server->maxLevelSubclass);
 	DeadlockTimeout(Config::Instance()->server->deadlockTimeout * 1000 * 1000);
 	DisableNoAuthExit();
 	DisableSendMail();
@@ -255,5 +256,16 @@ void __cdecl MyExt64::CDominionInitDominion()
 	reinterpret_cast<void(*)()>(0x7D831C)();
 	ScopedLock lock(pledgeInitCS);
 	pledgeInitialized = true;
+}
+
+void MyExt64::SetMaxLevel(const int main, const int subClass)
+{
+	WriteMemoryBYTE(0x562C8C, static_cast<const BYTE>(main));
+	WriteMemoryBYTE(0x562C9E, static_cast<const BYTE>(subClass));
+	WriteMemoryBYTE(0x4877C1, static_cast<const BYTE>(main - 1));
+	WriteMemoryBYTE(0x7A620E, static_cast<const BYTE>(main - 1));
+	const UINT64 *exp = reinterpret_cast<const UINT64*>(0xA77848);
+	WriteMemoryQWORD(0x52C29A, exp[subClass + 1]);
+	WriteMemoryQWORD(0x52C2A9, exp[subClass + 1] - 1);
 }
 

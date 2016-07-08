@@ -16,6 +16,8 @@ public:
 		int protocolVersion;
 		bool debug;
 		size_t maxIndex;
+		size_t maxLevelMain;
+		size_t maxLevelSubclass;
 		time_t deadlockTimeout;
 		time_t shutdownDuration;
 		bool globalShout;

@@ -39,6 +39,7 @@ protected:
 	static void LoadHook(void *x);
 	static void HookOnLoadEnd();
 	static void FixLoading();
+	static void SetMaxLevel(const int main, const int subClass);
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 
