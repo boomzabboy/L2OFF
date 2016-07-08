@@ -161,6 +161,8 @@ void CUserSocket::Init()
 		"\x31\xDB"      // xor ebx, ebx
 		"\xFF\xE0", 4); // jmp eax
 
+	WriteMemoryQWORD(0xE5FC78, reinterpret_cast<UINT64>(HtmlCmdObserverWrapper));
+
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // DummyPacket not to disconnect user
 }
 
@@ -415,6 +417,19 @@ std::wstring CUserSocket::GetIP()
 	return ws.str();
 }
 
+bool __cdecl CUserSocket::HtmlCmdObserverWrapper(CUserSocket *self, CUser *user, const wchar_t *s1, const wchar_t *s2)
+{
+	return self->HtmlCmdObserver(user, s1, s2);
+}
+
+bool CUserSocket::HtmlCmdObserver(CUser *user, const wchar_t *s1, const wchar_t *s2)
+{
+	if (user->IsNowTrade()) {
+		return false;
+	}
+	return reinterpret_cast<bool(*)(CUserSocket*, CUser*, const wchar_t*, const wchar_t*)>(0x948444)(this, user, s1, s2);
+}
+
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
 {
 	BYTE opcodeRemapped = opcode;
@@ -523,7 +538,38 @@ bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
 
 bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 {
+	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
 	switch (opcode) {
+	case 0x23: // RequestBypassToServer
+	{
+		if (!user) {
+			throw IgnorePacket(L"RequestBypassToServer without user");
+		}
+		if (user->IsNowTrade()) {
+			SendSystemMessage(Config::Instance()->server->name.c_str(), L"You can't do this while trading");
+			throw IgnorePacket(L"RequestBypassToServer while trading");
+		}
+		std::string escaped;
+		escaped.push_back(0);
+		escaped.push_back(0);
+		escaped.push_back(opcode);
+		bool escapeNeeded = false;
+		for (size_t i(0) ; i < packetLen - 3; i += 2) {
+			if (packet[i] == '\'' && !packet[i+1]) {
+				escaped.push_back('\\');
+				escaped.push_back('\x00');
+				escapeNeeded = true;
+			}
+			escaped.push_back(packet[i]);
+			escaped.push_back(packet[i+1]);
+		}
+		if (escapeNeeded) {
+			CLog::Add(CLog::Red, L"Had to escape bypass: %s -> %s", packet, escaped.c_str() + 3);
+			*reinterpret_cast<UINT16*>(&escaped[0]) = escaped.size() + 3;
+			return CallPacketHandler(opcode, reinterpret_cast<const BYTE*>(escaped.c_str() + 3));
+		}
+		break;
+	}
 	case 0x55: // AnswerTradeRequest
 	{
 		if (!user) {

@@ -178,6 +178,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CAttackAction.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CAttackAction.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CCreature.cpp"
 				>
 			</File>
@@ -263,6 +271,14 @@
 			</File>
 			<File
 				RelativePath=".\CSkillEnchantInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CSkillInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CSkillInfo.h"
 				>
 			</File>
 			<File

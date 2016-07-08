@@ -96,6 +96,8 @@ public:
 	bool IsInBlockListOriginal(int id);
 	bool IsWaitingForOlympiad() const;
 	bool IsInOlympiad() const;
+	bool DeleteItemInInventoryBeforeCommit(const UINT32 itemId, const UINT64 itemCount);
+	bool IsNowTrade() const;
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -108,6 +110,7 @@ public:
 	static bool __cdecl OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool ctrl, bool shift);
 	static void __cdecl FixPendingSkill(CUser *user);
 	static bool __cdecl IsInBlockListWrapper(CUser *self, int id);
+	static bool __cdecl DeleteItemInInventoryBeforeCommitWrapper(CUser *self, const UINT32 itemId, const UINT64 itemCount);
 
 	static CriticalSection counterCS;
 	static size_t counterTotal;

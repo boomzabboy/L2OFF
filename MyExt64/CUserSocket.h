@@ -51,6 +51,7 @@ public:
 	bool CheckCharacterName(const wchar_t *name);
 	UINT64 ProtocolVersionPacket(const BYTE *packet, const UINT32 protocolId, BYTE *buff);
 	std::wstring GetIP();
+	bool HtmlCmdObserver(class CUser *user, const wchar_t *s1, const wchar_t *s2);
 
 	static void __cdecl SendWrapper(CUserSocket *self, const char *format, ...);
 	static void __cdecl OfflineTradeDummyTimerExpired(CUserSocket*, int);
@@ -62,6 +63,7 @@ public:
 	static void __cdecl KickOfflineWrapper(CUserSocket *self);
 	static bool __cdecl CheckCharacterNameWrapper(CUserSocket *self, const wchar_t *name);
 	static UINT64 __cdecl ProtocolVersionPacketWrapper(CUserSocket *self, const BYTE *packet, const UINT32 protocolId, BYTE *buff);
+	static bool __cdecl HtmlCmdObserverWrapper(CUserSocket *self, class CUser *user, const wchar_t *s1, const wchar_t *s2);
 
 	static void *offlineTradeVtable[0x16];
 

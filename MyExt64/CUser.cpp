@@ -61,6 +61,8 @@ void CUser::Init()
 	WriteInstructionCall(0x711CAB, reinterpret_cast<UINT32>(FixPendingSkill), 0x711CB9);
 
 	WriteInstructionCall(0x8BD015, reinterpret_cast<UINT32>(IsInBlockListWrapper));
+
+	WriteMemoryQWORD(0xC543F8, reinterpret_cast<UINT64>(DeleteItemInInventoryBeforeCommitWrapper));
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -509,6 +511,24 @@ bool CUser::IsWaitingForOlympiad() const
 bool CUser::IsInOlympiad() const
 {
 	return olympiadStatus == 1 || olympiadStatus == 2;
+}
+
+bool __cdecl CUser::DeleteItemInInventoryBeforeCommitWrapper(CUser *self, const UINT32 itemId, const UINT64 itemCount)
+{
+	return self->DeleteItemInInventoryBeforeCommit(itemId, itemCount);
+}
+
+bool CUser::DeleteItemInInventoryBeforeCommit(const UINT32 itemId, const UINT64 itemCount)
+{
+	if (IsNowTrade()) {
+		return false;
+	}
+	return reinterpret_cast<bool(*)(CUser*, UINT32, UINT64)>(0x8E8D54)(this, itemId, itemCount);
+}
+
+bool CUser::IsNowTrade() const
+{
+	return reinterpret_cast<bool(*)(const CUser*)>(0x8A4E8C)(this);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

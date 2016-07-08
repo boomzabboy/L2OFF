@@ -15,6 +15,8 @@
 #include "CSummon.h"
 #include "BuilderCmd2Handler.h"
 #include "CHTMLCacheManager.h"
+#include "CSkillInfo.h"
+#include "CAttackAction.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -56,6 +58,8 @@ void MyExt64::Init()
 	CSummon::Init();
 	BuilderCmd2Handler::Init();
 	CHTMLCacheManager::Init();
+	CSkillInfo::Init();
+	CAttackAction::Init();
 }
 
 void MyExt64::Load()
