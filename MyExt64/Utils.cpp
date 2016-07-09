@@ -4,6 +4,8 @@
 
 HANDLE server = NULL;
 
+extern BOOL(*WriteProcessMemoryCopy)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*);
+
 void WriteMemoryBYTES(unsigned int address, void *bytes, unsigned int len)
 {
 	DWORD flOldProtect;
@@ -12,7 +14,7 @@ void WriteMemoryBYTES(unsigned int address, void *bytes, unsigned int len)
 	
 	if ((handle = server) && len) {
 		VirtualProtectEx(handle, (LPVOID)address, len, PAGE_WRITECOPY, &flOldProtect);
-		WriteProcessMemory(handle, (LPVOID)address, bytes, len, &uNumberOfBytesWritten);
+		WriteProcessMemoryCopy(handle, (LPVOID)address, bytes, len, &uNumberOfBytesWritten);
 		FlushInstructionCache(handle, (LPVOID)address, len);
 		VirtualProtectEx(handle, (LPVOID)address, len, flOldProtect, &flOldProtect);
 	}
@@ -93,12 +95,12 @@ void NOPMemory(unsigned int address, unsigned int len)
 	if ((handle = server) && len) {
 		VirtualProtectEx(handle, (LPVOID)address, len, PAGE_WRITECOPY, &flOldProtect);
 		while (dword_count) {
-			WriteProcessMemory(handle, (LPVOID)address, &Dword, sizeof(unsigned int), &uNumberOfBytesWritten);
+			WriteProcessMemoryCopy(handle, (LPVOID)address, &Dword, sizeof(unsigned int), &uNumberOfBytesWritten);
 			address += sizeof(unsigned int);
 			dword_count--;
 		}
 		while(byte_count) {
-			WriteProcessMemory(handle, (LPVOID)address, &Byte, sizeof(unsigned char), &uNumberOfBytesWritten);
+			WriteProcessMemoryCopy(handle, (LPVOID)address, &Byte, sizeof(unsigned char), &uNumberOfBytesWritten);
 			address += sizeof(unsigned char);
 			byte_count--;
 		}
@@ -120,12 +122,12 @@ void NULLMemory(unsigned int address, unsigned int len)
 	if((handle = server) && len) {
 		VirtualProtectEx(handle, (LPVOID)address, len, PAGE_WRITECOPY, &flOldProtect);
 		while(dword_count) {
-			WriteProcessMemory(handle, (LPVOID)address, &Dword, sizeof(unsigned int), &uNumberOfBytesWritten);
+			WriteProcessMemoryCopy(handle, (LPVOID)address, &Dword, sizeof(unsigned int), &uNumberOfBytesWritten);
 			address += sizeof(unsigned int);
 			dword_count--;
 		}
 		while(byte_count) {
-			WriteProcessMemory(handle, (LPVOID)address, &Byte, sizeof(unsigned char), &uNumberOfBytesWritten);
+			WriteProcessMemoryCopy(handle, (LPVOID)address, &Byte, sizeof(unsigned char), &uNumberOfBytesWritten);
 			address += sizeof(unsigned char);
 			byte_count--;
 		}
