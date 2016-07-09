@@ -19,6 +19,7 @@
 #include "CAttackAction.h"
 #include "COlympiadDefaultSetting.h"
 #include "OlympiadFixes.h"
+#include "AugmentationStatFix.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -65,6 +66,7 @@ void MyExt64::Init()
 	CAttackAction::Init();
 	COlympiadDefaultSetting::Init();
 	OlympiadFixes::Init();
+	AugmentationStatFix::Init();
 }
 
 void MyExt64::Load()
