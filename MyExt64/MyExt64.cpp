@@ -17,6 +17,7 @@
 #include "CHTMLCacheManager.h"
 #include "CSkillInfo.h"
 #include "CAttackAction.h"
+#include "COlympiadDefaultSetting.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -61,6 +62,7 @@ void MyExt64::Init()
 	CHTMLCacheManager::Init();
 	CSkillInfo::Init();
 	CAttackAction::Init();
+	COlympiadDefaultSetting::Init();
 }
 
 void MyExt64::Load()

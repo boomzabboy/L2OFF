@@ -226,6 +226,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\COlympiadDefaultSetting.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\COlympiadDefaultSetting.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Config.cpp"
 				>
 			</File>
