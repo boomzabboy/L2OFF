@@ -18,6 +18,7 @@
 #include "CSkillInfo.h"
 #include "CAttackAction.h"
 #include "COlympiadDefaultSetting.h"
+#include "OlympiadFixes.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -63,6 +64,7 @@ void MyExt64::Init()
 	CSkillInfo::Init();
 	CAttackAction::Init();
 	COlympiadDefaultSetting::Init();
+	OlympiadFixes::Init();
 }
 
 void MyExt64::Load()

@@ -402,6 +402,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\OlympiadFixes.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OlympiadFixes.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ShutdownChecker.cpp"
 				>
 			</File>
