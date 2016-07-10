@@ -226,6 +226,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CMultiSellList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CMultiSellList.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CNPC.cpp"
 				>
 			</File>

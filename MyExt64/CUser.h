@@ -78,6 +78,9 @@ public:
 			UINT32 lastChangeItem;
 			bool isEnchanting;
 			bool hasEnteredWorld;
+			CriticalSection lastMultisellLock;
+			UINT32 lastMultisellNpcId;
+			UINT32 lastMultisellListId;
 		};
 
 		BuySell buySell;
@@ -109,6 +112,7 @@ public:
 	bool IsInOlympiad() const;
 	bool DeleteItemInInventoryBeforeCommit(const UINT32 itemId, const UINT64 itemCount);
 	bool IsNowTrade() const;
+	bool MultiSellChoose(int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -122,6 +126,7 @@ public:
 	static void __cdecl FixPendingSkill(CUser *user);
 	static bool __cdecl IsInBlockListWrapper(CUser *self, int id);
 	static bool __cdecl DeleteItemInInventoryBeforeCommitWrapper(CUser *self, const UINT32 itemId, const UINT64 itemCount);
+	static bool __cdecl MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes);
 
 	static CriticalSection counterCS;
 	static size_t counterTotal;

@@ -20,6 +20,7 @@
 #include "COlympiadDefaultSetting.h"
 #include "OlympiadFixes.h"
 #include "AugmentationStatFix.h"
+#include "CMultiSellList.h"
 #include "CLog.h"
 #include <stdio.h>
 
@@ -69,6 +70,7 @@ void MyExt64::Init()
 	COlympiadDefaultSetting::Init();
 	OlympiadFixes::Init();
 	AugmentationStatFix::Init();
+	CMultiSellList::Init();
 }
 
 void MyExt64::Load()

@@ -63,6 +63,8 @@ void CUser::Init()
 	WriteInstructionCall(0x8BD015, reinterpret_cast<UINT32>(IsInBlockListWrapper));
 
 	WriteMemoryQWORD(0xC543F8, reinterpret_cast<UINT64>(DeleteItemInInventoryBeforeCommitWrapper));
+
+	WriteInstructionCall(0x928850, reinterpret_cast<UINT32>(MultiSellChooseWrapper));
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -537,6 +539,28 @@ bool CUser::DeleteItemInInventoryBeforeCommit(const UINT32 itemId, const UINT64 
 bool CUser::IsNowTrade() const
 {
 	return reinterpret_cast<bool(*)(const CUser*)>(0x8A4E8C)(this);
+}
+
+bool __cdecl CUser::MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes)
+{
+	return self->MultiSellChoose(listId, entryId, quantity, optionKey, attributes);
+}
+
+bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes)
+{
+	if (!this) {
+		return false;
+	}
+	CCreature *target = GetTarget();
+	ScopedLock lock(ext.guard.lastMultisellLock);
+	if (ext.guard.lastMultisellListId != listId) {
+		return false;
+	}
+	if (target->sd->npcClassId != ext.guard.lastMultisellNpcId) {
+		return false;
+	}
+	return reinterpret_cast<bool(*)(CUser*, int, int, UINT64, void*, void*)>(
+		0x8E9640)(this, listId, entryId, quantity, optionKey, attributes);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
