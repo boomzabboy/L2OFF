@@ -48,6 +48,7 @@ void MyExt64::Init()
 	HookOnLoadEnd();
 	FixLoading();
 	InitClanRestrictions();
+	ApplyMiscMXCFixes();
 	CUser::Init();
 	CUserSocket::Init();
 	SkillEnchantOperator::Init();
@@ -296,5 +297,10 @@ void MyExt64::InitClanRestrictions()
 	WriteMemoryDWORD(0xE5AC20, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceRechallengeDespiteRejectionPenaltyTimeout));
 	WriteMemoryDWORD(0xE5AC24, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->castleAnnounceTime));
 	WriteMemoryDWORD(0xE5AC28, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->castleStandbyTime));
+}
+
+void MyExt64::ApplyMiscMXCFixes()
+{
+	WriteMemoryBYTE(0x55CDE9, 0x77); // fix condition x <= 0 -> x >= 0 in ressurection
 }
 
