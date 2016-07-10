@@ -6,7 +6,7 @@
 #include "Config.h"
 #include "Utils.h"
 
-static unsigned char WriteProcessMemoryCopyBuffer[0x38+5]; //1A6];
+static unsigned char WriteProcessMemoryCopyBuffer[0x38+5];
 BOOL(*WriteProcessMemoryCopy)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*) = 0;
 
 BOOL WriteProcessMemoryFake(HANDLE hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *pNumberOfBytesWritten)
