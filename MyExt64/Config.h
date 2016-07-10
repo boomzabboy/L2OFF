@@ -63,6 +63,29 @@ public:
 		bool dump;
 	} *rate;
 
+	struct ClanRestrictions {
+		ClanRestrictions(Config *config);
+
+		UINT32 pledgeWarTimeout;
+		UINT32 pledgeOustPenaltyTimeout;
+		UINT32 pledgeWithdrawPenaltyTimeout;
+		UINT32 pledgeOustedPenaltyTimeout;
+		UINT32 pledgeRechallengePenaltyTimeout;
+		UINT32 pledgeRechallengeDespiteRejectionPenaltyTimeout;
+		UINT32 pledgeDismissTimeout;
+		UINT32 pledgeDismissPenaltyTimeout;
+		UINT32 pledgeDismissByNPC;
+		UINT32 allianceCanAcceptNewMemberPledge;
+		UINT32 allianceOustPenaltyTimeout;
+		UINT32 allianceWithdrawPenaltyTimeout;
+		UINT32 allianceOustedPenaltyTimeout;
+		UINT32 allianceDismissPenaltyTimeout;
+		UINT32 allianceRechallengePenaltyTimeout;
+		UINT32 allianceRechallengeDespiteRejectionPenaltyTimeout;
+		UINT32 castleAnnounceTime;
+		UINT32 castleStandbyTime;
+	} *clanRestrictions;
+
 protected:
 	Config(const wchar_t *filename);
 	std::wstring GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue);

@@ -40,6 +40,7 @@ protected:
 	static void HookOnLoadEnd();
 	static void FixLoading();
 	static void SetMaxLevel(const int main, const int subClass);
+	static void InitClanRestrictions();
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 
