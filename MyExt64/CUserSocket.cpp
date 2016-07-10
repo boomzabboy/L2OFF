@@ -163,7 +163,7 @@ void CUserSocket::Init()
 
 	WriteMemoryQWORD(0xE5FC78, reinterpret_cast<UINT64>(HtmlCmdObserverWrapper));
 
-	WriteMemoryQWORD(0xA2D92F, reinterpret_cast<UINT64>(TradeAddItemsPacketWrapper));
+	WriteAddress(0xA2D92F, reinterpret_cast<UINT32>(TradeAddItemsPacketWrapper));
 
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // DummyPacket not to disconnect user
 }
