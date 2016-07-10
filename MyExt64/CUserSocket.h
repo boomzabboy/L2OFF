@@ -69,6 +69,7 @@ public:
 	static bool __cdecl CheckCharacterNameWrapper(CUserSocket *self, const wchar_t *name);
 	static UINT64 __cdecl ProtocolVersionPacketWrapper(CUserSocket *self, const BYTE *packet, const UINT32 protocolId, BYTE *buff);
 	static bool __cdecl HtmlCmdObserverWrapper(CUserSocket *self, class CUser *user, const wchar_t *s1, const wchar_t *s2);
+	static bool __cdecl TradeAddItemsPacketWrapper(CUserSocket *socket, const BYTE *packet);
 
 	static void *offlineTradeVtable[0x16];
 

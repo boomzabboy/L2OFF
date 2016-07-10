@@ -41,6 +41,7 @@ protected:
 	static void FixLoading();
 	static void SetMaxLevel(const int main, const int subClass);
 	static void InitClanRestrictions();
+	static void ApplyMiscMXCFixes();
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 

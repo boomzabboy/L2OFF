@@ -163,6 +163,9 @@ void CUserSocket::Init()
 
 	WriteMemoryQWORD(0xE5FC78, reinterpret_cast<UINT64>(HtmlCmdObserverWrapper));
 
+	WriteInstructionCall(0xA2D92F, reinterpret_cast<UINT32>(TradeAddItemsPacketWrapper));
+
+
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // DummyPacket not to disconnect user
 }
 
@@ -435,6 +438,18 @@ bool CUserSocket::HtmlCmdObserver(CUser *user, const wchar_t *s1, const wchar_t 
 		return false;
 	}
 	return reinterpret_cast<bool(*)(CUserSocket*, CUser*, const wchar_t*, const wchar_t*)>(0x948444)(this, user, s1, s2);
+}
+
+bool __cdecl CUserSocket::TradeAddItemsPacketWrapper(CUserSocket *socket, const BYTE *packet)
+{
+	CUser *user = socket->user;
+	if (!user) {
+		return false;
+	}
+	if (!user->IsNowTrade()) {
+		return false;
+	}
+	return reinterpret_cast<bool(*)(CUserSocket*, const BYTE*)>(0x91C998)(socket, packet);
 }
 
 void CUserSocket::SetGuard(UINT32 &i)
