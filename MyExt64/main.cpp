@@ -12,11 +12,27 @@ BOOL(*WriteProcessMemoryCopy)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*) = 0;
 BOOL WriteProcessMemoryFake(HANDLE hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *pNumberOfBytesWritten)
 {
 	std::ofstream ofs("writeprocessmemory.txt", std::ios::app);
-	ofs << hProcess << " " << lpBaseAddress;
+	ofs << lpBaseAddress;
+	for (size_t i(0) ; i < nSize ; ++i) {
+		char buffer[3];
+		sprintf_s(buffer, "%02X", static_cast<const unsigned char*>(lpBaseAddress)[i]);
+		ofs << " " << buffer;
+	}
+	ofs << " =>";
 	for (size_t i(0) ; i < nSize ; ++i) {
 		char buffer[3];
 		sprintf_s(buffer, "%02X", static_cast<const unsigned char*>(lpBuffer)[i]);
 		ofs << " " << buffer;
+	}
+	if (nSize == 4) {
+		UINT32 a1 = *static_cast<const UINT32*>(lpBaseAddress);
+		UINT32 a2 = *static_cast<const UINT32*>(lpBuffer);
+		ofs << " - maybe address? "
+			<< reinterpret_cast<void*>(
+				reinterpret_cast<UINT32>(lpBaseAddress) + 4 + a1)
+			<< " => "
+			<< reinterpret_cast<void*>(
+				reinterpret_cast<UINT32>(lpBaseAddress) + 4 + a2);
 	}
 	ofs << std::endl;
 	ofs.close();
