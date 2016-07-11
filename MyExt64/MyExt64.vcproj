@@ -15,7 +15,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="..\Server"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -87,7 +87,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="..\Server"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -97,8 +97,6 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="xcopy /Y $(IntDir)\MyExt64.dll ..\server\&#x0D;&#x0A;xcopy /Y $(IntDir)\MyExt64.pdb ..\server\&#x0D;&#x0A;"
-				Outputs="..\server\MyExt64.dll;..\server\MyExt64.pdb"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -133,7 +131,7 @@
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				TargetMachine="17"
-				FixedBaseAddress="0"
+				FixedBaseAddress="1"
 			/>
 			<Tool
 				Name="VCALinkTool"

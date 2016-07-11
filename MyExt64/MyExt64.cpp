@@ -29,7 +29,6 @@ bool MyExt64::debug = false;
 CriticalSection MyExt64::pledgeInitCS;
 bool MyExt64::pledgeInitialized = false;
 
-
 void MyExt64::Init()
 {
 	SetMaxIndex(Config::Instance()->server->maxIndex);
@@ -37,7 +36,6 @@ void MyExt64::Init()
 	DeadlockTimeout(Config::Instance()->server->deadlockTimeout * 1000 * 1000);
 	DisableNoAuthExit();
 	DisableSendMail();
-	HideWarnings();
 	SetShutdownSeconds(Config::Instance()->server->shutdownDuration);
 	EnableLoadNpcSettingsAnytime();
 	AllowAirshipSkills();
@@ -72,6 +70,7 @@ void MyExt64::Init()
 	OlympiadFixes::Init();
 	AugmentationStatFix::Init();
 	CMultiSellList::Init();
+	HideWarnings(); // call this at last!
 }
 
 void MyExt64::Load()

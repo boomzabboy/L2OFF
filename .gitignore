@@ -1,4 +1,7 @@
 MyExt64/MyExt64.ncb
 MyExt64/MyExt64.suo
 MyExt64/MyExt64.vcproj.*.user
+MyExt64/MyExt64Loader.vcproj.*.user
 MyExt64/x64
+server/*.lib
+server/*.exp
