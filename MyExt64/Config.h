@@ -21,6 +21,7 @@ public:
 		time_t deadlockTimeout;
 		time_t shutdownDuration;
 		bool globalShout;
+		bool globalTrade;
 		bool allowLoadNpcSettingsAnyTime;
 		bool mountKeepBuffs;
 		bool dismountKeepBuffs;
@@ -85,6 +86,13 @@ public:
 		UINT32 castleAnnounceTime;
 		UINT32 castleStandbyTime;
 	} *clanRestrictions;
+
+	struct BuffSystem {
+		BuffSystem(Config *config);
+
+		int maxSlots;
+		int maxDivineInspirationBonusSlots;
+	} *buffSystem;
 
 protected:
 	Config(const wchar_t *filename);

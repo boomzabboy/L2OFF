@@ -50,6 +50,7 @@ void MyExt64::Init()
 	FixLoading();
 	InitClanRestrictions();
 	ApplyMiscMXCFixes();
+	SetBuffSlots();
 	CUser::Init();
 	CUserSocket::Init();
 	SkillEnchantOperator::Init();
@@ -179,6 +180,10 @@ void MyExt64::EnableGlobalShout()
 		WriteMemoryBYTES(0x8abc3a, "\x31\xDB\x89\x5C\x24\x3C\x90", 7);
 		WriteMemoryBYTES(0x8abc4a, "\x8D\x74\x24\xA0\x31\xFF", 6);
 	}
+	if (Config::Instance()->server->globalTrade) {
+		WriteMemoryBYTES(0x8AC31E, "\x31\xDB\x89\x5C\x24\x68\x90", 7);
+		WriteMemoryBYTES(0x8AC32C, "\x44\x8D\x77\xA0\x45\x31\xE4", 7);
+	}
 }
 
 void MyExt64::AllowAirshipSkills()
@@ -304,5 +309,11 @@ void MyExt64::InitClanRestrictions()
 void MyExt64::ApplyMiscMXCFixes()
 {
 	WriteMemoryBYTE(0x55CDE9, 0x77); // fix condition x <= 0 -> x >= 0 in ressurection
+}
+
+void MyExt64::SetBuffSlots()
+{
+	WriteMemoryBYTE(0x56AFDA, Config::Instance()->buffSystem->maxSlots);
+	WriteMemoryDWORD(0x840442, Config::Instance()->buffSystem->maxDivineInspirationBonusSlots);
 }
 

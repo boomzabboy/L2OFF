@@ -42,6 +42,7 @@ protected:
 	static void SetMaxLevel(const int main, const int subClass);
 	static void InitClanRestrictions();
 	static void ApplyMiscMXCFixes();
+	static void SetBuffSlots();
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 

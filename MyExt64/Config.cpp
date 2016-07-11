@@ -12,13 +12,15 @@ Config::Config(const wchar_t *filename) :
 	voiceCommands(0),
 	fixes(0),
 	rate(0),
-	clanRestrictions(0)
+	clanRestrictions(0),
+	buffSystem(0)
 {
 	server = new Server(this);
 	voiceCommands = new VoiceCommands(this);
 	fixes = new Fixes(this);
 	rate = new Rate(this);
 	clanRestrictions = new ClanRestrictions(this);
+	buffSystem = new BuffSystem(this);
 }
 
 Config::Server::Server(Config *config) :
@@ -31,6 +33,7 @@ Config::Server::Server(Config *config) :
 	deadlockTimeout(config->GetInt(L"server", L"DeadlockTimeout", 300)),
 	shutdownDuration(config->GetInt(L"server", L"ShutdownDuration", 180)),
 	globalShout(config->GetBool(L"server", L"GlobalShout", false)),
+	globalTrade(config->GetBool(L"server", L"GlobalTrade", false)),
 	allowLoadNpcSettingsAnyTime(config->GetBool(L"server", L"AllowLoadNpcSettingsAnyTime", true)),
 	mountKeepBuffs(config->GetBool(L"server", L"MountKeepBuffs", true)),
 	dismountKeepBuffs(config->GetBool(L"server", L"DismountKeepBuffs", true)),
@@ -90,6 +93,12 @@ Config::ClanRestrictions::ClanRestrictions(Config *config) :
 	allianceRechallengeDespiteRejectionPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceRechallengeDespiteRejectionPenaltyTimeout", 18000)),
 	castleAnnounceTime(config->GetInt(L"clan-restrictions", L"CastleAnnounceTime", 3600)),
 	castleStandbyTime(config->GetInt(L"clan-restrictions", L"CastleStandbyTime", 3600))
+{
+}
+
+Config::BuffSystem::BuffSystem(Config *config) :
+	maxSlots(config->GetInt(L"buff-system", L"MaxSlots", 20)),
+	maxDivineInspirationBonusSlots(config->GetInt(L"buff-system", L"MaxDivineInspirationBonusSlots", 4))
 {
 }
 
