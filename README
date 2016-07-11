@@ -1,19 +1,31 @@
-# MyExt64 #
+= MyExt64 =
 
-## What is MyExt64 ##
-MyExt64 is new opensource extender for l2off Gracia Final server (l2_off_gracia_final).
-It uses some knowledge from OSIE extender, MXC extender and maybe other extenders.
+== What is MyExt64 ==
+MyExt64 is new opensource extender for l2off Gracia Final server
+(l2_off_gracia_final). It uses some knowledge from OSIE extender,
+MXC extender and maybe other extenders.
 
-## How to use it ##
-If you're not familiar with l2off, it will probably require learning some stuff (MXC forum is a good start).
-To just use the last build, copy following files from server folder in this repository to your server folder:
+== How to use it ==
+If you're not familiar with l2off, it will probably require learning
+some stuff (MXC forum is a good start).
+
+To just use the last build, copy following files from server folder
+in this repository to your server folder:
+
 * MyExt64.dll - main extender file
 * MyExt64.ini - extender configuration
 * MyExt64Loader.exe - extender loader
+
 and run the server via MyExt64Loader.exe
 
-If you're more experienced with messing around PE files, you can add MyExt64.dll to import table of L2Server.exe and add call to DllMain.
+If you're more experienced with messing around PE files, you can add MyExt64.dll
+to import table of L2Server.exe and add call to DllMain.
 
-## How to compile it ##
-You should get Visual Studio 2005. Maybe it would be possible to compile it on some newer Visual Studio, but you'll have to define your own templates for std::vector and std::map (and possibly more containers) to match memory layout of their VS2005 versions.
-MyExt64 has no external dependencies except standard libraries for Windows development.
+== How to compile it ==
+You should get Visual Studio 2005. Maybe it would be possible to compile it
+on some newer Visual Studio, but you'll have to define your own templates
+for std::vector and std::map (and possibly more containers) to match memory
+layout of their VS2005 versions.
+
+MyExt64 has no external dependencies and requires only standard libraries
+for Windows development.
