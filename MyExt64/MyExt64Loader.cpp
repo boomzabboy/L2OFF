@@ -7,8 +7,8 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int showC
 	STARTUPINFO si = {0};
 	si.cb = sizeof(si);
 	PROCESS_INFORMATION pi;
-	if (!CreateProcess(L"L2Server_orig.exe", 0, 0, 0, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi)) {
-		MessageBox(0, L"Can't start L2Server_orig.exe", L"Error", 0);
+	if (!CreateProcess(L"L2Server.exe", 0, 0, 0, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi)) {
+		MessageBox(0, L"Can't start L2Server.exe", L"Error", 0);
 		return 1;
 	}
 	SIZE_T bytes;
@@ -18,7 +18,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int showC
 	HANDLE hThread = CreateRemoteThread(pi.hProcess, 0, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(LoadLibrary), buffer, 0, 0);
 	if (!hThread) {
 		TerminateProcess(pi.hProcess, 0);
-		MessageBox(0, L"Can't inject MyExt64.dll into L2Server_orig.exe", L"Error", 0);
+		MessageBox(0, L"Can't inject MyExt64.dll into L2Server.exe", L"Error", 0);
 		return 1;
 	}
 	DWORD status = 0;
@@ -27,7 +27,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int showC
 	ReadProcessMemory(pi.hProcess, reinterpret_cast<void*>(0x5EA1E2), buffer, 5, &bytes);
 	if (memcmp(buffer, "\x66\x31\xF6\x90\x90", 5)) {
 		TerminateProcess(pi.hProcess, 0);
-		MessageBox(0, L"Failed to load MyExt64.dll into L2Server_orig.exe", L"Error", 0);
+		MessageBox(0, L"Failed to load MyExt64.dll into L2Server.exe", L"Error", 0);
 		return 1;
 	}
 	ResumeThread(pi.hThread);
