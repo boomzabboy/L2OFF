@@ -313,6 +313,6 @@ void MyExt64::ApplyMiscMXCFixes()
 void MyExt64::SetBuffSlots()
 {
 	WriteMemoryBYTE(0x56AFDA, Config::Instance()->buffSystem->maxSlots);
-	WriteMemoryDWORD(0x840442, Config::Instance()->buffSystem->maxDivineInspirationBonusSlots);
+	WriteMemoryDWORD(0x840443, Config::Instance()->buffSystem->maxDivineInspirationBonusSlots);
 }
 
