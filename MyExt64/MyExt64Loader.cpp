@@ -37,33 +37,17 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int showC
 			MessageBox(0, ss.str().c_str(), L"Error", 0);
 			return 1;
 		}
-		if (status != STILL_ACTIVE) {
+		if (status == STILL_ACTIVE) {
+			continue;
+		} else if (status) {
 			break;
+		} else {
+			TerminateProcess(hProcess, 0);
+			MessageBox(0, L"L2Server.exe wasn't able to load MyExt64.dll", L"Error", 0);
+			return 1;
 		}
 	}
 	ResumeThread(pi.hThread);
-	DWORD oldProtect;
-	if (!VirtualProtectEx(hProcess, reinterpret_cast<void*>(0x5EA1E2), 5, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-		TerminateProcess(hProcess, 0);
-		wchar_t b[1024];
-		unsigned char *x = reinterpret_cast<unsigned char*>(buffer);
-		wsprintf(b, L"VirtualProtectEx failed: %x", GetLastError());
-		MessageBox(0, b, L"Error", 0);
-		return 1;
-	}
-	if (!ReadProcessMemory(hProcess, reinterpret_cast<void*>(0x5EA1E2), buffer, 5, &bytes)) {
-		TerminateProcess(hProcess, 0);
-		wchar_t b[1024];
-		unsigned char *x = reinterpret_cast<unsigned char*>(buffer);
-		wsprintf(b, L"ReadProcessMemory failed: %x", GetLastError());
-		MessageBox(0, b, L"Error", 0);
-		return 1;
-	}
-	if (memcmp(buffer, "\x66\x31\xF6\x90\x90", 5)) {
-		TerminateProcess(hProcess, 0);
-		MessageBox(0, L"Failed to load MyExt64.dll into L2Server.exe", L"Error", 0);
-		return 1;
-	}
 	for (;;) {
 		WaitForSingleObject(hProcess, INFINITE);
 		GetExitCodeProcess(hProcess, &status);
