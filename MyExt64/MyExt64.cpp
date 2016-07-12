@@ -49,6 +49,7 @@ void MyExt64::Init()
 	InitClanRestrictions();
 	ApplyMiscMXCFixes();
 	SetBuffSlots();
+	SetFixedPCCafePoints(Config::Instance()->server->fixedPCCafePoints);
 	CUser::Init();
 	CUserSocket::Init();
 	SkillEnchantOperator::Init();
@@ -314,5 +315,13 @@ void MyExt64::SetBuffSlots()
 {
 	WriteMemoryBYTE(0x56AFDA, Config::Instance()->buffSystem->maxSlots);
 	WriteMemoryDWORD(0x840443, Config::Instance()->buffSystem->maxDivineInspirationBonusSlots);
+}
+
+void MyExt64::SetFixedPCCafePoints(const INT32 points)
+{
+	if (points >= 0) {
+		WriteMemoryBYTE(0x891E1E, 0xB9);
+		WriteMemoryDWORD(0x891E1F, static_cast<UINT32>(points));
+	}
 }
 

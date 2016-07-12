@@ -43,6 +43,7 @@ protected:
 	static void InitClanRestrictions();
 	static void ApplyMiscMXCFixes();
 	static void SetBuffSlots();
+	static void SetFixedPCCafePoints(const INT32 points);
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 

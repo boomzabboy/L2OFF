@@ -29,6 +29,7 @@ public:
 		time_t pledgeLoadTimeout;
 		time_t pledgeWarLoadTimeout;
 		double vitalityMultiplier;
+		INT32 fixedPCCafePoints;
 		std::wstring loadDlls;
 	} *server;
 

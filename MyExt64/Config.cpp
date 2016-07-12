@@ -41,6 +41,7 @@ Config::Server::Server(Config *config) :
 	pledgeLoadTimeout(config->GetInt(L"server", L"PledgeLoadTimeout", 60)),
 	pledgeWarLoadTimeout(config->GetInt(L"server", L"PledgeWarLoadTimeout", 30)),
 	vitalityMultiplier(config->GetDouble(L"server", L"VitalityMultiplier", 1.0)),
+	fixedPCCafePoints(config->GetInt(L"server", L"FixedPCCafePoints", -1)),
 	loadDlls(config->GetString(L"server", L"LoadDlls", L""))
 {
 }

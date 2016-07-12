@@ -102,6 +102,9 @@ CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* 
 		ScopedLock lock(counterCS);
 		++counterTotal;
 	}
+	if (Config::Instance()->server->fixedPCCafePoints >= 0) {
+		ret->sd->pcPoints = Config::Instance()->server->fixedPCCafePoints;
+	}
 	return ret;
 }
 
