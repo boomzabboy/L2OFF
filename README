@@ -5,6 +5,22 @@ MyExt64 is new opensource extender for l2off Gracia Final server
 (l2_off_gracia_final). It uses some knowledge from OSIE extender,
 MXC extender and maybe other extenders.
 
+== Features ==
+ * Supports protocols 83 (Gracia Final) and 152 (Gracia Epilogue update 1)
+ * Protocol 87 (Gracia Final update 1) should be working but is not tested
+ * Supports Gracia Epilogue skill enchanting + buy/sell (refund and mail not implemented yet)
+ * Bunch of bugfixes (some ported from OSIE, some ported from MXC extender)
+ * Voice commands - offline trade, experience gain on/off, server time, online player count
+ * Configurable item enchant (safe/chances)
+ * Custom drop/spoil rate algorithm
+ * Custom event drop algorithm (flat chance based)
+ * Players in the same command channel are treated as allies
+ * Configurable max level for main/subclass
+ * Global shout/trade
+ * Vitality multiplier
+ * Configurable clan restriction (penalties)
+ * Configurable buff slot count + max divine inspiration bonus
+
 == How to use it ==
 If you're not familiar with l2off, it will probably require learning
 some stuff (MXC forum is a good start).
