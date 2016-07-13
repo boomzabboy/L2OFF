@@ -2,13 +2,23 @@
 #include "GraciaEpilogue.h"
 #include "CSkillEnchantInfo.h"
 #include "CSkillEnchantDB.h"
+#include "CUser.h"
+#include "CSharedCreatureData.h"
 #include "CLog.h"
 
 void GraciaEpilogue::InitPackets()
 {
 	WriteInstructionCall(0x8B0E7B, reinterpret_cast<UINT32>(AssembleInventoryUpdateItem1));
 	WriteInstructionCall(0x8B133C, reinterpret_cast<UINT32>(AssembleInventoryUpdateItem2));
+	WriteMemoryBYTES(0x8F2402, "\x49\x89\xCC", 3);
+	WriteMemoryBYTES(0x8F240A,
+		"\x4D\x89\xE2\x4D\x31\xE4\x8B\x8E"
+		"\xA0\x3F\x00\x00\x44\x8B\x8C\x24"
+		"\x90\x00\x00\x00\x90\x90\x90\x90"
+		"\x90", 0x19);
+	WriteMemoryBYTES(0x8F2428, "\x4D\x89\xD0\x90\x90\x90\x90\x90\x90\x90\x90", 0xB);
 	WriteInstructionCall(0x8F2446, reinterpret_cast<UINT32>(AssembleSkillListItem));
+
 	WriteInstructionCall(0x8E33BE, reinterpret_cast<UINT32>(AssembleItemListItem1));
 	WriteInstructionCall(0x8E2A82, reinterpret_cast<UINT32>(AssembleItemListItem2));
 	WriteInstructionCall(0x95B54D, reinterpret_cast<UINT32>(AssembleWarehouseDepositListItem));
@@ -45,15 +55,17 @@ int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem2(char *buffer, int maxSi
 	return Assemble(buffer, maxSize, "dddQhhhdQQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, 0, 0, 0);
 }
 
-int __cdecl GraciaEpilogue::AssembleSkillListItem(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT8 d)
+int __cdecl GraciaEpilogue::AssembleSkillListItem(char *buffer, int maxSize, CUser *user, UINT32 a, UINT32 b, UINT32 c, UINT32 d)
 {
 	bool enchantable = false;
-	CSkillEnchantInfo *info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(c, max(101, b));
-	if (info) {
-		enchantable = info->requiredSkillLevel <= b;
+	if (user) {
+		CSkillEnchantInfo *info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(c, max(101, b));
+		if (info && user->sd->level >= 76) {
+			enchantable = info->requiredSkillLevel <= b;
+		}
 	}
 	//                                abcd?
-	return Assemble(buffer, maxSize, "dddcc", a, b, c, d, enchantable);
+	return Assemble(buffer, maxSize, "dddcc", a, b, c, d ? 1 : 0, enchantable);
 }
 
 int __cdecl GraciaEpilogue::AssembleItemListItem1(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT32 d, UINT64 e, UINT16 f, UINT16 g, UINT16 h, UINT32 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT32 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT16 u, UINT16 v, UINT32 w)

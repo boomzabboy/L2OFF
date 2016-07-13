@@ -58,7 +58,7 @@ void CUser::Init()
 
 	WriteMemoryQWORD(0xC545D0, reinterpret_cast<UINT64>(OnMagicSkillUsePacketWrapper));
 	WriteMemoryBYTES(0x711CA8, "\x48\x89\xF9", 3);
-	WriteInstructionCall(0x711CAB, reinterpret_cast<UINT32>(FixPendingSkill), 0x711CB9);
+	WriteInstructionCall(0x711CAB, reinterpret_cast<UINT32>(FixPendingSkill), 0x711CBA);
 
 	WriteInstructionCall(0x8BD015, reinterpret_cast<UINT32>(IsInBlockListWrapper));
 

@@ -57,12 +57,22 @@ void GraciaEpilogue::InitSkillEnchant()
 	WriteMemoryBYTE(0x827239, 0xEB); // don't require NPC for RequestExEnchantSkill
 	WriteMemoryBYTE(0x8248C2, 0xEB); // don't require NPC for RequestExEnchantSkillRouteChange
 	WriteMemoryBYTE(0x824916, 0xEB); // don't require NPC for RequestExEnchantSkillRouteChange
+
 	WriteInstructionCall(0x827D60, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSuccess));
 	WriteInstructionCall(0x827FAE, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateFail));
 	WriteMemoryQWORD(0xC01AF8, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateNormal));
+
 	WriteInstructionCall(0x8285DE, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSuccess));
+	WriteMemoryBYTES(0x8287D1, "\x49\x8B\xCC", 3);
+	WriteInstructionCall(0x8287D4, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSafeFail), 0x8287DE);
+	WriteMemoryBYTES(0x82880A, "\x49\x8B\xCC", 3);
+	WriteInstructionCall(0x82880D, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSafeFail), 0x828817);
 	WriteMemoryQWORD(0xC01B58, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateSafe));
+
+	WriteInstructionCall(0x82B777, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSuccess));
 	WriteMemoryQWORD(0xC01BB8, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateUntrain));
+
+	WriteInstructionCall(0x8290CD, reinterpret_cast<UINT32>(SkillEnchantOperatorOperateSuccess));
 	WriteMemoryQWORD(0xC01D78, reinterpret_cast<UINT64>(SkillEnchantOperatorOperateRouteChange));
 
 	WriteMemoryBYTES(0x827BA3, "\x48\x89\xE9\x48\xC7\xC2\x00\x00\x00\x00\x45\x89\xF8\x45\x89\xF1"
@@ -347,6 +357,12 @@ void GraciaEpilogue::SkillEnchantOperatorOperateFail(CUser *user)
 		return;
 	}
 	socket->Send("chd", 0xFE, 0xA7, 0);
+}
+
+void GraciaEpilogue::SkillEnchantOperatorOperateSafeFail(CUserSocket *socket, const char *unused, BYTE a, UINT32 b, UINT32 c, UINT32 d, UINT32 e, UINT32 f)
+{
+	socket->Send("chd", 0xFE, 0xA7, 0);
+	socket->Send("cddddd", a, b, c, d, e, f);
 }
 
 bool GraciaEpilogue::SkillEnchantOperatorOperateNormal(SkillEnchantOperator *self, CUser *user, int id, int level)
