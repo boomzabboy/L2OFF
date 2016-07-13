@@ -621,7 +621,7 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 	{
 		CUser *user_ = user;
 		if (!user_) throw IgnorePacket(L"Packet without user");
-		if (!user_->ext.guard.isEnchanting) throw IgnorePacket(L"User is not enchanting item");
+		if (user_->ext.guard.isEnchanting) throw IgnorePacket(L"User is not enchanting item");
 		if (user_->IsNowTrade()) throw IgnorePacket(L"User is in trade");
 		break;
 	}
