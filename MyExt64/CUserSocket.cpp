@@ -713,7 +713,6 @@ bool CUserSocket::InGamePacketExHandler(const BYTE *packet, BYTE opcode)
 	case 0x42: // RequestConfirmCancelItem
 	case 0x32: // ExEnchantSkillSafe
 	case 0x0F: // ExEnchantSkill
-	case 0x36: // RequestGotoLobby
 	{
 		CUser *user_ = user;
 		if (!user_) throw IgnorePacket(L"Packet without user");
