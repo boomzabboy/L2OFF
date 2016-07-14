@@ -1,6 +1,7 @@
 
 #include <Server/CSkillEnchantDB.h>
 #include <Server/CSkillEnchantInfo.h>
+#include <Common/Utils.h>
 
 CSkillEnchantDB* CSkillEnchantDB::GetInstance()
 {
@@ -8,7 +9,8 @@ CSkillEnchantDB* CSkillEnchantDB::GetInstance()
 }
 
 CSkillEnchantInfo* CSkillEnchantDB::GetSkillEnchantInfo(int skillId, int skillLevel)
-{
+{ GUARDED
+
 	typedef CSkillEnchantInfo* (__thiscall *t)(CSkillEnchantDB*, int, int);
 	t f = reinterpret_cast<t>(0x826EDC);
 	return f(this, skillId, skillLevel);

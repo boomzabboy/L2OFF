@@ -32,13 +32,15 @@ std::wstring EventDrop::GetConfig(const wchar_t *section, const wchar_t *name, c
 }
 
 void EventDrop::ReloadEventINIFile()
-{
+{ GUARDED
+
 	reinterpret_cast<void(*)()>(0x641168)();
 	Load();
 }
 
 void EventDrop::Load()
-{
+{ GUARDED
+
 	ScopedLock lock(reloadCS);
 	CLog::Add(CLog::Blue, L"Load event drop");
 	Data *newData = (data == dataA ? dataB : dataA);

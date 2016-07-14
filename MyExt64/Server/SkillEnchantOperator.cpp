@@ -21,20 +21,23 @@ void SkillEnchantOperator::Init()
 }
 
 SkillEnchantOperator* __cdecl SkillEnchantOperator::FixedGetOperator(void *self, UINT32 &type)
-{
+{ GUARDED
+
 	UINT32 type_ = type > 3 ? 0 : type;
 	return OriginalGetOperator(self, type_);
 }
 
 SkillEnchantOperator* __cdecl SkillEnchantOperator::GetOperator(UINT32 type)
-{
+{ GUARDED
+
 	typedef void* (__cdecl *t1)();
 	t1 f1 = reinterpret_cast<t1>(0x472C08);
 	return FixedGetOperator(f1(), type);
 }
 
 int SkillEnchantOperator::CalculateProb(CSkillEnchantInfo *info, int level)
-{
+{ GUARDED
+
 	typedef int (__thiscall *t)(SkillEnchantOperator*, CSkillEnchantInfo*, int);
 	t f = reinterpret_cast<t>(
 		*reinterpret_cast<void**>(

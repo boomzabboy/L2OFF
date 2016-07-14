@@ -10,7 +10,8 @@ void OlympiadFixes::Init()
 }
 
 void __cdecl OlympiadFixes::PledgeSkillLock(unsigned long &a, int b, CUser *user, bool d, bool e, bool &f)
-{
+{ GUARDED
+
 	if (!user) {
 		return;
 	}

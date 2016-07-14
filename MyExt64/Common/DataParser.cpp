@@ -3,7 +3,8 @@
 #include <fstream>
 
 bool DataParser::parse(const std::string &filename)
-{
+{ GUARDED
+
 	std::ifstream ifs(filename.c_str());
     if (!ifs) {
 		CLog::Add(CLog::Red, L"Can't open file '%s' for reading", Widen(filename).c_str());

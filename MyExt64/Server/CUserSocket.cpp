@@ -169,14 +169,16 @@ void CUserSocket::Init()
 }
 
 CUserSocket* __cdecl CUserSocket::Constructor(CUserSocket *self, SOCKET s)
-{
+{ GUARDED
+
 	CUserSocket *ret = reinterpret_cast<CUserSocket*(*)(CUserSocket*, SOCKET)>(0x93CADC)(self, s);
 	new (&ret->ext) Ext();
 	return ret;
 }
 
 CUserSocket* __cdecl CUserSocket::Destructor(CUserSocket *self, bool isMemoryFreeUsed)
-{
+{ GUARDED
+
 	self->ext.~Ext();
 	return reinterpret_cast<CUserSocket*(*)(CUserSocket*, bool)>(0x92DE7C)(self, isMemoryFreeUsed);
 }
@@ -197,7 +199,8 @@ CUser* CUserSocket::GetUser()
 }
 
 void CUserSocket::Send(const char *format, ...)
-{
+{ GUARDED
+
 	va_list va;
 	va_start(va, format);
 	SendV(format, va);
@@ -220,7 +223,8 @@ void CUserSocket::SendSystemMessage(const wchar_t *sender, const wchar_t *messag
 }
 
 void CUserSocket::Close()
-{
+{ GUARDED
+
 	status = 2;
 	reinterpret_cast<void(*)(CUserSocket*)>(0x4564D8)(this);
 }
@@ -231,7 +235,8 @@ void CUserSocket::OnClose()
 }
 
 void __cdecl CUserSocket::SendWrapper(CUserSocket *self, const char *format, ...)
-{
+{ GUARDED
+
 	va_list args;
     va_start(args, format);
 
@@ -324,7 +329,8 @@ void __cdecl CUserSocket::OfflineTradeDummyOnRead(CUserSocket*)
 }
 
 void __cdecl CUserSocket::BindUserWrapper(CUserSocket *self, CUser *user)
-{
+{ GUARDED
+
 	self->ext.offlineSocketHandleCopy = self->socketHandleCopy;
 	self->BindUser(user);
 }
@@ -335,7 +341,8 @@ void CUserSocket::BindUser(CUser *user)
 }
 
 void __cdecl CUserSocket::KickOfflineWrapper(CUserSocket *self)
-{
+{ GUARDED
+
 	if (!self) {
 		return;
 	}
@@ -355,7 +362,8 @@ bool CUserSocket::CheckCharacterNameWrapper(CUserSocket *self, const wchar_t *na
 }
 
 bool CUserSocket::CheckCharacterName(const wchar_t *name)
-{
+{ GUARDED
+
 	std::wstring name_(name);
 	if (name_.empty() || name_.size() >= 15) {
 		return false;
@@ -377,7 +385,8 @@ UINT64 __cdecl CUserSocket::ProtocolVersionPacketWrapper(CUserSocket *self, cons
 }
 
 UINT64 CUserSocket::ProtocolVersionPacket(const BYTE *packet, const UINT32 protocolId, BYTE *buff)
-{
+{ GUARDED
+
 	if (*reinterpret_cast<const UINT16*>(packet - 7) != 267) {
 		CLog::Add(CLog::Red, L"Client %s: Invalid packet length (%d, expected %d)",
 			GetIP().c_str(), *reinterpret_cast<const UINT16*>(packet - 7), 267);
@@ -432,7 +441,8 @@ bool __cdecl CUserSocket::HtmlCmdObserverWrapper(CUserSocket *self, CUser *user,
 }
 
 bool CUserSocket::HtmlCmdObserver(CUser *user, const wchar_t *s1, const wchar_t *s2)
-{
+{ GUARDED
+
 	if (user->IsNowTrade()) {
 		return false;
 	}
@@ -440,7 +450,8 @@ bool CUserSocket::HtmlCmdObserver(CUser *user, const wchar_t *s1, const wchar_t 
 }
 
 bool __cdecl CUserSocket::TradeAddItemsPacketWrapper(CUserSocket *socket, const BYTE *packet)
-{
+{ GUARDED
+
 	CUser *user = socket->user;
 	if (!user) {
 		return false;
@@ -468,7 +479,8 @@ void CUserSocket::CheckGuard(const UINT32 &i) const
 }
 
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	BYTE opcodeRemapped = opcode;
 
 	try {
@@ -479,7 +491,8 @@ UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const
 }
 
 UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	BYTE opcodeRemapped = opcode;
 
 	try {
@@ -490,7 +503,8 @@ UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const 
 }
 
 bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const BYTE* packet, WORD opcodeEx)
-{
+{ GUARDED
+
 	if (opcodeEx > maxOpcodeEx) {
 		return true;
 	}
@@ -534,7 +548,8 @@ bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const 
 }
 
 bool CUserSocket::CallPacketHandler(const BYTE opcode, const BYTE *packet)
-{
+{ GUARDED
+
 	if (Server::GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
 		switch (opcode) {
 		case 0x37: return GraciaEpilogue::BuyPacket(this, packet, opcode);
@@ -551,7 +566,8 @@ bool CUserSocket::CallPacketHandler(const BYTE opcode, const BYTE *packet)
 }
 
 bool CUserSocket::CallPacketExHandler(const BYTE opcode, const BYTE *packet)
-{
+{ GUARDED
+
 	if (Server::GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
 		switch (opcode) {
 		case 0x0E: return GraciaEpilogue::RequestExEnchantSkillInfo(this, packet, opcode);
@@ -568,13 +584,15 @@ bool CUserSocket::CallPacketExHandler(const BYTE opcode, const BYTE *packet)
 }
 
 bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	bool ret = CallPacketHandler(opcode, packet);
 	return ret;
 }
 
 bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
 
 	switch (opcode) {
@@ -707,7 +725,8 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 }
 
 bool CUserSocket::InGamePacketExHandler(const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	switch (opcode) {
 	case 0x41: // RequestRefine
 	case 0x42: // RequestConfirmCancelItem

@@ -207,3 +207,8 @@ std::basic_string<wchar_t> Widen(const std::string &s)
 	std::copy(s.begin(), s.end(), std::back_inserter(result));
 	return result;
 }
+
+size_t Guard::off1 = 0;
+size_t Guard::off2 = 0;
+size_t Guard::off3 = 0;
+

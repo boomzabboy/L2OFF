@@ -110,7 +110,8 @@ void GraciaEpilogue::InitSkillEnchant()
 }
 
 void GraciaEpilogue::LoadSkillEnchant()
-{
+{ GUARDED
+
 	CLog::Add(CLog::Blue, L"Reading ..\\Script\\skillenchantcost.txt");
 	if (!Parser().parse("..\\Script\\skillenchantcost.txt")) {
 		CLog::Add(CLog::Red, L"Failed to load skillenchantcost.txt");
@@ -120,7 +121,8 @@ void GraciaEpilogue::LoadSkillEnchant()
 }
 
 std::pair<int, INT64> GraciaEpilogue::GetEnchantSpAdena(CUser *user, UINT32 &enchantType, int skillId, int skillLevel, CSkillEnchantInfo **info_)
-{
+{ GUARDED
+
 	if (enchantType > 3) {
 		return std::make_pair(-1, -1);
 	}
@@ -208,7 +210,8 @@ std::pair<int, INT64> GraciaEpilogue::GetEnchantSpAdena(CUser *user, UINT32 &enc
 }
 
 bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfo(CUserSocket *self, const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	(void) opcode;
 
 	CUser *user = self->GetUser();
@@ -263,7 +266,8 @@ bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfo(CUserSocket *self, const 
 }
 
 bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfoDetail(CUserSocket *self, const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	(void) opcode;
 
 	CUser *user = self->GetUser();
@@ -310,7 +314,8 @@ bool __cdecl GraciaEpilogue::RequestExEnchantSkillInfoDetail(CUserSocket *self, 
 }
 
 bool __cdecl GraciaEpilogue::RequestExEnchantSkillUntrain(CUserSocket *self, const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	(void) opcode;
 
 	UINT32 skillId = 0;
@@ -330,7 +335,8 @@ bool __cdecl GraciaEpilogue::RequestExEnchantSkillUntrain(CUserSocket *self, con
 }
 
 void GraciaEpilogue::SkillEnchantOperatorOperateSuccess(CUser *user)
-{
+{ GUARDED
+
 	if (!user) {
 		return;
 	}
@@ -345,7 +351,8 @@ void GraciaEpilogue::SkillEnchantOperatorOperateSuccess(CUser *user)
 }
 
 void GraciaEpilogue::SkillEnchantOperatorOperateFail(CUser *user)
-{
+{ GUARDED
+
 	if (!user) {
 		return;
 	}
@@ -360,13 +367,15 @@ void GraciaEpilogue::SkillEnchantOperatorOperateFail(CUser *user)
 }
 
 void GraciaEpilogue::SkillEnchantOperatorOperateSafeFail(CUserSocket *socket, const char *unused, BYTE a, UINT32 b, UINT32 c, UINT32 d, UINT32 e, UINT32 f)
-{
+{ GUARDED
+
 	socket->Send("chd", 0xFE, 0xA7, 0);
 	socket->Send("cddddd", a, b, c, d, e, f);
 }
 
 bool GraciaEpilogue::SkillEnchantOperatorOperateNormal(SkillEnchantOperator *self, CUser *user, int id, int level)
-{
+{ GUARDED
+
 	if (!user) {
 		return false;
 	}
@@ -387,7 +396,8 @@ bool GraciaEpilogue::SkillEnchantOperatorOperateNormal(SkillEnchantOperator *sel
 }
 
 bool GraciaEpilogue::SkillEnchantOperatorOperateSafe(SkillEnchantOperator *self, CUser *user, int id, int level)
-{
+{ GUARDED
+
 	if (!user) {
 		return false;
 	}
@@ -408,7 +418,8 @@ bool GraciaEpilogue::SkillEnchantOperatorOperateSafe(SkillEnchantOperator *self,
 }
 
 bool GraciaEpilogue::SkillEnchantOperatorOperateUntrain(SkillEnchantOperator *self, CUser *user, int id, int level)
-{
+{ GUARDED
+
 	if (!user) {
 		return false;
 	}
@@ -429,7 +440,8 @@ bool GraciaEpilogue::SkillEnchantOperatorOperateUntrain(SkillEnchantOperator *se
 }
 
 bool GraciaEpilogue::SkillEnchantOperatorOperateRouteChange(SkillEnchantOperator *self, CUser *user, int id, int level)
-{
+{ GUARDED
+
 	if (!user) {
 		return false;
 	}
@@ -450,7 +462,8 @@ bool GraciaEpilogue::SkillEnchantOperatorOperateRouteChange(SkillEnchantOperator
 }
 
 bool __cdecl GraciaEpilogue::CheckEnchantItems(CUser *user, UINT32 enchantType, int skillId, int skillLevel)
-{
+{ GUARDED
+
 	CSkillEnchantInfo *info = 0;
 	std::pair<int, INT64> spAdena = GetEnchantSpAdena(user, enchantType, skillId, skillLevel, &info);
 	if (spAdena.first < 0) {
@@ -476,7 +489,8 @@ bool __cdecl GraciaEpilogue::CheckEnchantItems(CUser *user, UINT32 enchantType, 
 }
 
 void __cdecl GraciaEpilogue::TakeEnchantItems(CUser *user, UINT32 enchantType, int skillId, int skillLevel)
-{
+{ GUARDED
+
 	CSkillEnchantInfo *info = 0;
 	std::pair<int, INT64> spAdena = GetEnchantSpAdena(user, enchantType, skillId, skillLevel, &info);
 	if (spAdena.first < 0) {
@@ -501,7 +515,8 @@ INT64 __cdecl GraciaEpilogue::SkillEnchantOperatorCalculateEXP(SkillEnchantOpera
 }
 
 int __cdecl GraciaEpilogue::SkillEnchantOperatorCalculateSP(SkillEnchantOperator *self, class CSkillEnchantInfo *info, int level)
-{
+{ GUARDED
+
 	std::pair<int, INT64> spAdena = GetEnchantSpAdena(0, self->operatorType, info->skillId, info->newEnchantLevel, 0);
 	if (spAdena.first < 0) {
 		return 0;

@@ -41,7 +41,8 @@ void DropRate::Init()
 }
 
 void DropRate::CNPCSetDrop(CCreature *npc, UINT32 type, std::vector<ItemDrop*> &data)
-{
+{ GUARDED
+
 	double dropRate = type == 144 ? Config::Instance()->rate->spoilRate : npc->IsBoss() ? Config::Instance()->rate->bossDropRate : Config::Instance()->rate->dropRate;
 	if (Config::Instance()->rate->fixupLowLevel && npc->sd->level < 20) {
 		dropRate = max(1, floor(0.5 + pow(npc->sd->level / 20.0, log((double) dropRate) / log((double) 4)) * dropRate));
@@ -87,7 +88,7 @@ void DropRate::CNPCSetDrop(CCreature *npc, UINT32 type, std::vector<ItemDrop*> &
 }
 
 void DropRate::CNPCSetDropMulti(CCreature *npc, UINT32 type, std::vector<ItemDropMulti*> &data)
-{
+{ GUARDED
 
 	double dropRate;
 	if (type == 250) {

@@ -12,12 +12,14 @@ void CHTMLCacheManager::Init()
 }
 
 bool CHTMLCacheManager::IsValidLinkWrapper(CHTMLCacheManager *self, void *data, const wchar_t *link, CUser *user)
-{
+{ GUARDED
+
 	return self->IsValidLink(data, link, user);
 }
 
 bool CHTMLCacheManager::IsValidLink(void *data, const wchar_t *link, CUser *user)
-{
+{ GUARDED
+
 	std::wstring link_(link);
 	if (link_ == L"_bbsclan" || link_ == L"_bbshome"  || link_ == L"manor_menu_select") {
 		return true;

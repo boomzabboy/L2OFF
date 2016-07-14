@@ -44,19 +44,20 @@ void GraciaEpilogue::InitPackets()
 }
 
 int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem1(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
-{
+{ GUARDED
 	//                                abcdefghijklmnopqr000
 	return Assemble(buffer, maxSize, "dddQhhhdQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, 0, 0, 0);
 }
 
 int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem2(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT64 j,	UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r)
-{
+{ GUARDED
 	//                                abcdefghijklmnopq000
 	return Assemble(buffer, maxSize, "dddQhhhdQQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, 0, 0, 0);
 }
 
 int __cdecl GraciaEpilogue::AssembleSkillListItem(char *buffer, int maxSize, CUser *user, UINT32 a, UINT32 b, UINT32 c, UINT32 d)
-{
+{ GUARDED
+
 	bool enchantable = false;
 	if (user) {
 		CSkillEnchantInfo *info = CSkillEnchantDB::GetInstance()->GetSkillEnchantInfo(c, max(101, b));
@@ -69,37 +70,38 @@ int __cdecl GraciaEpilogue::AssembleSkillListItem(char *buffer, int maxSize, CUs
 }
 
 int __cdecl GraciaEpilogue::AssembleItemListItem1(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT32 d, UINT64 e, UINT16 f, UINT16 g, UINT16 h, UINT32 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT32 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT16 u, UINT16 v, UINT32 w)
-{
+{ GUARDED
 	//                                abcdefghijklmnopqrstuvw000
 	return Assemble(buffer, maxSize, "hdddQhhhdhhhhdhhhhhhhhdhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, 0, 0, 0);
 }
 
 int __cdecl GraciaEpilogue::AssembleItemListItem2(char *buffer, int maxSize, const char *format, UINT16 a, UINT16 b, UINT32 c, UINT32 d, UINT32 e, UINT64 f, UINT16 g, UINT16 h, UINT16 i, UINT32 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT32 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT16 u, UINT16 v, UINT16 w, UINT32 x)
-{
+{ GUARDED
 	//                                abcdefghijklmnopqrstuvwx000
 	return Assemble(buffer, maxSize, "hhdddQhhhdhhhhdhhhhhhhhdhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, 0, 0, 0);
 }
 
 int __cdecl GraciaEpilogue::AssembleWarehouseDepositListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT32 k, UINT32 l, UINT32 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT16 u, UINT32 v, UINT32 w)
-{
+{ GUARDED
 	//                                abcdefghijklmnopqrstuvw000
 	return Assemble(buffer, maxSize, "hddQhhdhhhdddhhhhhhhhddhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, 0, 0, 0);
 }
 
 int __cdecl GraciaEpilogue::AssembleWarehouseWithdrawListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT32 k, UINT32 l, UINT32 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT16 u, UINT32 v, UINT32 w)
-{
+{ GUARDED
 	//                                abcdefghijklmnopqrstuvw000
 	return Assemble(buffer, maxSize, "hddQhhdhhhdddhhhhhhhhddhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, 0, 0, 0);
 }
 
 int __cdecl GraciaEpilogue::AssembleWarehouseGMListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT32 k, UINT32 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s, UINT16 t, UINT32 u, UINT32 v, UINT32 w)
-{
+{ GUARDED
 	//                                abcdefghijklmnopqrstuvw000
 	return Assemble(buffer, maxSize, "hddQhhdhhhdddhhhhhhhhddhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, 0, 0, 0);
 }
 
 void __cdecl GraciaEpilogue::SendETCBuffStatusInfo(CUserSocket *socket, const char *format, BYTE opcode, UINT32 a, UINT32 b, UINT32 c, UINT32 d, UINT32 e, UINT32 f, UINT32 g, UINT32 h)
-{
+{ GUARDED
+
 	(void) e;
 	if (!socket) {
 		return;
@@ -125,13 +127,13 @@ void __cdecl GraciaEpilogue::SendETCBuffStatusInfo(CUserSocket *socket, const ch
 }
 
 void __cdecl GraciaEpilogue::SendExBrBroadcastEventState(CUserSocket *socket, void *unused, BYTE opcode, UINT16 opcodeEx, UINT32 a, UINT32 b)
-{
+{ GUARDED
 	//              ab0000000, both h at end should be string (h = 0 is empty string)
 	socket->Send("chdddddddhh", opcode, opcodeEx, a, b, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void __cdecl GraciaEpilogue::SendRelationChanged(CUserSocket *socket, void *unused, BYTE opcode, UINT32 a, UINT32 b, UINT32 c, UINT32 d, UINT32 e)
-{
+{ GUARDED
 	//             1abcde
 	socket->Send("cdddddd", opcode, 1, a, b, c, d, e);
 }

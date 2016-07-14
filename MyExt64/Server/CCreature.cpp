@@ -13,7 +13,8 @@ CCreature::~CCreature()
 }
 
 int CCreature::GetAcquiredSkillLevel(int skillId)
-{
+{ GUARDED
+
 	typedef int (__thiscall *t)(CCreature*, int);
 	t f = reinterpret_cast<t>(0x5502D8);
 	return f(this, skillId);
@@ -50,7 +51,8 @@ bool CCreature::IsSummon() const
 }
 
 bool CCreature::AddItemToInventory(int itemId, UINT64 count)
-{
+{ GUARDED
+
     UINT32 itemOptionKey[2];
     itemOptionKey[0] = 0;
     itemOptionKey[1] = 0;
@@ -64,7 +66,8 @@ bool CCreature::AddItemToInventory(int itemId, UINT64 count)
 }
 
 CCreature* CCreature::GetTarget()
-{
+{ GUARDED
+
 	CCreature *result = 0;
 	UINT32 targetId_ = targetId;
 	if (targetId_ && (targetId_ & 0xF8000000) == 0x48000000) {

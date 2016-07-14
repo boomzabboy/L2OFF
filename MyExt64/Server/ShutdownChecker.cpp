@@ -1,5 +1,6 @@
 
 #include <Server/ShutdownChecker.h>
+#include <Common/Utils.h>
 #include <fstream>
 #include <string>
 
@@ -13,7 +14,8 @@ void ShutdownChecker::Init()
 }
 
 void ShutdownChecker::StartChecking()
-{
+{ GUARDED
+
 	std::ofstream ofs("status.txt");
 	if (ofs) {
 		ofs << "running" << std::endl;
@@ -24,7 +26,8 @@ void ShutdownChecker::StartChecking()
 }
 
 DWORD ShutdownChecker::CheckForShutdown(void *v)
-{
+{ GUARDED
+
 	(void) v;
 
 	for (;;) {

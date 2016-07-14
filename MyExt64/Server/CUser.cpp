@@ -81,7 +81,8 @@ CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* 
 								  unsigned int uUnk11, unsigned int uUnk12, unsigned int uUnk13, unsigned int uUnk14,
 								  unsigned int uUnk15, unsigned int uUnk16, unsigned int uUnk17, unsigned int uUnk18,
 								  unsigned int uUnk19, unsigned int uUnk20, unsigned int uUnk21, unsigned int uUnk22, bool bUnk23)
-{
+{ GUARDED
+
 	typedef CUser* (__cdecl *t)(CUser*, wchar_t*, wchar_t*, unsigned int, unsigned int, unsigned int,
 								unsigned int, unsigned int, unsigned int, unsigned int, unsigned int,
 								int, int, int, double, double, unsigned int, unsigned __int64, unsigned int,
@@ -109,7 +110,8 @@ CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* 
 }
 
 CUser* __cdecl CUser::Destructor(CUser *self, bool isMemoryFreeUsed)
-{
+{ GUARDED
+
 	{
 		ScopedLock lock(counterCS);
 		--counterTotal;
@@ -166,13 +168,15 @@ CUser::Ext::Guard::Guard() :
 }
 
 UINT64 CUser::GetItemCount(UINT32 itemId)
-{
+{ GUARDED
+
 	return reinterpret_cast<UINT64(*)(void*, UINT32, int)>(0x6864B4)(
 		reinterpret_cast<void*>(reinterpret_cast<char*>(this) + 0xaa8), itemId, 0);
 }
 
 void CUser::TakeItem(UINT32 itemId, UINT64 count)
-{
+{ GUARDED
+
 	reinterpret_cast<void(*)(CUser*, UINT32, UINT64, int)>(
 		*reinterpret_cast<void**>(
 			reinterpret_cast<char*>(*reinterpret_cast<void**>(this)) + 0x830))(
@@ -190,7 +194,8 @@ void CUser::ResetNicknameAndColor()
 }
 
 void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
-{
+{ GUARDED
+
 	if (message[0] != L'.' || !Config::Instance()->voiceCommands->enabled) {
 		self->Say(message);
 		return;
@@ -254,41 +259,45 @@ void CUser::Say(const wchar_t *message)
 
 INT64 __cdecl CUser::ExpIncWrapper(CUser *self, const INT64 exp, const bool b)
 {
-	return self->ExpInc((exp < 0 || !self->ext.isExpOff) ? exp : 0, b);
+	return self->ExpInc(exp, b);
 }
 
 INT64 CUser::ExpInc(const INT64 exp, const bool b)
-{
-	return reinterpret_cast<INT64(*)(CUser*, const INT64, const bool)>(0x88BF30)(this, exp, b);
+{ GUARDED
+
+	return reinterpret_cast<INT64(*)(CUser*, const INT64, const bool)>(0x88BF30)(
+        this, (exp < 0 || !ext.isExpOff) ? exp : 0, b);
 }
 
 void __cdecl CUser::AddVitalityPointWrapper(CUser *self, const int points, const int type, const bool b)
 {
+	self->AddVitalityPoint(points, type, b);
+}
+
+void CUser::AddVitalityPoint(const int points, const int type, const bool b)
+{ GUARDED
+
 	int points_ = points;
 	if (points_ < 0) {
-		if (!self->ext.isExpOff) {
+		if (!ext.isExpOff) {
 			points_ = static_cast<int>(points * Config::Instance()->server->vitalityMultiplier);
 		} else {
 			points_ = 0;
 		}
 	}
 
-	if (Config::Instance()->fixes->maxReplenishedVitalityPoints >= 0 && type == 6 && points < 0 && self->isVitalityReplenishing > 0) {
+	if (Config::Instance()->fixes->maxReplenishedVitalityPoints >= 0 && type == 6 && points < 0 && isVitalityReplenishing > 0) {
 		if (points_ < -Config::Instance()->fixes->maxReplenishedVitalityPoints) {
 			points_ = -Config::Instance()->fixes->maxReplenishedVitalityPoints;
 		}
 	}
 
-	self->AddVitalityPoint(points_, type, b);
-}
-
-void CUser::AddVitalityPoint(const int points, const int type, const bool b)
-{
-	reinterpret_cast<void(*)(CUser*, const int, const int, const bool)>(0x89C918)(this, points, type, b);
+	reinterpret_cast<void(*)(CUser*, const int, const int, const bool)>(0x89C918)(this, points_, type, b);
 }
 
 void CUser::StartOfflineTrade()
-{
+{ GUARDED
+
 	switch (sd->storeMode) {
 	case 1:	case 3:	case 5:	case 8: break;
 	default:
@@ -322,7 +331,8 @@ void CUser::StartOfflineTrade()
 }
 
 void* __cdecl CUser::OfflineTradePartyInvite(void *a, void *b, void *c)
-{
+{ GUARDED
+
 	void *ret = reinterpret_cast<void*(*)(void*, void*, void*)>(0x4CEDAC)(a, b, c);
 	if (ret && *reinterpret_cast<UINT64*>(ret) && **reinterpret_cast<UINT64**>(ret) == 0xC53BB8) {
 		CUser **user = reinterpret_cast<CUser**>(ret);
@@ -334,7 +344,8 @@ void* __cdecl CUser::OfflineTradePartyInvite(void *a, void *b, void *c)
 }
 
 void __cdecl CUser::SendCharInfoWrapper(CUser *self, CUserSocket *socket, const bool b)
-{
+{ GUARDED
+
 	self->SendCharInfo(socket, b);
 	if (self->ext.isOffline) {
 		switch (self->sd->storeMode) {
@@ -359,15 +370,16 @@ void CUser::SendCharInfo(CUserSocket *socket, const bool b)
 void __cdecl CUser::EnterWorldWrapper(CUser *self)
 {
 	self->EnterWorld();
-	if (self->sd->builder) {
-		self->nickColor = 0xff00;
-		self->ResetNicknameAndColor();
-		reinterpret_cast<bool(*)(CUserSocket*, CUser*, wchar_t*)>(0x48A8EC)(self->socket, self, L"//gmon");
-	}
 }
 
 void CUser::EnterWorld()
-{
+{ GUARDED
+
+	if (sd->builder) {
+		nickColor = 0xff00;
+		ResetNicknameAndColor();
+		reinterpret_cast<bool(*)(CUserSocket*, CUser*, wchar_t*)>(0x48A8EC)(socket, this, L"//gmon");
+	}
 	reinterpret_cast<void(*)(CUser*)>(0x8CF0E4)(this);
 }
 
@@ -387,7 +399,8 @@ bool __cdecl CUser::IsEnemyToWrapper(CUser *self, CCreature *creature)
 }
 
 bool CUser::IsEnemyTo(CCreature *creature)
-{
+{ GUARDED
+
 	bool ret = reinterpret_cast<bool(*)(CUser*, CCreature*)>(0x8CD084)(this, creature);
 
 	if (!Config::Instance()->fixes->commandChannelFriendly) {
@@ -428,7 +441,8 @@ bool CUser::IsEnemyTo(CCreature *creature)
 }
 
 int CUser::GetRelationTo(CUser *user)
-{
+{ GUARDED
+
 	int ret = reinterpret_cast<int(*)(CUser*, CUser*)>(0x8CC944)(this, user);
 
 	if (!Config::Instance()->fixes->commandChannelFriendly) {
@@ -458,7 +472,8 @@ bool __cdecl CUser::OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool 
 }
 
 bool CUser::OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift)
-{
+{ GUARDED
+
 	ext.lastSkill.skillId = skillId;
 	ext.lastSkill.ctrl = ctrl;
 	ext.lastSkill.shift = shift;
@@ -472,7 +487,8 @@ bool CUser::OnMagicSkillUsePacketOriginal(int skillId, bool ctrl, bool shift)
 }
 
 void __cdecl CUser::FixPendingSkill(CUser *user)
-{
+{ GUARDED
+
 	if (Config::Instance()->fixes->repeatSkillOnDistanceFailSeconds < 0 || !user->ext.lastSkill.skillId) {
 		CUserSocket *socket = user->socket;
 		if (socket) {
@@ -501,7 +517,8 @@ bool __cdecl CUser::IsInBlockListWrapper(CUser *self, int id)
 }
 
 bool CUser::IsInBlockList(int id)
-{
+{ GUARDED
+
 	if (IsInBlockListOriginal(id)) {
 		return true;
 	}
@@ -532,7 +549,7 @@ bool __cdecl CUser::DeleteItemInInventoryBeforeCommitWrapper(CUser *self, const 
 }
 
 bool CUser::DeleteItemInInventoryBeforeCommit(const UINT32 itemId, const UINT64 itemCount)
-{
+{ GUARDED
 	if (IsNowTrade()) {
 		return false;
 	}
@@ -550,7 +567,8 @@ bool __cdecl CUser::MultiSellChooseWrapper(CUser *self, int listId, int entryId,
 }
 
 bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes)
-{
+{ GUARDED
+
 	if (!this) {
 		return false;
 	}
@@ -570,3 +588,4 @@ CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
 CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);
 CompileTimeOffsetCheck(CUser, isVitalityReplenishing, 0x38B0);
 CompileTimeOffsetCheck(CUser, ext, 0x3A10);
+

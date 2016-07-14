@@ -87,7 +87,8 @@ void EnchantItem::Load()
 }
 
 double __cdecl EnchantItem::GetFighterWeaponChance(const int level)
-{
+{ GUARDED
+
 	std::map<int, double>::const_iterator i(chancesFighterWeapon.find(level));
 	if (i == chancesFighterWeapon.end()) {
 		CLog::Add(CLog::Red, L"Chance for enchant fighter weapon +%d -> +%d not found, assuming zero chance", level, level+1);
@@ -98,7 +99,8 @@ double __cdecl EnchantItem::GetFighterWeaponChance(const int level)
 }
 
 double __cdecl EnchantItem::GetMageWeaponChance(const int level)
-{
+{ GUARDED
+
 	std::map<int, double>::const_iterator i(chancesMageWeapon.find(level));
 	if (i == chancesMageWeapon.end()) {
 		CLog::Add(CLog::Red, L"Chance for enchant mage weapon +%d -> +%d not found, assuming zero chance", level, level+1);
@@ -109,7 +111,8 @@ double __cdecl EnchantItem::GetMageWeaponChance(const int level)
 }
 
 double __cdecl EnchantItem::GetNormalArmorChance(const int level)
-{
+{ GUARDED
+
 	std::map<int, double>::const_iterator i(chancesNormalArmor.find(level));
 	if (i == chancesNormalArmor.end()) {
 		CLog::Add(CLog::Red, L"Chance for enchant normal armor +%d -> +%d not found, assuming zero chance", level, level+1);
@@ -121,7 +124,8 @@ double __cdecl EnchantItem::GetNormalArmorChance(const int level)
 
 
 double __cdecl EnchantItem::GetOnePieceArmorChance(const int level)
-{
+{ GUARDED
+
 	std::map<int, double>::const_iterator i(chancesOnePieceArmor.find(level));
 	if (i == chancesOnePieceArmor.end()) {
 		CLog::Add(CLog::Red, L"Chance for enchant one piece armor +%d -> +%d not found, assuming zero chance", level, level+1);

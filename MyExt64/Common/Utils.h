@@ -48,3 +48,37 @@ extern Disassemble_t Disassemble;
 
 std::basic_string<wchar_t> Widen(const std::string &s);
 
+class Guard {
+public:
+	__forceinline Guard(const wchar_t* functionName)
+	{
+		if (!off1 || !off2 || !off3) return;
+		UINT32 threadIndex = *reinterpret_cast<UINT32*>(*reinterpret_cast<UINT64*>(__readgsqword(0x58)) + off1);
+		reinterpret_cast<const wchar_t**>(off2)[threadIndex * 1000 + reinterpret_cast<UINT32*>(off3)[threadIndex]++] = functionName;
+	}
+
+	__forceinline ~Guard()
+	{
+		if (!off1 || !off2 || !off3) return;
+		UINT32 threadIndex = *reinterpret_cast<UINT32*>(*reinterpret_cast<UINT64*>(__readgsqword(0x58)) + off1);
+		--reinterpret_cast<UINT32*>(off3)[threadIndex];
+	}
+
+	static size_t off1;
+	static size_t off2;
+	static size_t off3;
+};
+
+#define WIDEN2(x) L##x
+#define WIDEN(x) WIDEN2(x)
+#define __WFILE__ WIDEN(__FILE__)
+#define __WDATE__ WIDEN(__DATE__)
+#define __WTIME__ WIDEN(__TIME__)
+#define __WFUNCTION__ WIDEN(__FUNCTION__)
+#define __WFUNCDNAME__ WIDEN(__FUNCDNAME__)
+#define __WFUNCSIG__ WIDEN(__FUNCSIG__)
+
+#define WIDEN2(x) L##x
+#define WIDEN(x) WIDEN2(x)
+#define GUARDED Guard functionGuard_(__WFUNCSIG__);
+

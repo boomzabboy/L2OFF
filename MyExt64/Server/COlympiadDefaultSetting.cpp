@@ -14,23 +14,27 @@ void COlympiadDefaultSetting::Init()
 }
 
 int COlympiadDefaultSetting::GetTransferingPointWrapper(COlympiadDefaultSetting *self, int a, int b, int c)
-{
+{ GUARDED
+
 	return self->GetTransferingPoint(a, b, c);
 }
 
 int COlympiadDefaultSetting::GetTransferingPoint(int a, int b, int c)
-{
+{ GUARDED
+
 	int result = reinterpret_cast<int(*)(COlympiadDefaultSetting*, int, int, int)>(0x768E48)(this, a, b, c);
 	return result < 10 ? result : 10;
 }
 
 int COlympiadDefaultSetting::GetPenaltyPointWrapper(COlympiadDefaultSetting *self, int a, int b)
-{
+{ GUARDED
+
 	return self->GetPenaltyPoint(a, b);
 }
 
 int COlympiadDefaultSetting::GetPenaltyPoint(int a, int b)
-{
+{ GUARDED
+
 	int result = reinterpret_cast<int(*)(COlympiadDefaultSetting*, int, int)>(0x768F78)(this, a, b);
 	return result < 10 ? result : 10;
 }

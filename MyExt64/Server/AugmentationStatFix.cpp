@@ -8,7 +8,8 @@ void AugmentationStatFix::Init()
 }
 
 BYTE* __cdecl AugmentationStatFix::Fix(BYTE *a, BYTE *b, int c, int d, int e, int f, int g, BYTE h)
-{
+{ GUARDED
+
 	unsigned char *ret = reinterpret_cast<BYTE*(*)(BYTE*, BYTE*, int, int, int, int, int, BYTE)>(
 		0x6A9600)(a, b, c, d, e, f, g, h);
 

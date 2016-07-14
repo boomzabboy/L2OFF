@@ -81,7 +81,8 @@ int __cdecl GraciaEpilogue::AssembleBuySellListItem(char *buffer, int maxSize, c
 
 namespace {
 CUserSocket *UserSocketFromBuySell(UINT32 a)
-{
+{ GUARDED
+
 	void *ret;
 	reinterpret_cast<void*(*)(void*,void**,UINT32)>(0x448F14)(
 		reinterpret_cast<void*>(0x10DE4580),
@@ -99,20 +100,24 @@ CUserSocket *UserSocketFromBuySell(UINT32 a)
 		*reinterpret_cast<void**>(reinterpret_cast<char*>(*reinterpret_cast<void**>(ret)) + 0xAD0))(ret);
 	return reinterpret_cast<CUserSocket*>(ret);
 }
+
 bool IsEconomySell(void *economy)
 {
 	bool ret = __RTtypeid(economy) == reinterpret_cast<std::type_info*>(0xE588D8);
 	return ret;
 }
+
 bool IsEconomyBuy(void *economy)
 {
 	bool ret = __RTtypeid(economy) == reinterpret_cast<std::type_info*>(0xE588F8);
 	return ret;
 }
+
 }
 
 bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYTE *packet)
-{
+{ GUARDED
+
 	typedef bool (__cdecl *t)(void*, const BYTE*);
 
 	CUserSocket *userSocket = UserSocketFromBuySell(*reinterpret_cast<const UINT32*>(packet));
@@ -241,14 +246,16 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 }
 
 void __cdecl GraciaEpilogue::UserShowHTMLAfterBuySell(CUser *user, const wchar_t *s1, const wchar_t *s2, unsigned int i)
-{
+{ GUARDED
+
 	NpcSocketSendHtmlCmdMenuSelectFirst(
 		user, "cddddQd", 0xC, user->sd->index, user->objectId, user->ext.buySell.storedNpcSdIndex,
 		-1, user->ext.buySell.storedReply, -1, false);
 }
 
 void __cdecl GraciaEpilogue::SendBuySellWrapper(CUserSocket *socket, const unsigned char isBuy, unsigned char opcode, UINT64 adena, UINT32 buyListId, UINT16 itemCount, UINT32 size, void *data)
-{
+{ GUARDED
+
 	CUser *user = socket->user;
 	if (!user) {
 		return;
@@ -261,7 +268,8 @@ void __cdecl GraciaEpilogue::SendBuySellWrapper(CUserSocket *socket, const unsig
 }
 
 bool __cdecl GraciaEpilogue::CUserReleaseEconomy(CUser *self)
-{
+{ GUARDED
+
 	typedef bool (__cdecl *t)(CUser*);
 	t f = reinterpret_cast<t>(0x8D6A70);
 	bool result = false;
@@ -275,7 +283,8 @@ bool __cdecl GraciaEpilogue::CUserReleaseEconomy(CUser *self)
 }
 
 bool __cdecl GraciaEpilogue::SellPacket(CUserSocket *socket, const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	CUser *user = socket->user;
 	if (!user) {
 		return false;
@@ -300,7 +309,8 @@ bool __cdecl GraciaEpilogue::SellPacket(CUserSocket *socket, const BYTE *packet,
 }
 
 bool __cdecl GraciaEpilogue::BuyPacket(CUserSocket *socket, const BYTE *packet, BYTE opcode)
-{
+{ GUARDED
+
 	CUser *user = socket->user;
 	if (!user) {
 		return false;
@@ -323,12 +333,14 @@ bool __cdecl GraciaEpilogue::BuyPacket(CUserSocket *socket, const BYTE *packet, 
 }
 
 void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelect(CUser *user, const char *format, BYTE opcode, UINT32 userSdIndex, UINT32 userObjectId, UINT32 npcSdIndex, INT32 ask, INT64 reply, INT32 state)
-{
+{ GUARDED
+
 	NpcSocketSendHtmlCmdMenuSelectFirst(user, format, opcode, userSdIndex, userObjectId, npcSdIndex, ask, reply, state, true);
 }
 
 void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelectFirst(CUser *user, const char *format, BYTE opcode, UINT32 userSdIndex, UINT32 userObjectId, UINT32 npcSdIndex, INT32 ask, INT64 reply, INT32 state, bool first)
-{
+{ GUARDED
+
 	void *npcSocket = reinterpret_cast<void*>(0x1634170);
 	typedef void (__cdecl *t)(void*, const char*, BYTE, UINT32, UINT32, UINT32, INT32, INT64, INT32);
 	t f = reinterpret_cast<t>(0x72D09C);

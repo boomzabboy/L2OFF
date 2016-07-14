@@ -15,7 +15,8 @@ void CMultiSellList::SendListWrapper(CMultiSellList *self, CUser *user, CNPC *np
 }
 
 void CMultiSellList::SendList(CUser *user, CNPC *npc)
-{
+{ GUARDED
+
 	if (!user) {
 		return;
 	}

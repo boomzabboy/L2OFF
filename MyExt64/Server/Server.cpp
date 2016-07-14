@@ -77,7 +77,8 @@ void Server::Init()
 }
 
 void Server::Load()
-{
+{ GUARDED
+
 	if (GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
 		GraciaEpilogue::Load();
 	}
@@ -155,7 +156,8 @@ void Server::HideWarnings()
 }
 
 void Server::OnLoadEnd(UINT64 classBase)
-{
+{ GUARDED
+
 	typedef UINT32 (__thiscall *t)(UINT64);
 	t f = reinterpret_cast<t>(0x470544);
 	int res = f(classBase);
@@ -234,7 +236,8 @@ HWND Server::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWind
 }
 
 void Server::StartHook(void *logger, int level, const wchar_t *fmt, const wchar_t *build)
-{
+{ GUARDED
+
 	reinterpret_cast<void(*)(void*, int, const wchar_t*, const wchar_t*)>(0x6B9EBC)(logger, level, fmt, build);
 	CLog::Add(CLog::Blue, L"Patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)");
 }
@@ -245,7 +248,8 @@ void Server::HookLoad()
 }
 
 void Server::LoadHook(void *x)
-{
+{ GUARDED
+
 	reinterpret_cast<void(*)(void*)>(0x80E030)(x);
 	Load();
 }
@@ -256,7 +260,8 @@ void Server::HookOnLoadEnd()
 }
 
 void __cdecl Server::CPledgeInitPledge()
-{
+{ GUARDED
+
 	for (;;) {
 		Sleep(100);
 		ScopedLock lock(pledgeInitCS);
@@ -268,7 +273,8 @@ void __cdecl Server::CPledgeInitPledge()
 }
 
 void __cdecl Server::CDominionInitDominion()
-{
+{ GUARDED
+
 	reinterpret_cast<void(*)()>(0x5EA29C)();
 	reinterpret_cast<void(*)()>(0x7D831C)();
 	ScopedLock lock(pledgeInitCS);

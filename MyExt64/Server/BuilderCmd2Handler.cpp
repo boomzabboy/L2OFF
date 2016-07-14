@@ -13,7 +13,8 @@ void BuilderCmd2Handler::Init()
 }
 
 bool __cdecl BuilderCmd2Handler::Handler(CUserSocket *socket, const BYTE *packet)
-{
+{ GUARDED
+
 	CUser *user = socket->user;
 	if (!user) {
 		return false;

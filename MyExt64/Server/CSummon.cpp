@@ -11,7 +11,8 @@ void CSummon::Init()
 }
 
 bool CSummon::IsEnemyTo(CCreature *creature)
-{
+{ GUARDED
+
 	bool ret = reinterpret_cast<bool(*)(CSummon*, CCreature*)>(0x7ABBD8)(this, creature);
 	if (!Config::Instance()->fixes->commandChannelFriendly) {
 		return ret;

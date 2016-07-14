@@ -9,7 +9,8 @@ void GraciaEpilogue::Init()
 }
 
 void GraciaEpilogue::Load()
-{
+{ GUARDED
+
 	LoadSkillEnchant();
 }
 

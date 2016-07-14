@@ -18,7 +18,8 @@ bool __cdecl CSkillInfo::IsValidTargetWrapper(CSkillInfo *self, CCreature *attac
 }
 
 bool CSkillInfo::IsValidTarget(CCreature *attacker, CCreature *target, bool b)
-{
+{ GUARDED
+
 	if (target && target->IsBoss() && target->sd->npcClassId == 1029028) { // valakas
 		return attacker->sd->z >= -1500; // too high?
 	}

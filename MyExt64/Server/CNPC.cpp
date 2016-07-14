@@ -26,7 +26,8 @@ bool __cdecl CNPC::DieWrapper(CNPC *npc, CCreature *killer)
 }
 
 bool CNPC::Die(CCreature *killer)
-{
+{ GUARDED
+
 	if (this && killer && !IsUser() && !IsSummon() && (killer->IsUser() || killer->IsSummon())) {
 		EventDrop::Data *data = EventDrop::data;
 		if (data->maxLevelDifference < 0 || sd->level >= killer->sd->level - data->maxLevelDifference) {
