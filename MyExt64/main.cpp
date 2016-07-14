@@ -116,18 +116,24 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
 		Guard::off1 = 0x7D18;
 		Guard::off2 = 0x226F890;
 		Guard::off3 = 0x228EC90;
+		Assemble = reinterpret_cast<Assemble_t>(0x68F99C);
+		Disassemble = reinterpret_cast<Disassemble_t>(0x68ED10);
 	    Server::Init();
 	} else if (!memcmp(id, "\x48\x8D\x05\x09\x9D\x1E\x00\x48\x89\x01\xE9\x11\x63\x1A\x00\xCC", 16)) {
 		CLog::instance = reinterpret_cast<CLog*>(0x1962620);
 		Guard::off1 = 0x10;
 		Guard::off2 = 0x191D530;
 		Guard::off3 = 0x194C330;
+		Assemble = reinterpret_cast<Assemble_t>(0x473680);
+		Disassemble = reinterpret_cast<Disassemble_t>(0x473A9C);
 		Cached::Init();
 	} else if (!memcmp(id, "\x4D\x85\xC0\x74\x16\x0F\xB7\x02\x66\x39\x01\x75\x11\x48\x83\xC1", 16)) {
 		CLog::instance = reinterpret_cast<CLog*>(0x291EF90);
 		Guard::off1 = 0x30F78;
 		Guard::off2 = 0x285C160;
 		Guard::off3 = 0x287B560;
+		Assemble = reinterpret_cast<Assemble_t>(0x46D7F4);
+		Disassemble = reinterpret_cast<Disassemble_t>(0x46C5D8);
 		NPCd::Init();
 	} else {
 		wchar_t buffer[1024];

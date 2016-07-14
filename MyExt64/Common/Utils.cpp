@@ -198,8 +198,8 @@ void WriteAddress(unsigned int uAddress, UINT32 absAddr)
 	WriteMemoryDWORD(uAddress, absAddr - (uAddress + 4));
 }
 
-Assemble_t Assemble = reinterpret_cast<Assemble_t>(0x68F99C);
-Disassemble_t Disassemble = reinterpret_cast<Disassemble_t>(0x68ED10);
+Assemble_t Assemble = 0;
+Disassemble_t Disassemble = 0;
 
 std::basic_string<wchar_t> Widen(const std::string &s)
 {
