@@ -111,6 +111,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="0"
+				AdditionalIncludeDirectories="$(ProjectDir)"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -164,305 +165,325 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="Common"
 			>
 			<File
-				RelativePath=".\AugmentationStatFix.cpp"
+				RelativePath=".\Common\CLog.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\AugmentationStatFix.h"
+				RelativePath=".\Common\CLog.h"
 				>
 			</File>
 			<File
-				RelativePath=".\BuilderCmd2Handler.cpp"
+				RelativePath=".\Common\Config.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\BuilderCmd2Handler.h"
+				RelativePath=".\Common\Config.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CAttackAction.cpp"
+				RelativePath=".\Common\CriticalSection.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CAttackAction.h"
+				RelativePath=".\Common\CriticalSection.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CCreature.cpp"
+				RelativePath=".\Common\CSharedCreatureData.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CCreature.h"
+				RelativePath=".\Common\CSharedCreatureData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CHTMLCacheManager.cpp"
+				RelativePath=".\Common\CYieldLock.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CHTMLCacheManager.h"
+				RelativePath=".\Common\CYieldLock.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CLog.cpp"
+				RelativePath=".\Common\DataParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CLog.h"
+				RelativePath=".\Common\DataParser.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CMultiPartyCommandChannel.cpp"
+				RelativePath=".\Common\SmartPtr.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CMultiPartyCommandChannel.h"
+				RelativePath=".\Common\Utils.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CMultiSellList.cpp"
+				RelativePath=".\Common\Utils.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CMultiSellList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CNPC.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CNPC.h"
-				>
-			</File>
-			<File
-				RelativePath=".\COlympiadDefaultSetting.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\COlympiadDefaultSetting.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Config.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Config.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CParty.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CParty.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CriticalSection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CriticalSection.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSharedCreatureData.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CSharedCreatureData.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillEnchantDB.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillEnchantDB.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillEnchantInfo.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillEnchantInfo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillInfo.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CSkillInfo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CSummon.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CSummon.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CTrade.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CTrade.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CTradeManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CTradeManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CUser.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CUser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CUserSocket.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CUserSocket.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CYieldLock.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CYieldLock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DataParser.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DataParser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DropRate.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DropRate.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EnchantItem.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\EnchantItem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EventDrop.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\EventDrop.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraciaEpilogue.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraciaEpilogue.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraciaEpilogueBuySell.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraciaEpiloguePackets.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraciaEpilogueSkillEnchant.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MyExt64.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MyExt64.h"
-				>
-			</File>
-			<File
-				RelativePath=".\OlympiadFixes.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\OlympiadFixes.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ShutdownChecker.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ShutdownChecker.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SkillEnchantOperator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkillEnchantOperator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SmartPtr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Utils.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Utils.h"
-				>
-			</File>
-			<File
-				RelativePath=".\xvector.h"
+				RelativePath=".\Common\xvector.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			Name="Cached"
 			>
+			<File
+				RelativePath=".\Cached\Cached.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Cached\Cached.h"
+				>
+			</File>
 		</Filter>
+		<Filter
+			Name="NPCd"
+			>
+			<File
+				RelativePath=".\NPCd\NPCd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\NPCd.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Server"
+			>
+			<File
+				RelativePath=".\Server\AugmentationStatFix.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\AugmentationStatFix.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\BuilderCmd2Handler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\BuilderCmd2Handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CAttackAction.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CAttackAction.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CCreature.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CCreature.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CHTMLCacheManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CHTMLCacheManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CMultiPartyCommandChannel.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CMultiPartyCommandChannel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CMultiSellList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CMultiSellList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CNPC.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CNPC.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\COlympiadDefaultSetting.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\COlympiadDefaultSetting.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CParty.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CParty.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillEnchantDB.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillEnchantDB.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillEnchantInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillEnchantInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSummon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSummon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CTrade.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CTrade.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CTradeManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CTradeManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CUser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CUser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CUserSocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CUserSocket.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DropRate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DropRate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\EnchantItem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\EnchantItem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\EventDrop.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\EventDrop.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\GraciaEpilogue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\GraciaEpilogue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\GraciaEpilogueBuySell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\GraciaEpiloguePackets.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\GraciaEpilogueSkillEnchant.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\OlympiadFixes.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\OlympiadFixes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\Server.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\Server.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\ShutdownChecker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\ShutdownChecker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\SkillEnchantOperator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\SkillEnchantOperator.h"
+				>
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\main.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
