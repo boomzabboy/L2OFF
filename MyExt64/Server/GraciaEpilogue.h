@@ -27,6 +27,8 @@ public:
 	static int __cdecl AssemblePrivateStoreManageListBuyItem2(char *buffer, int maxSize, const char *format, UINT32 a, UINT16 b, UINT64 c, UINT64 d, UINT16 e, UINT32 f, UINT16 g, UINT16 h, UINT16 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o);
 	static const unsigned char* __cdecl DisassembleSetPrivateStoreListBuyItem1(const unsigned char *data, const char *format, UINT32 *a, UINT16 *b, UINT16 *c, UINT64 *d, UINT64 *e);
 	static int __cdecl AssemblePrivateStoreBuyList(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT16 c, UINT64 d, UINT64 e, UINT16 f, UINT32 g, UINT16 h, UINT64 i, UINT64 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r);
+	static int __cdecl AssemblePetItemListItem1(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT16 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r);
+	static int __cdecl AssemblePetItemListItem2(char *buffer, int maxSize, const char *format, UINT16 a, UINT16 b, UINT32 c, UINT32 d, UINT64 e, UINT16 f, UINT16 g, UINT16 h, UINT32 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s);
 
 	// buy/sell
 	static void InitBuySell();
