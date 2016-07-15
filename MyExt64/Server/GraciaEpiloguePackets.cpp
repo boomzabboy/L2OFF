@@ -43,6 +43,8 @@ void GraciaEpilogue::InitPackets()
 	WriteInstructionCall(0x8BB459, reinterpret_cast<UINT32>(AssemblePrivateStoreBuyList));
 	WriteInstructionCall(0x7B3982, reinterpret_cast<UINT32>(AssemblePetItemListItem1));
 	WriteInstructionCall(0x7B3435, reinterpret_cast<UINT32>(AssemblePetItemListItem2));
+	WriteInstructionCall(0x77F552, reinterpret_cast<UINT32>(AssemblePartyMember1));
+	WriteInstructionCall(0x77F661, reinterpret_cast<UINT32>(AssemblePartyMember2));
 }
 
 int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem1(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
@@ -187,5 +189,17 @@ int __cdecl GraciaEpilogue::AssemblePetItemListItem2(char *buffer, int maxSize, 
 {
 	//                                abcdefghijklmnopqrs000
 	return Assemble(buffer, maxSize, "hhddQhhhdhhhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, 0, 0, 0);
+}
+
+int __cdecl GraciaEpilogue::AssemblePartyMember1(char *buffer, int maxSize, const char *format, UINT32 a, const wchar_t *b, UINT32 c, UINT32 d, UINT32 e, UINT32 f, UINT32 g, UINT32 h, UINT32 i, UINT32 j, UINT32 k, UINT32 l)
+{
+	//                                abcdefghij0kl
+	return Assemble(buffer, maxSize, "dSddddddddddd", a, b, c, d, e, f, g, h, i, j, 0, k, l);
+}
+
+int __cdecl GraciaEpilogue::AssemblePartyMember2(char *buffer, int maxSize, const char *format, UINT32 a)
+{
+	//                                a0
+	return Assemble(buffer, maxSize, "dd", a, 0);
 }
 
