@@ -248,6 +248,14 @@
 			Name="NPCd"
 			>
 			<File
+				RelativePath=".\NPCd\Function.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\Function.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NPCd\NPCd.cpp"
 				>
 			</File>

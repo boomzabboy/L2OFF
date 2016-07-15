@@ -1,5 +1,6 @@
 
 #include <NPCd/NPCd.h>
+#include <NPCd/Function.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 
@@ -8,6 +9,7 @@ void NPCd::Init()
 	DisableSendMail();
 	HookStart();
 	ChangePaths();
+	Function::Init();
 }
 
 void NPCd::DisableSendMail()
