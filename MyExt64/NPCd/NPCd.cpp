@@ -41,5 +41,7 @@ void NPCd::StartHook(void *logger, int level, const char *fmt)
 
 	reinterpret_cast<void(*)(void*, int, const char*)>(0x478038)(logger, level, fmt);
 	CLog::Add(CLog::Blue, L"Patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)");
+	ShellExecute(0, L"open", L"cmd.exe", L"/C mkdir bak", 0, SW_HIDE);
+	ShellExecute(0, L"open", L"cmd.exe", L"/C move LinError.txt.*.bak bak\\", 0, SW_HIDE);
 }
 

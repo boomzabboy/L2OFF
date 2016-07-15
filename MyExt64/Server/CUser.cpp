@@ -141,7 +141,9 @@ CUser::Ext::~Ext()
 CUser::Ext::BuySell::BuySell() :
 	economy2(0),
 	storedNpcSdIndex(0),
+	storedAsk(-1),
 	storedReply(-1),
+	storedState(-1),
 	firstBuySell(true),
 	fakeSell(false)
 {

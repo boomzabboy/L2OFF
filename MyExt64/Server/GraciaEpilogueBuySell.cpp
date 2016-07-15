@@ -222,6 +222,21 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 
 		user->sdLock->Enter(__FILEW__, __LINE__);
 
+		if (user->ext.buySell.storedAsk != -1 || user->ext.buySell.storedState != -1 || user->ext.buySell.storedReply > 8) {
+			userSocket->Send("chQdhbhhc", 0xFE, 0xB7,
+			user->ext.buySell.sellList.adena,
+			user->ext.buySell.sellList.id,
+			user->ext.buySell.sellList.itemCount,
+			user->ext.buySell.sellList.items.size(),
+			user->ext.buySell.sellList.items.data(),
+			0,
+			0,
+			!user->ext.buySell.firstBuySell);
+
+			user->sdLock->Leave(__FILEW__, __LINE__);
+			return false;
+		}
+
 		if (user->ext.buySell.economy2 && !IsEconomyBuy(user->ext.buySell.economy2)) {
 			CUserReleaseEconomy(user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
@@ -250,7 +265,7 @@ void __cdecl GraciaEpilogue::UserShowHTMLAfterBuySell(CUser *user, const wchar_t
 
 	NpcSocketSendHtmlCmdMenuSelectFirst(
 		user, "cddddQd", 0xC, user->sd->index, user->objectId, user->ext.buySell.storedNpcSdIndex,
-		-1, user->ext.buySell.storedReply, -1, false);
+		user->ext.buySell.storedAsk, user->ext.buySell.storedReply, user->ext.buySell.storedState, false);
 }
 
 void __cdecl GraciaEpilogue::SendBuySellWrapper(CUserSocket *socket, const unsigned char isBuy, unsigned char opcode, UINT64 adena, UINT32 buyListId, UINT16 itemCount, UINT32 size, void *data)
@@ -290,11 +305,12 @@ bool __cdecl GraciaEpilogue::SellPacket(CUserSocket *socket, const BYTE *packet,
 		return false;
 	}
 
-	if (*reinterpret_cast<const UINT32*>(packet) != user->ext.buySell.buyList.id) {
-		return false;
+	if (*reinterpret_cast<const UINT32*>(packet) != user->ext.buySell.sellList.id) {
+		if (*reinterpret_cast<const UINT32*>(packet) != user->ext.buySell.buyList.id || !user->ext.buySell.buyList.id) {
+			return false;
+		}
+		*reinterpret_cast<UINT32*>(const_cast<BYTE*>(packet)) = user->ext.buySell.sellList.id;
 	}
-
-	*reinterpret_cast<UINT32*>(const_cast<BYTE*>(packet)) = user->ext.buySell.sellList.id;
 
 	user->sdLock->Enter(__FILEW__, __LINE__);
 	if (user->ext.buySell.buySellSwitched) {
@@ -344,24 +360,20 @@ void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelectFirst(CUser *user, co
 	void *npcSocket = reinterpret_cast<void*>(0x1634170);
 	typedef void (__cdecl *t)(void*, const char*, BYTE, UINT32, UINT32, UINT32, INT32, INT64, INT32);
 	t f = reinterpret_cast<t>(0x72D09C);
-	if (ask != -1 || state != -1 || reply > 8) {
-		f(npcSocket, format, opcode, userSdIndex, userObjectId, npcSdIndex, ask, reply, state);
-		return;
-	}
 
 	if (!user) {
 		return;
 	}
 
 	user->sdLock->Enter(__FILEW__, __LINE__);
-
 	CUserReleaseEconomy(user);
 	user->ext.buySell.fakeSell = reply == 8;
 	user->ext.buySell.firstBuySell = first;
+	user->ext.buySell.storedAsk = ask;
 	user->ext.buySell.storedReply = reply;
+	user->ext.buySell.storedState = state;
 	user->ext.buySell.storedNpcSdIndex = npcSdIndex;
 	user->ext.buySell.buySellSwitched = false;
-
 	user->sdLock->Leave(__FILEW__, __LINE__);
 
 	f(npcSocket, format, opcode, userSdIndex, userObjectId, npcSdIndex, ask, reply, state);

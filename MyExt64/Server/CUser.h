@@ -53,7 +53,9 @@ public:
 
 			void *economy2;
 			UINT32 storedNpcSdIndex;
+			int storedAsk;
 			int storedReply;
+			int storedState;
 			bool firstBuySell;
 			bool fakeSell;
 			BuySellList sellList;

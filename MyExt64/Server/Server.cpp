@@ -242,6 +242,8 @@ void Server::StartHook(void *logger, int level, const wchar_t *fmt, const wchar_
 
 	reinterpret_cast<void(*)(void*, int, const wchar_t*, const wchar_t*)>(0x6B9EBC)(logger, level, fmt, build);
 	CLog::Add(CLog::Blue, L"Patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)");
+	ShellExecute(0, L"open", L"cmd.exe", L"/C mkdir bak", 0, SW_HIDE);
+	ShellExecute(0, L"open", L"cmd.exe", L"/C move LinError.txt.*.bak bak\\", 0, SW_HIDE);
 }
 
 void Server::HookLoad()
