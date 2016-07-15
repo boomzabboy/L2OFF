@@ -1,5 +1,6 @@
 
 #include <Common/Config.h>
+#include <Common/Utils.h>
 #include <Server/Server.h>
 #include <windows.h>
 #include <fstream>
@@ -107,25 +108,27 @@ Config::BuffSystem::BuffSystem(Config *config) :
 
 Config* Config::Instance()
 {
-	if (!instance) {
-		std::ifstream ifs(".\\MyExt64.ini");
-		if (ifs) {
-			instance = new Config(L".\\MyExt64.ini");
-			return instance;
-		}
-		ifs.open("..\\MyExt64.ini");
-		if (ifs) {
-			instance = new Config(L"..\\MyExt64.ini");
-			return instance;
-		}
-		ifs.open("..\\l2server\\MyExt64.ini");
-		if (ifs) {
-			instance = new Config(L"..\\l2server\\MyExt64.ini");
-			return instance;
-		}
-		instance = new Config(L"..\\server\\MyExt64.ini");
+	const static char *paths[] = {
+		".\\MyExt64.ini",
+		"..\\MyExt64.ini",
+		"..\\l2server\\MyExt64.ini",
+		"..\\server\\MyExt64.ini",
+		0};
+
+	if (instance) {
+		return instance;
 	}
-	return instance;
+	for (size_t i(0) ; paths[i] ; ++i) {
+		if (std::ifstream(paths[i])) {
+			instance = new Config(Widen(paths[i]).c_str());
+			return instance;
+		}
+	}
+	MessageBox(0,
+		L"Can't find suitable config MyExt64.ini.\r\n\r\n"
+		L"To use global config for all daemons, place it in top level directory (same level as Cached, NPC and L2Server directories)\r\n"
+		L"To use local configs for single daemons, place it to daemon directory (Cached, NPC, L2Server)", L"ERROR", 0);
+	exit(1);
 }
 
 std::wstring Config::GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue)

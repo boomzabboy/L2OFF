@@ -9,9 +9,9 @@
 #include <new>
 #include <time.h>
 
-CriticalSection CUser::counterCS;
-size_t CUser::counterTotal = 0;
-size_t CUser::counterOffline = 0;
+CriticalSection CUser::onlineOfflineTradeUsersCS;
+std::set<CUser*> CUser::onlineUsers;
+std::set<CUser*> CUser::offlineTradeUsers;
 
 CUser::CUser()
 {
@@ -43,6 +43,7 @@ void CUser::Init()
 	WriteMemoryQWORD(0xC546F8, reinterpret_cast<UINT64>(SendCharInfoWrapper));
 	WriteInstructionCall(0x93A05C, reinterpret_cast<UINT32>(OfflineTradePartyInvite));
 	WriteMemoryQWORD(0xC54400, reinterpret_cast<UINT64>(EnterWorldWrapper));
+	WriteMemoryQWORD(0xC54408, reinterpret_cast<UINT64>(LeaveWorldWrapper));
 
 	WriteMemoryQWORD(0xc53f58, reinterpret_cast<UINT64>(IsEnemyToWrapper));
 	WriteInstructionCall(0x52E43C + 0x164, reinterpret_cast<UINT32>(GetRelationToWrapper));
@@ -99,10 +100,6 @@ CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* 
 		pUnkBuff, uUnk10, uUnk11, uUnk12, uUnk13, uUnk14, uUnk15, uUnk16, uUnk17,
 		uUnk18, uUnk19, uUnk20, uUnk21, uUnk22, bUnk23);
 	new (&ret->ext) Ext();
-	{
-		ScopedLock lock(counterCS);
-		++counterTotal;
-	}
 	if (Config::Instance()->server->fixedPCCafePoints >= 0) {
 		ret->sd->pcPoints = Config::Instance()->server->fixedPCCafePoints;
 	}
@@ -113,12 +110,18 @@ CUser* __cdecl CUser::Destructor(CUser *self, bool isMemoryFreeUsed)
 { GUARDED
 
 	{
-		ScopedLock lock(counterCS);
-		--counterTotal;
-		if (self->ext.isOffline) {
-			--counterOffline;
+		ScopedLock lock(onlineOfflineTradeUsersCS);
+		std::set<CUser*>::iterator i = onlineUsers.find(self);
+		if (i != onlineUsers.end()) {
+			onlineUsers.erase(i);
+		} else {
+			std::set<CUser*>::iterator i = offlineTradeUsers.find(self);
+			if (i != offlineTradeUsers.end()) {
+				offlineTradeUsers.erase(i);
+			}
 		}
 	}
+
 	self->ext.~Ext();
 	typedef CUser* (__cdecl *t)(CUser*, bool);
 	t f = reinterpret_cast<t>(0x8D33C0);
@@ -218,10 +221,17 @@ void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 		}
 	} else if (command == L"online" && Config::Instance()->voiceCommands->online) {
 		wchar_t buffer[1024];
+		size_t online = 0;
+		size_t offlineTrade = 0;
+		{
+			ScopedLock lock(onlineOfflineTradeUsersCS);
+			online = onlineUsers.size();
+			offlineTrade = offlineTradeUsers.size();
+		}
 		if (Config::Instance()->voiceCommands->offline) {
-			swprintf_s(buffer, 1024, L"There are %d characters online (%d on offline trade)", counterTotal, counterOffline);
+			swprintf_s(buffer, 1024, L"There are %d characters online (%d on offline trade)", online + offlineTrade, offlineTrade);
 		} else {
-			swprintf_s(buffer, 1024, L"There are %d characters online", counterTotal);
+			swprintf_s(buffer, 1024, L"There are %d characters online", online);
 		}
 		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
 	} else if (command == L"offline" && Config::Instance()->voiceCommands->offline) {
@@ -325,8 +335,12 @@ void CUser::StartOfflineTrade()
 	ext.isOffline = true;
 
 	{
-		ScopedLock lock(counterCS);
-		++counterOffline;
+		ScopedLock lock(onlineOfflineTradeUsersCS);
+		std::set<CUser*>::iterator i = onlineUsers.find(this);
+		if (i != onlineUsers.end()) {
+			onlineUsers.erase(i);
+		}
+		offlineTradeUsers.insert(this);
 	}
 }
 
@@ -375,12 +389,39 @@ void __cdecl CUser::EnterWorldWrapper(CUser *self)
 void CUser::EnterWorld()
 { GUARDED
 
+	{
+		ScopedLock lock(onlineOfflineTradeUsersCS);
+		onlineUsers.insert(this);
+	}
 	if (sd->builder) {
 		nickColor = 0xff00;
 		ResetNicknameAndColor();
 		reinterpret_cast<bool(*)(CUserSocket*, CUser*, wchar_t*)>(0x48A8EC)(socket, this, L"//gmon");
 	}
 	reinterpret_cast<void(*)(CUser*)>(0x8CF0E4)(this);
+}
+
+void __cdecl CUser::LeaveWorldWrapper(CUser *self)
+{
+	self->LeaveWorld();
+}
+
+void CUser::LeaveWorld()
+{ GUARDED
+
+	reinterpret_cast<void(*)(CUser*)>(0x8CB090)(this);
+	{
+		ScopedLock lock(onlineOfflineTradeUsersCS);
+		std::set<CUser*>::iterator i = onlineUsers.find(this);
+		if (i != onlineUsers.end()) {
+			onlineUsers.erase(i);
+		} else {
+			std::set<CUser*>::iterator i = offlineTradeUsers.find(this);
+			if (i != offlineTradeUsers.end()) {
+				offlineTradeUsers.erase(i);
+			}
+		}
+	}
 }
 
 CMultiPartyCommandChannel* CUser::GetMPCC()

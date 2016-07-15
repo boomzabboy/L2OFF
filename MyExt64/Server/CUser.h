@@ -6,6 +6,7 @@
 #include <Common/CriticalSection.h>
 #include <Common/CYieldLock.h>
 #include <string>
+#include <set>
 
 class CUser : public CCreature {
 protected:
@@ -100,6 +101,7 @@ public:
 	void ResetNicknameAndColor();
 	void SendCharInfo(class CUserSocket *socket, const bool b);
 	void EnterWorld();
+	void LeaveWorld();
 	class CMultiPartyCommandChannel* GetMPCC();
 	void SendRelationChanged(class CUserSocket *socket);
 	bool IsEnemyTo(CCreature *creature);
@@ -120,6 +122,7 @@ public:
 	static void* __cdecl OfflineTradePartyInvite(void *a, void *b, void *c);
 	static void __cdecl SendCharInfoWrapper(CUser *self, class CUserSocket *socket, const bool b);
 	static void __cdecl EnterWorldWrapper(CUser *self);
+	static void __cdecl LeaveWorldWrapper(CUser *self);
 	static bool __cdecl IsEnemyToWrapper(CUser *self, CCreature *creature);
 	static int __cdecl GetRelationToWrapper(CUser *self, CUser *user);
 	static bool __cdecl OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool ctrl, bool shift);
@@ -128,9 +131,9 @@ public:
 	static bool __cdecl DeleteItemInInventoryBeforeCommitWrapper(CUser *self, const UINT32 itemId, const UINT64 itemCount);
 	static bool __cdecl MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes);
 
-	static CriticalSection counterCS;
-	static size_t counterTotal;
-	static size_t counterOffline;
+	static CriticalSection onlineOfflineTradeUsersCS;
+	static std::set<CUser*> onlineUsers;
+	static std::set<CUser*> offlineTradeUsers;
 
 	/* 0x1CB0 */ unsigned char padding0x1CB0[0x598];
 	/* 0x2248 */ void *economy;
