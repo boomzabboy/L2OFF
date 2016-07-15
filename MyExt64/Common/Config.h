@@ -30,6 +30,7 @@ public:
 		time_t pledgeWarLoadTimeout;
 		double vitalityMultiplier;
 		INT32 fixedPCCafePoints;
+		bool oneScriptDirectory;
 		std::wstring loadDlls;
 	} *server;
 

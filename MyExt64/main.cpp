@@ -113,6 +113,7 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
 
 	if (!memcmp(id, "\x48\x8D\x05\xC1\x06\x64\x00\xC6\x41\x08\x00\x48\x89\x01\x48\x8B", 16)) {
 		CLog::instance = reinterpret_cast<CLog*>(0x913EDD0);
+		CLog::logfn = 0x6B92AC;
 		Guard::off1 = 0x7D18;
 		Guard::off2 = 0x226F890;
 		Guard::off3 = 0x228EC90;
@@ -121,6 +122,7 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
 	    Server::Init();
 	} else if (!memcmp(id, "\x48\x8D\x05\x09\x9D\x1E\x00\x48\x89\x01\xE9\x11\x63\x1A\x00\xCC", 16)) {
 		CLog::instance = reinterpret_cast<CLog*>(0x1962620);
+		CLog::logfn = 0x47DCF0;
 		Guard::off1 = 0x10;
 		Guard::off2 = 0x191D530;
 		Guard::off3 = 0x194C330;
@@ -129,6 +131,7 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
 		Cached::Init();
 	} else if (!memcmp(id, "\x4D\x85\xC0\x74\x16\x0F\xB7\x02\x66\x39\x01\x75\x11\x48\x83\xC1", 16)) {
 		CLog::instance = reinterpret_cast<CLog*>(0x291EF90);
+		CLog::logfn = 0x4774D0;
 		Guard::off1 = 0x30F78;
 		Guard::off2 = 0x285C160;
 		Guard::off3 = 0x287B560;

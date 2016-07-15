@@ -2,6 +2,7 @@
 #include <Common/Config.h>
 #include <Server/Server.h>
 #include <windows.h>
+#include <fstream>
 #include <sstream>
 
 Config *Config::instance = 0;
@@ -42,6 +43,7 @@ Config::Server::Server(Config *config) :
 	pledgeWarLoadTimeout(config->GetInt(L"server", L"PledgeWarLoadTimeout", 30)),
 	vitalityMultiplier(config->GetDouble(L"server", L"VitalityMultiplier", 1.0)),
 	fixedPCCafePoints(config->GetInt(L"server", L"FixedPCCafePoints", -1)),
+	oneScriptDirectory(config->GetBool(L"server", L"OneScriptDirectory", false)),
 	loadDlls(config->GetString(L"server", L"LoadDlls", L""))
 {
 }
@@ -106,7 +108,22 @@ Config::BuffSystem::BuffSystem(Config *config) :
 Config* Config::Instance()
 {
 	if (!instance) {
-		instance = new Config(L".\\MyExt64.ini");
+		std::ifstream ifs(".\\MyExt64.ini");
+		if (ifs) {
+			instance = new Config(L".\\MyExt64.ini");
+			return instance;
+		}
+		ifs.open("..\\MyExt64.ini");
+		if (ifs) {
+			instance = new Config(L"..\\MyExt64.ini");
+			return instance;
+		}
+		ifs.open("..\\l2server\\MyExt64.ini");
+		if (ifs) {
+			instance = new Config(L"..\\l2server\\MyExt64.ini");
+			return instance;
+		}
+		instance = new Config(L"..\\server\\MyExt64.ini");
 	}
 	return instance;
 }

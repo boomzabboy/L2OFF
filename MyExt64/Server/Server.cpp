@@ -232,7 +232,9 @@ void Server::HookStart()
 
 HWND Server::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
 {
-	return ::CreateWindowEx(dwExStyle, lpClassName, L"L2Server - patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)", dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+	std::wstring name(lpWindowName);
+	name += L" - patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)";
+	return ::CreateWindowEx(dwExStyle, lpClassName, name.c_str(), dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 }
 
 void Server::StartHook(void *logger, int level, const wchar_t *fmt, const wchar_t *build)
