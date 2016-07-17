@@ -604,12 +604,12 @@ bool CUser::IsNowTrade() const
 	return reinterpret_cast<bool(*)(const CUser*)>(0x8A4E8C)(this);
 }
 
-bool __cdecl CUser::MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes)
+bool __cdecl CUser::MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute)
 {
-	return self->MultiSellChoose(listId, entryId, quantity, optionKey, attributes);
+	return self->MultiSellChoose(listId, entryId, quantity, enchant, optionKey, baseAttribute);
 }
 
-bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, void *optionKey, void *attributes)
+bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute)
 { GUARDED
 
 	if (!this) {
@@ -623,8 +623,8 @@ bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, void *opti
 	if (target->sd->npcClassId != ext.guard.lastMultisellNpcId) {
 		return false;
 	}
-	return reinterpret_cast<bool(*)(CUser*, int, int, UINT64, void*, void*)>(
-		0x8E9640)(this, listId, entryId, quantity, optionKey, attributes);
+	return reinterpret_cast<bool(*)(CUser*, int, int, UINT64, int, UINT32*, UINT16*)>(
+		0x8E9640)(this, listId, entryId, quantity, enchant, optionKey, baseAttribute);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
