@@ -14,9 +14,17 @@ bool DataParser::parse(const std::wstring &filename)
 		CLog::Add(CLog::Red, L"Can't open file '%s' for reading", filename.c_str());
         return false;
     }
-	char bom1 = ifs.get();
-	char bom2 = ifs.get();
-	if (bom1 != 0xFF || bom2 != 0xFE) {
+	bool bomOk = false;
+	unsigned char bom1 = ifs.peek();
+	if (bom1 == 0xff) {
+		ifs.get();
+		unsigned char bom2 = ifs.peek();
+		if (bom2 == 0xfe) {
+			ifs.get();
+			bomOk = true;
+		}
+	}
+	if (!bomOk) {
 		CLog::Add(CLog::Red, L"Missing/invalid BOM in file '%s'", filename.c_str());
 	}
     for (;;) {
@@ -69,13 +77,16 @@ void DataParser::GetLine(std::ifstream &stream, std::wstring &line)
 {
 	line.clear();
 	for (;;) {
-		if (!stream) {
+		if (!stream.good()) {
 			break;
 		}
-		wchar_t c = static_cast<wchar_t>(static_cast<unsigned int>(stream.get()) + static_cast<unsigned int>(stream.get()) * 0x100);
-		if (c == '\n' || stream.eof()) {
+		unsigned char c1 = stream.get();
+		unsigned char c2 = stream.get();
+		wchar_t c = static_cast<wchar_t>(
+			static_cast<unsigned int>(c1) + static_cast<unsigned int>(c2) * 0x100);
+		if (c == L'\n' || stream.eof()) {
 			break;
-		} else if (c != '\r') {
+		} else if (c != L'\r') {
 			line.push_back(c);
 		}
 	}
