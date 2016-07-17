@@ -16,27 +16,27 @@ public:
 
 	int state;
 
-	virtual void OnData(const std::map<std::string, std::string> &data)
+	virtual void OnData(const std::map<std::wstring, std::wstring> &data)
 	{
-		if (Exists(data, "weapon")) {
-			if (Get<std::string>(data, "weapon") == "fighter") {
+		if (Exists(data, L"weapon")) {
+			if (Get<std::wstring>(data, L"weapon") == L"fighter") {
 				state = 0;
-			} else if (Get<std::string>(data, "weapon") == "mage") {
+			} else if (Get<std::wstring>(data, L"weapon") == L"mage") {
 				state = 1;
 			} else {
 				state = -1;
 			}
-		} else if (Exists(data, "armor")) {
-			if (Get<std::string>(data, "armor") == "normal") {
+		} else if (Exists(data, L"armor")) {
+			if (Get<std::wstring>(data, L"armor") == L"normal") {
 				state = 2;
-			} else if (Get<std::string>(data, "armor") == "onepiece") {
+			} else if (Get<std::wstring>(data, L"armor") == L"onepiece") {
 				state = 3;
 			} else {
 				state = -1;
 			}
 		} else if (state >= 0) {
-			int level = Get<int>(data, "level");
-			double chance = Get<double>(data, "chance");
+			int level = Get<int>(data, L"level");
+			double chance = Get<double>(data, L"chance");
 			switch (state) {
 			case 0: chancesFighterWeapon[level - 1] = chance; break;
 			case 1: chancesMageWeapon[level - 1] = chance; break;
@@ -79,7 +79,7 @@ void EnchantItem::Init()
 void EnchantItem::Load()
 {
 	CLog::Add(CLog::Blue, L"Reading ..\\Script\\itemenchant.txt");
-	if (!Parser().parse("..\\Script\\itemenchant.txt")) {
+	if (!Parser().parse(L"..\\Script\\itemenchant.txt")) {
 		CLog::Add(CLog::Red, L"Failed to load itemenchant.txt");
 	} else {
 		CLog::Add(CLog::Blue, L"Loaded ..\\Script\\itemenchant.txt");

@@ -31,20 +31,20 @@ public:
 	int skillId;
     int levels;
 
-	virtual void OnData(const std::map<std::string, std::string> &data)
+	virtual void OnData(const std::map<std::wstring, std::wstring> &data)
     {
-        if (Exists(data, "skill")) {
-            skillId = Get<int>(data, "skill");
-            levels = Get<int>(data, "levels", 0);
-        } else if (skillId >= 0 && Exists(data, "level")) {
-            int level = Get<int>(data, "level");
+        if (Exists(data, L"skill")) {
+            skillId = Get<int>(data, L"skill");
+            levels = Get<int>(data, L"levels", 0);
+        } else if (skillId >= 0 && Exists(data, L"level")) {
+            int level = Get<int>(data, L"level");
             if (level < 1 || level > min(levels, 30)) {
 				CLog::Add(CLog::Red, L"Invalid skill level %d for skill %d", level, skillId);
                 return;
             }
 			std::pair<std::map<UINT32, EnchantCost>::iterator, bool> i = enchantCosts.insert(std::make_pair(skillId, EnchantCost()));
-			i.first->second.levels[level-1].adena = Get<int>(data, "adena", 0);
-			i.first->second.levels[level-1].sp = Get<int>(data, "sp", 0);
+			i.first->second.levels[level-1].adena = Get<int>(data, L"adena", 0);
+			i.first->second.levels[level-1].sp = Get<int>(data, L"sp", 0);
         }
     }
 };
@@ -113,7 +113,7 @@ void GraciaEpilogue::LoadSkillEnchant()
 { GUARDED
 
 	CLog::Add(CLog::Blue, L"Reading ..\\Script\\skillenchantcost.txt");
-	if (!Parser().parse("..\\Script\\skillenchantcost.txt")) {
+	if (!Parser().parse(L"..\\Script\\skillenchantcost.txt")) {
 		CLog::Add(CLog::Red, L"Failed to load skillenchantcost.txt");
 	} else {
 		CLog::Add(CLog::Blue, L"Loaded %d skills from ..\\Script\\skillenchantcost.txt", enchantCosts.size());

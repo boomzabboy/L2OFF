@@ -8,47 +8,50 @@
 
 class DataParser {
 public:
-    bool parse(const std::string &filename);
-    virtual void OnData(const std::map<std::string, std::string> &data) = 0;
+    bool parse(const std::wstring &filename);
+    virtual void OnData(const std::map<std::wstring, std::wstring> &data) = 0;
 
     template<class T>
-    T Convert(const std::string &value, const T &defaultValue = T())
+    T Convert(const std::wstring &value, const T &defaultValue = T())
     {
         T ret;
-        std::stringstream ss;
+        std::wstringstream ss;
         ss << value;
         ss >> ret;
         if (!ss) {
-			CLog::Add(CLog::Red, L"Invalid lexical cast for '%s'", Widen(value).c_str());
+			CLog::Add(CLog::Red, L"Invalid lexical cast for '%s'", value.c_str());
             return defaultValue;
         }
         return ret;
     }
 
     template<class T>
-    T Get(const std::map<std::string, std::string> &data, const std::string &name)
+    T Get(const std::map<std::wstring, std::wstring> &data, const std::wstring &name)
     {
-        std::map<std::string, std::string>::const_iterator idata(data.find(name));
+        std::map<std::wstring, std::wstring>::const_iterator idata(data.find(name));
         if (idata == data.end()) {
-			CLog::Add(CLog::Red, L"Missing '%s'", Widen(name).c_str());
+			CLog::Add(CLog::Red, L"Missing '%s'", name.c_str());
             return T();
         }
         return Convert<T>(idata->second);
     }
 
     template<class T>
-    T Get(const std::map<std::string, std::string> &data, const std::string &name, const T &defaultValue)
+    T Get(const std::map<std::wstring, std::wstring> &data, const std::wstring &name, const T &defaultValue)
     {
-        std::map<std::string, std::string>::const_iterator idata(data.find(name));
+        std::map<std::wstring, std::wstring>::const_iterator idata(data.find(name));
         if (idata == data.end()) {
             return defaultValue;
         }
         return Convert<T>(idata->second);
     }
 
-    bool Exists(const std::map<std::string, std::string> &data, const std::string &name)
+    bool Exists(const std::map<std::wstring, std::wstring> &data, const std::wstring &name)
     {
         return data.find(name) != data.end();
     }
+
+protected:
+	void GetLine(std::ifstream &stream, std::wstring &line);
 };
 
