@@ -3,6 +3,7 @@
 
 #include <string>
 #include <set>
+#include <vector>
 #include <windows.h>
 
 class Config {
@@ -29,6 +30,7 @@ public:
 		time_t pledgeLoadTimeout;
 		time_t pledgeWarLoadTimeout;
 		double vitalityMultiplier;
+		std::vector<INT64> vitalityLevels;
 		INT32 fixedPCCafePoints;
 		bool oneScriptDirectory;
 		std::wstring loadDlls;
@@ -102,6 +104,7 @@ protected:
 	INT64 GetInt(const wchar_t *section, const wchar_t *name, const INT64 defaultValue);
 	bool GetBool(const wchar_t *section, const wchar_t *name, const bool defaultValue);
 	double GetDouble(const wchar_t *section, const wchar_t *name, const double defaultValue);
+	std::vector<INT64> GetIntList(const wchar_t *section, const wchar_t *name, const std::vector<INT64> &defaultValue);
 	std::set<INT64> GetIntSet(const wchar_t *section, const wchar_t *name, const std::set<INT64> &defaultValue);
 
 	std::wstring filename;

@@ -52,6 +52,7 @@ void Server::Init()
 	ApplyMiscMXCFixes();
 	SetBuffSlots();
 	SetFixedPCCafePoints(Config::Instance()->server->fixedPCCafePoints);
+	SetVitalityLevels();
 	CUser::Init();
 	CUserSocket::Init();
 	SkillEnchantOperator::Init();
@@ -337,3 +338,21 @@ void Server::SetFixedPCCafePoints(const INT32 points)
 	}
 }
 
+void Server::SetVitalityLevels()
+{
+	// default is 240, 1800, 14600, 18200, 20000
+	// epilogue is 240, 2000, 13000, 17000, 20000
+	if (Config::Instance()->server->vitalityLevels.size() != 5) {
+		return;
+	}
+	WriteMemoryDWORD(0x959697 + 2, Config::Instance()->server->vitalityLevels[0]);
+	WriteMemoryDWORD(0x9596AB + 2, Config::Instance()->server->vitalityLevels[0]);
+	WriteMemoryDWORD(0x9596B3 + 2, Config::Instance()->server->vitalityLevels[1]);
+	WriteMemoryDWORD(0x9596CA + 2, Config::Instance()->server->vitalityLevels[1]);
+	WriteMemoryDWORD(0x9596D2 + 2, Config::Instance()->server->vitalityLevels[2]);
+	WriteMemoryDWORD(0x9596E9 + 2, Config::Instance()->server->vitalityLevels[2]);
+	WriteMemoryDWORD(0x9596F1 + 2, Config::Instance()->server->vitalityLevels[3]);
+	WriteMemoryDWORD(0x959708 + 2, Config::Instance()->server->vitalityLevels[3]);
+	WriteMemoryDWORD(0x959710 + 2, Config::Instance()->server->vitalityLevels[4]);
+	WriteMemoryDWORD(0x891DB0 + 1, Config::Instance()->server->vitalityLevels[4]);
+}

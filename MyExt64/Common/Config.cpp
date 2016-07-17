@@ -43,6 +43,7 @@ Config::Server::Server(Config *config) :
 	pledgeLoadTimeout(config->GetInt(L"server", L"PledgeLoadTimeout", 60)),
 	pledgeWarLoadTimeout(config->GetInt(L"server", L"PledgeWarLoadTimeout", 30)),
 	vitalityMultiplier(config->GetDouble(L"server", L"VitalityMultiplier", 1.0)),
+	vitalityLevels(config->GetIntList(L"server", L"VitalityLevels", std::vector<INT64>())),
 	fixedPCCafePoints(config->GetInt(L"server", L"FixedPCCafePoints", -1)),
 	oneScriptDirectory(config->GetBool(L"server", L"OneScriptDirectory", false)),
 	loadDlls(config->GetString(L"server", L"LoadDlls", L""))
@@ -186,16 +187,51 @@ double Config::GetDouble(const wchar_t *section, const wchar_t *name, const doub
 	return ret;
 }
 
+std::vector<INT64> Config::GetIntList(const wchar_t *section, const wchar_t *name, const std::vector<INT64> &defaultValue)
+{
+	std::wstring s(GetString(section, name, L""));
+	if (s.empty()) {
+		return defaultValue;
+	}
+	std::vector<INT64> result;
+	if (s == L"-" || s == L"null") {
+		return result;
+	}
+	std::wstring part;
+	for (size_t i(0) ; i < s.size() ; ++i) {
+		if (s[i] == L' ' || s[i] == L',' || s[i] == L';') {
+			if (!part.empty()) {
+				std::wstringstream ss;
+				INT64 i;
+				ss << part;
+				ss >> i;
+				result.push_back(i);
+				part.clear();
+			}
+		} else if (s[i] >= L'0' && s[i] <= L'9') {
+			part.push_back(s[i]);
+		}
+	}
+	if (!part.empty()) {
+		std::wstringstream ss;
+		INT64 i;
+		ss << part;
+		ss >> i;
+		result.push_back(i);
+	}
+	return result;
+}
+
 std::set<INT64> Config::GetIntSet(const wchar_t *section, const wchar_t *name, const std::set<INT64> &defaultValue)
 {
 	std::wstring s(GetString(section, name, L""));
 	if (s.empty()) {
 		return defaultValue;
 	}
-	if (s == L"-" || s == L"null") {
-		return std::set<INT64>();
-	}
 	std::set<INT64> result;
+	if (s == L"-" || s == L"null") {
+		return result;
+	}
 	std::wstring part;
 	for (size_t i(0) ; i < s.size() ; ++i) {
 		if (s[i] == L' ' || s[i] == L',' || s[i] == L';') {

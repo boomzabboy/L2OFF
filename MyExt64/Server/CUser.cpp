@@ -7,6 +7,7 @@
 #include <Common/Utils.h>
 #include <Common/Config.h>
 #include <new>
+#include <sstream>
 #include <time.h>
 
 CriticalSection CUser::onlineOfflineTradeUsersCS;
