@@ -14,7 +14,9 @@ bool DataParser::parse(const std::wstring &filename)
 		CLog::Add(CLog::Red, L"Can't open file '%s' for reading", filename.c_str());
         return false;
     }
-	if (ifs.get() != 0xFE || ifs.get() != 0xFF) {
+	char bom1 = ifs.get();
+	char bom2 = ifs.get();
+	if (bom1 != 0xFF || bom2 != 0xFE) {
 		CLog::Add(CLog::Red, L"Missing/invalid BOM in file '%s'", filename.c_str());
 	}
     for (;;) {
