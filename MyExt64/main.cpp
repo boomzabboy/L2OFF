@@ -98,7 +98,6 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
 					MessageBox(0, s.str().c_str(), L"Error", 16);
 					return FALSE;
 				} else if (debug) {
-					void *ptr = GetProcAddress(module, "DllMain");
 					std::ofstream ofs("writeprocessmemory.txt", std::ios::app);
 					ofs << "done" << std::endl;
 					MessageBox(0, L"DONE", L"DONE", 0);
