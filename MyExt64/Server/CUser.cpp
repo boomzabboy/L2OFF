@@ -410,8 +410,15 @@ void __cdecl CUser::LeaveWorldWrapper(CUser *self)
 }
 
 void CUser::LeaveWorld()
-{ GUARDED
+{
+	GUARDED;
 
+	if (Config::Instance()->server->autoRemoveFromGMList && sd->builder) {
+		CUserSocket *socket_ = socket;
+		if (socket_) {
+			reinterpret_cast<bool(*)(CUserSocket*, CUser*, const wchar_t*)>(0x49E898)(socket_, this, L"//gmunreg");
+		}
+	}
 	reinterpret_cast<void(*)(CUser*)>(0x8CB090)(this);
 	{
 		ScopedLock lock(onlineOfflineTradeUsersCS);

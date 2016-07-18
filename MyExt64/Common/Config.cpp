@@ -46,6 +46,7 @@ Config::Server::Server(Config *config) :
 	vitalityLevels(config->GetIntList(L"server", L"VitalityLevels", std::vector<INT64>())),
 	fixedPCCafePoints(config->GetInt(L"server", L"FixedPCCafePoints", -1)),
 	oneScriptDirectory(config->GetBool(L"server", L"OneScriptDirectory", false)),
+	autoRemoveFromGMList(config->GetBool(L"server", L"AutoRemoveFromGMList", true)),
 	loadDlls(config->GetString(L"server", L"LoadDlls", L""))
 {
 }

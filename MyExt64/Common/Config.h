@@ -33,6 +33,7 @@ public:
 		std::vector<INT64> vitalityLevels;
 		INT32 fixedPCCafePoints;
 		bool oneScriptDirectory;
+		bool autoRemoveFromGMList;
 		std::wstring loadDlls;
 	} *server;
 
