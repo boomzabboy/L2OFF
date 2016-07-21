@@ -3,6 +3,7 @@
 #include <Server/CUserSocket.h>
 #include <Server/CParty.h>
 #include <Server/CSummon.h>
+#include <Server/Server.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Utils.h>
 #include <Common/Config.h>
@@ -247,6 +248,28 @@ void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 		localtime_s(&t, &now);
 		wcsftime(buffer, 1024, L"Current date and time is %Y-%m-%d %H:%M:%S", &t);
 		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
+	} else if (Server::IsDebug() && command == L"dbginzone") {
+		wchar_t buffer[1024];
+		wsprintf(buffer, L"inZoneRestrictionMap1 (size %d)", self->inZoneRestrictionMap1.size());
+		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
+		for (std::map<UINT32, InZoneRestriction>::const_iterator i = self->inZoneRestrictionMap1.begin() ;
+			i != self->inZoneRestrictionMap1.end() ;
+			++i) {
+
+			wsprintf(buffer, L"    %d: %d, %d, %d",
+				i->first, i->second.time, i->second.cnt, i->second.unknown);
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
+		}
+		wsprintf(buffer, L"inZoneRestrictionMap2 (size %d)", self->inZoneRestrictionMap2.size());
+		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
+		for (std::map<UINT32, InZoneRestriction>::const_iterator i = self->inZoneRestrictionMap2.begin() ;
+			i != self->inZoneRestrictionMap2.end() ;
+			++i) {
+
+			wsprintf(buffer, L"    %d: %d, %d, %d",
+				i->first, i->second.time, i->second.cnt, i->second.unknown);
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
+		}
 	} else {
 		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Available voice commands:");
 		if (Config::Instance()->voiceCommands->expOnOff) {
@@ -633,6 +656,11 @@ bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchan
 	}
 	return reinterpret_cast<bool(*)(CUser*, int, int, UINT64, int, UINT32*, UINT16*)>(
 		0x8E9640)(this, listId, entryId, quantity, enchant, optionKey, baseAttribute);
+}
+
+UINT32 CUser::GetDbId()
+{
+	return reinterpret_cast<UINT32(*)(CUser*)>(0x407FE8)(this);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

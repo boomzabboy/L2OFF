@@ -292,11 +292,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CDB.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CDB.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CHTMLCacheManager.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Server\CHTMLCacheManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CInstantZone.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CInstantZone.h"
 				>
 			</File>
 			<File

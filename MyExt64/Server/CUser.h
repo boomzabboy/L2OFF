@@ -7,6 +7,7 @@
 #include <Common/CYieldLock.h>
 #include <string>
 #include <set>
+#include <map>
 
 class CUser : public CCreature {
 protected:
@@ -14,6 +15,12 @@ protected:
 	~CUser();
 
 public:
+	struct InZoneRestriction {
+		int time;
+		int cnt;
+		int unknown;
+	};
+
 	static void Init();
 
 	static CUser* __cdecl Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -117,6 +124,7 @@ public:
 	bool DeleteItemInInventoryBeforeCommit(const UINT32 itemId, const UINT64 itemCount);
 	bool IsNowTrade() const;
 	bool MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute);
+	UINT32 GetDbId();
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -137,22 +145,25 @@ public:
 	static std::set<CUser*> onlineUsers;
 	static std::set<CUser*> offlineTradeUsers;
 
-	/* 0x1CB0 */ unsigned char padding0x1CB0[0x598];
+	/* 0x1CB0 */ unsigned char padding0x1CB0[0x2248 - 0x1CB0];
 	/* 0x2248 */ void *economy;
-	/* 0x2250 */ unsigned char padding0x2250[0x1014];
+	/* 0x2250 */ unsigned char padding0x2250[0x3264 - 0x2250];
 	/* 0x3264 */ CYieldLock htmlLock;
-	/* 0x3270 */ unsigned char padding0x3270[0x28];
+	/* 0x3270 */ unsigned char padding0x3270[0x3298 - 0x3270];
 	/* 0x3298 */ unsigned int olympiadStatus;
-	/* 0x329C */ unsigned char padding0x329C[0xBC];
+	/* 0x329C */ unsigned char padding0x329C[0x3358 - 0x329C];
 	/* 0x3358 */ class CUserSocket *socket;
 	/* 0x3360 */ UINT32 tradeId;
-	/* 0x3364 */ unsigned char padding0x3360[0x274];
+	/* 0x3364 */ unsigned char padding0x3360[0x35D8 - 0x3364];
 	/* 0x35D8 */ bool acceptPM;
-	/* 0x35D9 */ unsigned char padding0x35D9[0x19F];
+	/* 0x35D9 */ unsigned char padding0x35D9[0x3778 - 0x35D9];
 	/* 0x3778 */ UINT32 nickColor;
-	/* 0x377C */ unsigned char padding0x377C[0x134];
+	/* 0x377C */ unsigned char padding0x377C[0x3818 - 0x377C];
+	/* 0x3818 */ std::map<UINT32, InZoneRestriction> inZoneRestrictionMap1;
+	/* 0x3830 */ std::map<UINT32, InZoneRestriction> inZoneRestrictionMap2;
+	/* 0x3848 */ unsigned char padding0x3848[0x38B0 - 0x3848];
 	/* 0x38B0 */ unsigned int isVitalityReplenishing;
-	/* 0x38B4 */ unsigned char padding0x38B4[0x15C];
+	/* 0x38B4 */ unsigned char padding0x38B4[0x3A10 - 0x38B4];
 
 	/* EXT DATA BEGIN AT 0x3A10 */
 	/* 0x3A10 */ Ext ext;

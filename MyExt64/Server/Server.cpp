@@ -19,6 +19,7 @@
 #include <Server/OlympiadFixes.h>
 #include <Server/AugmentationStatFix.h>
 #include <Server/CMultiSellList.h>
+#include <Server/CInstantZone.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -74,6 +75,7 @@ void Server::Init()
 	OlympiadFixes::Init();
 	AugmentationStatFix::Init();
 	CMultiSellList::Init();
+	CInstantZone::Init();
 	HideWarnings(); // call this at last!
 }
 
