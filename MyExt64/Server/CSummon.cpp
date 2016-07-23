@@ -2,16 +2,20 @@
 #include <Server/CSummon.h>
 #include <Server/CUser.h>
 #include <Server/CParty.h>
+#include <Server/NpcServer.h>
 #include <Common/Utils.h>
 #include <Common/Config.h>
+#include <Common/CLog.h>
 
 void CSummon::Init()
 {
-    WriteMemoryQWORD(0xBCB498, reinterpret_cast<UINT64>(IsEnemyToWrapper));
+	WriteMemoryQWORD(0xBCB498, reinterpret_cast<UINT64>(IsEnemyToWrapper));
+	WriteMemoryQWORD(0xBCB508, reinterpret_cast<UINT64>(OutOfSightWrapper));
 }
 
 bool CSummon::IsEnemyTo(CCreature *creature)
-{ GUARDED
+{
+	GUARDED;
 
 	bool ret = reinterpret_cast<bool(*)(CSummon*, CCreature*)>(0x7ABBD8)(this, creature);
 	if (!Config::Instance()->fixes->commandChannelFriendly) {
@@ -64,5 +68,19 @@ CUser* CSummon::GetUserOrMaster()
 bool CSummon::IsEnemyToWrapper(CSummon *self, CCreature *creature)
 {
 	return self->IsEnemyTo(creature);
+}
+
+void __cdecl CSummon::OutOfSightWrapper(CSummon *self, CObject *object, bool b)
+{
+	self->OutOfSight(object, b);
+}
+
+void CSummon::OutOfSight(CObject *object, bool b)
+{
+	GUARDED;
+
+	if (object && GetTarget() == object) {
+		NpcServer::Instance()->Send("cdddddd", 0x37, objectId, 2, 0, 0, 0, 0x11);
+	}
 }
 

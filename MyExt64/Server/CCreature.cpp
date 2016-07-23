@@ -66,7 +66,8 @@ bool CCreature::AddItemToInventory(int itemId, UINT64 count)
 }
 
 CCreature* CCreature::GetTarget()
-{ GUARDED
+{
+	GUARDED;
 
 	CCreature *result = 0;
 	UINT32 targetId_ = targetId;

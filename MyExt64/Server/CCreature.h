@@ -1,9 +1,10 @@
 
 #pragma once
 
+#include <Server/CObject.h>
 #include <windows.h>
 
-class CCreature {
+class CCreature : public CObject {
 protected:
 	CCreature();
 	~CCreature();

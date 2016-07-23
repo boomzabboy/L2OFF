@@ -340,6 +340,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CObject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\COlympiadDefaultSetting.cpp"
 				>
 			</File>
@@ -353,6 +361,14 @@
 			</File>
 			<File
 				RelativePath=".\Server\CParty.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CPet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CPet.h"
 				>
 			</File>
 			<File
@@ -461,6 +477,14 @@
 			</File>
 			<File
 				RelativePath=".\Server\GraciaEpilogueSkillEnchant.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\NpcServer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\NpcServer.h"
 				>
 			</File>
 			<File

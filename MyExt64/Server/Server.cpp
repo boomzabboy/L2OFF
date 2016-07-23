@@ -11,6 +11,7 @@
 #include <Server/EnchantItem.h>
 #include <Server/CMultiPartyCommandChannel.h>
 #include <Server/CSummon.h>
+#include <Server/CPet.h>
 #include <Server/BuilderCmd2Handler.h>
 #include <Server/CHTMLCacheManager.h>
 #include <Server/CSkillInfo.h>
@@ -67,6 +68,7 @@ void Server::Init()
 	EnchantItem::Init();
 	CMultiPartyCommandChannel::Init();
 	CSummon::Init();
+	CPet::Init();
 	BuilderCmd2Handler::Init();
 	CHTMLCacheManager::Init();
 	CSkillInfo::Init();

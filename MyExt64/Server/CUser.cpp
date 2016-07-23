@@ -663,6 +663,11 @@ UINT32 CUser::GetDbId()
 	return reinterpret_cast<UINT32(*)(CUser*)>(0x407FE8)(this);
 }
 
+CSummon* CUser::GetSummonOrPet()
+{
+	return reinterpret_cast<CSummon*(*)(CUser*)>(0x8FC6CC)(this);
+}
+
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
 CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);
 CompileTimeOffsetCheck(CUser, isVitalityReplenishing, 0x38B0);
