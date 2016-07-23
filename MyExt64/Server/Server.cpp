@@ -10,6 +10,7 @@
 #include <Server/ShutdownChecker.h>
 #include <Server/EnchantItem.h>
 #include <Server/CMultiPartyCommandChannel.h>
+#include <Server/CCreature.h>
 #include <Server/CSummon.h>
 #include <Server/CPet.h>
 #include <Server/BuilderCmd2Handler.h>
@@ -67,6 +68,7 @@ void Server::Init()
 	ShutdownChecker::Init();
 	EnchantItem::Init();
 	CMultiPartyCommandChannel::Init();
+	CCreature::Init();
 	CSummon::Init();
 	CPet::Init();
 	BuilderCmd2Handler::Init();

@@ -3,6 +3,18 @@
 #include <Common/CSharedCreatureData.h>
 #include <Common/CYieldLock.h>
 #include <Common/Utils.h>
+#include <math.h>
+
+void CCreature::Init()
+{
+	WriteInstructionCall(0x57362C + 0xC0, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+	WriteInstructionCall(0x575B40 + 0x694, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+	WriteInstructionCall(0x7130B0 + 0x79, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+	WriteInstructionCall(0x7131E8 + 0x9C, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+	WriteInstructionCall(0x847364 + 0xA0, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+	WriteInstructionCall(0x847364 + 0xBD, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+	WriteInstructionCall(0x895AE0 + 0x79, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+}
 
 CCreature::CCreature()
 {
@@ -75,6 +87,29 @@ CCreature* CCreature::GetTarget()
 		return reinterpret_cast<CCreature*(*)(UINT64, UINT32)>(0x41A3A4)(0xF1B250, targetId_);
 	}
 	return 0;
+}
+
+unsigned long CCreature::GetSkillUsedTime(const int skillId)
+{
+	return reinterpret_cast<unsigned long(*)(CCreature*, const int)>(0x550B9C)(this, skillId);
+}
+
+int CCreature::GetRemainReuseDelaySec(const int skillId)
+{
+	UINT64 skillUsedTime = GetSkillUsedTime(skillId);
+	if (!skillUsedTime) {
+		return 0;
+	}
+	INT64 delta = skillUsedTime - GetTickCount();
+	if (delta <= 0) {
+		return 0;
+	}
+	return ceil(double(delta) / 1000.0);
+}
+
+int __cdecl CCreature::GetRemainReuseDelaySecWrapper(CCreature *self, const int skillId)
+{
+	return self->GetRemainReuseDelaySec(skillId);
 }
 
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);
