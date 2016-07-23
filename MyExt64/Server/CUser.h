@@ -125,6 +125,7 @@ public:
 	bool IsNowTrade() const;
 	bool MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute);
 	UINT32 GetDbId();
+	CSummon* GetSummonOrPet();
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
