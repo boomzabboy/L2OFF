@@ -7,6 +7,7 @@
 #include <Server/CMultiPartyCommandChannel.h>
 #include <Server/CTradeManager.h>
 #include <Server/CTrade.h>
+#include <Server/SkillEnchantFix.h>
 #include <Common/CLog.h>
 #include <Common/Utils.h>
 #include <Common/Config.h>
@@ -573,6 +574,11 @@ bool CUserSocket::CallPacketExHandler(const BYTE opcode, const BYTE *packet)
 		case 0x0E: return GraciaEpilogue::RequestExEnchantSkillInfo(this, packet, opcode);
 		case 0x33: return GraciaEpilogue::RequestExEnchantSkillUntrain(this, packet, opcode);
 		case 0x46: return GraciaEpilogue::RequestExEnchantSkillInfoDetail(this, packet, opcode);
+		default: break;
+		}
+	} else {
+		switch (opcode) {
+		case 0x46: return SkillEnchantFix::RequestExEnchantSkillInfoDetail(this, packet, opcode);
 		default: break;
 		}
 	}

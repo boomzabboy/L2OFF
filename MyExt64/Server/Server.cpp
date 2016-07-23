@@ -22,6 +22,7 @@
 #include <Server/AugmentationStatFix.h>
 #include <Server/CMultiSellList.h>
 #include <Server/CInstantZone.h>
+#include <Server/SkillEnchantFix.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>

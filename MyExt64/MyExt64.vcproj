@@ -512,6 +512,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\SkillEnchantFix.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\SkillEnchantFix.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\SkillEnchantOperator.cpp"
 				>
 			</File>
