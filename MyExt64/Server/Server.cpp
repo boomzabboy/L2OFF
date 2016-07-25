@@ -1,5 +1,6 @@
 
 #include <Server/Server.h>
+#include <Server/CWorld.h>
 #include <Server/CUser.h>
 #include <Server/CUserSocket.h>
 #include <Server/SkillEnchantOperator.h>
@@ -57,6 +58,7 @@ void Server::Init()
 	SetBuffSlots();
 	SetFixedPCCafePoints(Config::Instance()->server->fixedPCCafePoints);
 	SetVitalityLevels();
+	CWorld::Init();
 	CUser::Init();
 	CUserSocket::Init();
 	SkillEnchantOperator::Init();

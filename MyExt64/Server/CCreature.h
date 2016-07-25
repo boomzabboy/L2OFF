@@ -2,6 +2,7 @@
 #pragma once
 
 #include <Server/CObject.h>
+#include <Server/CInventory.h>
 #include <windows.h>
 
 class CCreature : public CObject {
@@ -26,15 +27,17 @@ public:
 
 	static int __cdecl GetRemainReuseDelaySecWrapper(CCreature *self, const int skillId);
 
-	/* 0x0000 */ unsigned char padding0x0000[0x18];
+
+	/* 0x0000 */ unsigned char padding0x0000[0x0018 - 0x0000];
 	/* 0x0018 */ UINT32 objectId;
-	/* 0x001C */ unsigned char padding0x001C[0xA74];
+	/* 0x001C */ unsigned char padding0x001C[0x0A90 - 0x001C];
 	/* 0x0A90 */ class CSharedCreatureData *sd;
-	/* 0x0A98 */ unsigned char padding0x0A98[0x8];
+	/* 0x0A98 */ unsigned char padding0x0A98[0x0AA0 - 0x0A98];
 	/* 0x0AA0 */ class CYieldLock *sdLock;
-	/* 0x0AA8 */ unsigned char padding0x0AA8[0x9B8];
+	/* 0x0AA8 */ CInventory inventory;
+	/* 0x0B78 */ unsigned char padding0x0B78[0x1460 - 0x0B78];
 	/* 0x1460 */ UINT32 targetId;
-	/* 0x1464 */ unsigned char padding0x1464[0x84C];
+	/* 0x1464 */ unsigned char padding0x1464[0x1CB0 - 0x1464];
 	/* 0x1CB0 */
 };
 

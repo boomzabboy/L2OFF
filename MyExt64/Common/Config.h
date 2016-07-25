@@ -45,6 +45,7 @@ public:
 		bool online;
 		bool offline;
 		bool time;
+		bool autoloot;
 	} *voiceCommands;
 
 	struct Fixes {
@@ -98,6 +99,15 @@ public:
 		int maxSlots;
 		int maxDivineInspirationBonusSlots;
 	} *buffSystem;
+
+	struct AutoLoot {
+		AutoLoot(Config *config);
+
+		bool autoLootMobDrop;
+		bool autoLootBossDrop;
+		int maximumAutoLootDistance;
+		std::set<INT64> excludedItems;
+	} *autoLoot;
 
 protected:
 	Config(const wchar_t *filename);

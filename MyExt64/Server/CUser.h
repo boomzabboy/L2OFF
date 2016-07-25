@@ -98,6 +98,7 @@ public:
 		bool isOffline;
 		LastSkill lastSkill;
 		Guard guard;
+		bool autoloot;
 	};
 
 	UINT64 GetItemCount(UINT32 itemId);
@@ -126,6 +127,7 @@ public:
 	bool MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute);
 	UINT32 GetDbId();
 	class CSummon* GetSummonOrPet();
+	bool AddItemToInventory2(class CItem *item);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);

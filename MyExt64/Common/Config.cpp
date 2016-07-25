@@ -15,7 +15,8 @@ Config::Config(const wchar_t *filename) :
 	fixes(0),
 	rate(0),
 	clanRestrictions(0),
-	buffSystem(0)
+	buffSystem(0),
+	autoLoot(0)
 {
 	server = new Server(this);
 	voiceCommands = new VoiceCommands(this);
@@ -23,6 +24,7 @@ Config::Config(const wchar_t *filename) :
 	rate = new Rate(this);
 	clanRestrictions = new ClanRestrictions(this);
 	buffSystem = new BuffSystem(this);
+	autoLoot = new AutoLoot(this);
 }
 
 Config::Server::Server(Config *config) :
@@ -56,7 +58,8 @@ Config::VoiceCommands::VoiceCommands(Config *config) :
 	expOnOff(config->GetBool(L"voicecommands", L"ExpOnOff", true)),
 	online(config->GetBool(L"voicecommands", L"Online", true)),
 	offline(config->GetBool(L"voicecommands", L"Offline", true)),
-	time(config->GetBool(L"voicecommands", L"Time", true))
+	time(config->GetBool(L"voicecommands", L"Time", true)),
+	autoloot(config->GetBool(L"voicecommands", L"Autoloot", true))
 {
 }
 
@@ -105,6 +108,14 @@ Config::ClanRestrictions::ClanRestrictions(Config *config) :
 Config::BuffSystem::BuffSystem(Config *config) :
 	maxSlots(config->GetInt(L"buff-system", L"MaxSlots", 20)),
 	maxDivineInspirationBonusSlots(config->GetInt(L"buff-system", L"MaxDivineInspirationBonusSlots", 4))
+{
+}
+
+Config::AutoLoot::AutoLoot(Config *config) :
+	autoLootMobDrop(config->GetBool(L"autoloot", L"AutoLootMobDrop", false)),
+	autoLootBossDrop(config->GetBool(L"autoloot", L"AutoLootBossDrop", false)),
+	maximumAutoLootDistance(config->GetInt(L"autoloot", L"MaximumAutoLootDistance", 2000)),
+	excludedItems(config->GetIntSet(L"autoloot", L"ExcludedItems", std::set<INT64>()))
 {
 }
 

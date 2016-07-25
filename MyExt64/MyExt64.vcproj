@@ -284,6 +284,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CContributeData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CContributeData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CCreature.cpp"
 				>
 			</File>
@@ -313,6 +321,18 @@
 			</File>
 			<File
 				RelativePath=".\Server\CInstantZone.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CInventory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CItem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CItem.h"
 				>
 			</File>
 			<File
@@ -433,6 +453,14 @@
 			</File>
 			<File
 				RelativePath=".\Server\CUserSocket.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CWorld.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CWorld.h"
 				>
 			</File>
 			<File

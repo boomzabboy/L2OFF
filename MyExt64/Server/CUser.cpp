@@ -132,7 +132,8 @@ CUser* __cdecl CUser::Destructor(CUser *self, bool isMemoryFreeUsed)
 
 CUser::Ext::Ext() :
 	isExpOff(false),
-	isOffline(false)
+	isOffline(false),
+	autoloot(true)
 {
 }
 
@@ -248,6 +249,20 @@ void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 		localtime_s(&t, &now);
 		wcsftime(buffer, 1024, L"Current date and time is %Y-%m-%d %H:%M:%S", &t);
 		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
+	} else if (command == L"looton" && Config::Instance()->voiceCommands->autoloot) {
+		if (!self->ext.autoloot) {
+			self->ext.autoloot = true;
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Autoloot turned on");
+		} else {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Autoloot already turned on");
+		}
+	} else if (command == L"lootoff" && Config::Instance()->voiceCommands->autoloot) {
+		if (self->ext.autoloot) {
+			self->ext.autoloot = false;
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Autoloot turned off");
+		} else {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Autoloot already turned off");
+		}
 	} else if (Server::IsDebug() && command == L"dbginzone") {
 		wchar_t buffer[1024];
 		wsprintf(buffer, L"inZoneRestrictionMap1 (size %d)", self->inZoneRestrictionMap1.size());
@@ -284,6 +299,10 @@ void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 		}
 		if (Config::Instance()->voiceCommands->time) {
 			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".time - show current server time");
+		}
+		if (Config::Instance()->voiceCommands->autoloot) {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".looton - turns autoloot on");
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".lootoff - turns autoloot off");
 		}
 	}
 }
@@ -666,6 +685,11 @@ UINT32 CUser::GetDbId()
 CSummon* CUser::GetSummonOrPet()
 {
 	return reinterpret_cast<CSummon*(*)(CUser*)>(0x8FC6CC)(this);
+}
+
+bool CUser::AddItemToInventory2(CItem *item)
+{
+	return reinterpret_cast<bool(*)(CUser*, CItem*)>(0x8D6F98)(this, item);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

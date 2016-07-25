@@ -82,3 +82,9 @@ public:
 #define WIDEN(x) WIDEN2(x)
 #define GUARDED Guard functionGuard_(__WFUNCSIG__);
 
+struct FVector {
+	double x;
+	double y;
+	double z;
+};
+

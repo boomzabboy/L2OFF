@@ -20,13 +20,14 @@ void CNPC::Init()
 	WriteMemoryQWORD(0xC8C9D8, reinterpret_cast<UINT64>(DieWrapper));
 }
 
-bool __cdecl CNPC::DieWrapper(CNPC *npc, CCreature *killer)
+bool __cdecl CNPC::DieWrapper(CNPC *self, CCreature *killer)
 {
-	return npc->Die(killer);
+	return self->Die(killer);
 }
 
 bool CNPC::Die(CCreature *killer)
-{ GUARDED
+{
+	GUARDED;
 
 	if (this && killer && !IsUser() && !IsSummon() && (killer->IsUser() || killer->IsSummon())) {
 		EventDrop::Data *data = EventDrop::data;

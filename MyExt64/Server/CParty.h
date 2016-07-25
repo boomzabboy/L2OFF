@@ -13,5 +13,6 @@ public:
 	std::vector<class CUser*> GetAllMember();
 	void GetAllMember(xvector<class CUser*> *members);
 	void SendRelationChanged();
+	bool IsParty() const;
 };
 

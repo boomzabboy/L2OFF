@@ -1,5 +1,6 @@
 
 #include <Server/CCreature.h>
+#include <Server/CItem.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CYieldLock.h>
 #include <Common/Utils.h>
