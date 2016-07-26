@@ -21,7 +21,7 @@ MXC extender and maybe other extenders.
  * Configurable clan restriction (penalties)
  * Configurable buff slot count + max divine inspiration bonus
  * Configurable vitality level ranges
- * Configurable autoloot system - WORK IN PROGRESS, party autoloot doesn't work yet + not much tested
+ * Configurable autoloot system
 
 == How to use it ==
 If you're not familiar with l2off, it will probably require learning
