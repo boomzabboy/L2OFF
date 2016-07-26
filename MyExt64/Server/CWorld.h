@@ -16,5 +16,6 @@ public:
 
 	bool PutItemNPCDrop(class CItem *item, class FVector &pos, class CNPC *npc);
 	bool PutItem(class CItem *item, class FVector &pos, class CNPC *npc);
+	bool PickItem(class CItem *item, class CUser *user);
 };
 

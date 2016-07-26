@@ -331,6 +331,7 @@ void Server::InitClanRestrictions()
 void Server::ApplyMiscMXCFixes()
 {
 	WriteMemoryBYTE(0x55CDE9, 0x77); // fix condition x <= 0 -> x >= 0 in ressurection
+	NOPMemory(0x7585FF, 20); // prevent possible crash on race condition
 }
 
 void Server::SetBuffSlots()

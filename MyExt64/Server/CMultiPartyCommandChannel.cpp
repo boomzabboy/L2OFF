@@ -23,7 +23,8 @@ void CMultiPartyCommandChannel::SendRelationUpdates()
 }
 
 std::vector<CParty*> CMultiPartyCommandChannel::GetAllParty()
-{ GUARDED
+{
+	GUARDED;
 
 	xvector<CParty*> parties;
 	GetAllParty(&parties);
@@ -33,5 +34,19 @@ std::vector<CParty*> CMultiPartyCommandChannel::GetAllParty()
 void CMultiPartyCommandChannel::GetAllParty(xvector<CParty*> *parties)
 {
 	reinterpret_cast<void(*)(CMultiPartyCommandChannel*, xvector<CParty*>*)>(0x6EF204)(this, parties);
+}
+
+std::vector<CUser*> CMultiPartyCommandChannel::GetAllMember()
+{
+	GUARDED;
+
+	xvector<CUser*> users;
+	GetAllMember(&users);
+	return users;
+}
+
+void CMultiPartyCommandChannel::GetAllMember(xvector<CUser*> *users)
+{
+	reinterpret_cast<void(*)(CMultiPartyCommandChannel*, xvector<CUser*>*)>(0x6F0070)(this, users);
 }
 

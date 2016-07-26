@@ -42,8 +42,3 @@ void CParty::SendRelationChanged()
 	}
 }
 
-bool CParty::IsParty() const
-{
-	return reinterpret_cast<const UINT64*>(this)[0] == 0xBBD518;
-}
-
