@@ -85,7 +85,11 @@ bool CWorld::PutItemNPCDrop(CItem *item, FVector &pos, CNPC *npc)
 
 		CUser *contributor = reinterpret_cast<CUser*>(creature);
 
-		if (!contributor->ext.autoloot || !contributor->socket || !contributeData->PickableIn5Sec(contributor)) {
+		if (!contributor->sd->isAlive
+			|| !contributor->ext.autoloot
+			|| !contributor->socket
+			|| !contributeData->PickableIn5Sec(contributor)) {
+
 			continue;
 		}
 

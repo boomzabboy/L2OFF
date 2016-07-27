@@ -12,7 +12,9 @@ public:
 	/* 0x0020 */ INT32 heading;
 	/* 0x0024 */ UINT32 objectId;
 	/* 0x0028 */ UINT32 index;
-	/* 0x002C */ unsigned char padding0x002C[0x00A4-0x002C];
+	/* 0x002C */ unsigned char padding0x002C[0x0068-0x002C];
+	/* 0x0068 */ INT32 isAlive;
+	/* 0x006C */ unsigned char padding0x006C[0x00A4-0x006C];
 	/* 0x00A4 */ WCHAR name[25];
 	/* 0x00D6 */ unsigned char padding0x00D6[0x06AC-0x00D6];
 	/* 0x06AC */ INT32 storeMode;
