@@ -26,6 +26,7 @@ void WriteInstructionCallJmpEax(unsigned int uAddress, unsigned int uDestination
 void WriteInstructionCall(unsigned int uAddress, unsigned int uDestination, unsigned int uNopEnd = NULL);
 void WriteInstructionJmp(unsigned int uAddress, unsigned int uDestination, unsigned int uNopEnd = NULL);
 bool ReplaceString(unsigned int uAddress, const wchar_t *from, const wchar_t *to);
+void MakeExecutable(unsigned int address, unsigned int len);
 
 template <typename Type, typename Member, int Offset, int RequiredOffset>
 struct MemberOffsetCheck;

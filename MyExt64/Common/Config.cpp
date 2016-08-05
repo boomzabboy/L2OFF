@@ -25,6 +25,7 @@ Config::Config(const wchar_t *filename) :
 	clanRestrictions = new ClanRestrictions(this);
 	buffSystem = new BuffSystem(this);
 	autoLoot = new AutoLoot(this);
+	beta = new Beta(this);
 }
 
 Config::Server::Server(Config *config) :
@@ -49,7 +50,8 @@ Config::Server::Server(Config *config) :
 	fixedPCCafePoints(config->GetInt(L"server", L"FixedPCCafePoints", -1)),
 	oneScriptDirectory(config->GetBool(L"server", L"OneScriptDirectory", false)),
 	autoRemoveFromGMList(config->GetBool(L"server", L"AutoRemoveFromGMList", true)),
-	loadDlls(config->GetString(L"server", L"LoadDlls", L""))
+	loadDlls(config->GetString(L"server", L"LoadDlls", L"")),
+	plugin(config->GetString(L"server", L"Plugin", L""))
 {
 }
 
@@ -116,6 +118,15 @@ Config::AutoLoot::AutoLoot(Config *config) :
 	autoLootBossDrop(config->GetBool(L"autoloot", L"AutoLootBossDrop", false)),
 	maximumAutoLootDistance(config->GetInt(L"autoloot", L"MaximumAutoLootDistance", 2000)),
 	excludedItems(config->GetIntSet(L"autoloot", L"ExcludedItems", std::set<INT64>()))
+{
+}
+
+Config::Beta::Beta(Config *config) :
+	enabled(config->GetBool(L"beta", L"Enabled", false)),
+	level(config->GetBool(L"beta", L"Level", false)),
+	class_(config->GetBool(L"beta", L"Class", false)),
+	adena(config->GetBool(L"beta", L"Adena", false)),
+	noblesse(config->GetBool(L"beta", L"Noblesse", false))
 {
 }
 

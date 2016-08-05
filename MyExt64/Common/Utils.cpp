@@ -20,6 +20,15 @@ void WriteMemoryBYTES(unsigned int address, void *bytes, unsigned int len)
 	}
 }
 
+void MakeExecutable(unsigned int address, unsigned int len)
+{
+	DWORD flOldProtect;
+	HANDLE handle;
+	if ((handle = server) && len) {
+		VirtualProtectEx(handle, (LPVOID)address, len, PAGE_EXECUTE, &flOldProtect);
+	}
+}
+
 void ReadMemoryBYTES(unsigned int address, void *bytes, unsigned int len)
 {
 	DWORD flOldProtect;

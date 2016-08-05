@@ -35,6 +35,7 @@ public:
 		bool oneScriptDirectory;
 		bool autoRemoveFromGMList;
 		std::wstring loadDlls;
+		std::wstring plugin;
 	} *server;
 
 	struct VoiceCommands {
@@ -108,6 +109,16 @@ public:
 		int maximumAutoLootDistance;
 		std::set<INT64> excludedItems;
 	} *autoLoot;
+
+	struct Beta {
+		Beta(Config *config);
+
+		bool enabled;
+		bool level;
+		bool class_;
+		bool adena;
+		bool noblesse;
+	} *beta;
 
 protected:
 	Config(const wchar_t *filename);

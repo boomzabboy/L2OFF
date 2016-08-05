@@ -8,10 +8,12 @@
 #include <Server/CTradeManager.h>
 #include <Server/CTrade.h>
 #include <Server/SkillEnchantFix.h>
+#include <Server/Beta.h>
 #include <Common/CLog.h>
 #include <Common/Utils.h>
 #include <Common/Config.h>
 #include <Common/SmartPtr.h>
+#include <Common/CSharedCreatureData.h>
 #include <new>
 #include <sstream>
 
@@ -188,6 +190,9 @@ CUserSocket::Ext::Ext() :
 	offlineUser(0),
 	offlineSocketHandleCopy(0)
 {
+	if (Server::GetPlugin()) {
+		Server::GetPlugin()->init(pluginData, pluginCS);
+	}
 }
 
 CUserSocket::Ext::~Ext()
@@ -590,16 +595,32 @@ bool CUserSocket::CallPacketExHandler(const BYTE opcode, const BYTE *packet)
 }
 
 bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
-{ GUARDED
+{
+	GUARDED;
+
+	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
+	if (packetLen < 3) {
+		return false;
+	}
+	if (Server::GetPlugin()) {
+		Server::GetPlugin()->decrypt(ext.pluginData, ext.pluginCS, const_cast<BYTE*>(packet), packetLen, opcode);
+	}
 
 	bool ret = CallPacketHandler(opcode, packet);
 	return ret;
 }
 
 bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
-{ GUARDED
+{
+	GUARDED;
 
 	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
+	if (packetLen < 3) {
+		return false;
+	}
+	if (Server::GetPlugin()) {
+		Server::GetPlugin()->decrypt(ext.pluginData, ext.pluginCS, const_cast<BYTE*>(packet), packetLen, opcode);
+	}
 
 	switch (opcode) {
 	case 0x19: // UseItem
@@ -704,6 +725,10 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 			CLog::Add(CLog::Red, L"Had to escape bypass: %s -> %s", packet, escaped.c_str() + 3);
 			*reinterpret_cast<UINT16*>(&escaped[0]) = escaped.size() + 3;
 			return CallPacketHandler(opcode, reinterpret_cast<const BYTE*>(escaped.c_str() + 3));
+		}
+		if (Config::Instance()->beta->enabled && std::wstring(reinterpret_cast<const wchar_t*>(packet), 5) == L"beta_") {
+			Beta::Bypass(user, std::wstring(reinterpret_cast<const wchar_t*>(packet) + 5));
+			return false;
 		}
 		break;
 	}

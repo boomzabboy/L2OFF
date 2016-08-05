@@ -12,11 +12,18 @@ public:
 		ProtocolVersionGraciaEpilogueUpdate1 = 152
 	};
 
+	class Plugin {
+	public:
+		virtual void init(unsigned char *data, CriticalSection &cs) = 0;
+		virtual void decrypt(unsigned char *data, CriticalSection &cs, BYTE *packet, int packetLen, BYTE opcode) = 0;
+	};
+
 	static void Init();
 	static void SetDebug(bool debug);
 	static bool IsDebug();
 	static void SetProtocolVersion(int version);
 	static int GetProtocolVersion();
+	static Plugin* GetPlugin();
 
 protected:
 	static void Load();
@@ -55,5 +62,6 @@ protected:
 	static bool debug;
 	static CriticalSection pledgeInitCS;
 	static bool pledgeInitialized;
+	static Plugin *plugin;
 };
 

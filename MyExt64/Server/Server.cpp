@@ -33,6 +33,7 @@ int Server::protocolVersion = Server::ProtocolVersionGraciaFinal;
 bool Server::debug = false;
 CriticalSection Server::pledgeInitCS;
 bool Server::pledgeInitialized = false;
+Server::Plugin *Server::plugin = 0;
 
 void Server::Init()
 {
@@ -65,6 +66,21 @@ void Server::Init()
 	if (GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
 		GraciaEpilogue::Init();
 	}
+	if (!Config::Instance()->server->plugin.empty()) {
+		if (HMODULE mod = LoadLibrary(Config::Instance()->server->plugin.c_str())) {
+			FARPROC proc = GetProcAddress(mod, "factory");
+			if (proc) {
+				plugin = reinterpret_cast<Plugin*(*)()>(proc)();
+			} else {
+				MessageBox(0, L"Can't load function factory from plugin", L"Error", 0);
+				exit(1);
+			}
+		} else {
+			MessageBox(0, L"Can't load plugin", L"Error", 0);
+			exit(1);
+		}
+	}
+
 	DropRate::Init();
 	EventDrop::Init();
 	CNPC::Init();
@@ -366,3 +382,9 @@ void Server::SetVitalityLevels()
 	WriteMemoryDWORD(0x959710 + 2, Config::Instance()->server->vitalityLevels[4]);
 	WriteMemoryDWORD(0x891DB0 + 1, Config::Instance()->server->vitalityLevels[4]);
 }
+
+Server::Plugin* Server::GetPlugin()
+{
+	return plugin;
+}
+

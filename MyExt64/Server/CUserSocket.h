@@ -2,6 +2,7 @@
 #pragma once
 
 #include <Common/Utils.h>
+#include <Common/CriticalSection.h>
 #include <windows.h>
 #include <stdexcept>
 
@@ -26,6 +27,8 @@ public:
 	public:
 		class CUser *offlineUser;
 		UINT64 offlineSocketHandleCopy;
+		unsigned char pluginData[512];
+		CriticalSection pluginCS;
 	};
 
 	static CUserSocket* __cdecl Constructor(CUserSocket *self, SOCKET s);
