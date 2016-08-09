@@ -120,6 +120,13 @@ public:
 		bool noblesse;
 	} *beta;
 
+	struct Custom {
+		Custom(Config *config);
+
+		bool removeKamaelRace;
+		bool removeVitalitySystem;
+	} *custom;
+
 protected:
 	Config(const wchar_t *filename);
 	std::wstring GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue);

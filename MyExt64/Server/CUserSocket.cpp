@@ -333,14 +333,18 @@ void __cdecl CUserSocket::OfflineTradeDummyOnRead(CUserSocket*)
 }
 
 void __cdecl CUserSocket::BindUserWrapper(CUserSocket *self, CUser *user)
-{ GUARDED
-
-	self->ext.offlineSocketHandleCopy = self->socketHandleCopy;
+{
 	self->BindUser(user);
 }
 
 void CUserSocket::BindUser(CUser *user)
 {
+	GUARDED;
+
+	ext.offlineSocketHandleCopy = socketHandleCopy;
+	if (!user || (Config::Instance()->custom->removeKamaelRace && user->sd->race > 4)) {
+		Close();
+	}
 	return reinterpret_cast<void(*)(CUserSocket*, CUser*)>(0x9246DC)(this, user);
 }
 

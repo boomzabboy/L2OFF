@@ -107,6 +107,7 @@ public:
 	void StartOfflineTrade();
 	INT64 ExpInc(const INT64 exp, const bool b);
 	void AddVitalityPoint(const int points, const int type, const bool b);
+	void SetVitalityPoint(const int points, const bool b);
 	class CParty* GetParty();
 	void ResetNicknameAndColor();
 	void SendCharInfo(class CUserSocket *socket, const bool b);
@@ -132,6 +133,7 @@ public:
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
 	static void __cdecl AddVitalityPointWrapper(CUser *self, const int points, const int type, const bool b);
+	static void __cdecl SetVitalityPointWrapper(CUser *self, const int point, const bool b);
 	static void* __cdecl OfflineTradePartyInvite(void *a, void *b, void *c);
 	static void __cdecl SendCharInfoWrapper(CUser *self, class CUserSocket *socket, const bool b);
 	static void __cdecl EnterWorldWrapper(CUser *self);

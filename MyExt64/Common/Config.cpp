@@ -16,7 +16,9 @@ Config::Config(const wchar_t *filename) :
 	rate(0),
 	clanRestrictions(0),
 	buffSystem(0),
-	autoLoot(0)
+	autoLoot(0),
+	beta(0),
+	custom(0)
 {
 	server = new Server(this);
 	voiceCommands = new VoiceCommands(this);
@@ -26,6 +28,7 @@ Config::Config(const wchar_t *filename) :
 	buffSystem = new BuffSystem(this);
 	autoLoot = new AutoLoot(this);
 	beta = new Beta(this);
+	custom = new Custom(this);
 }
 
 Config::Server::Server(Config *config) :
@@ -127,6 +130,12 @@ Config::Beta::Beta(Config *config) :
 	class_(config->GetBool(L"beta", L"Class", false)),
 	adena(config->GetBool(L"beta", L"Adena", false)),
 	noblesse(config->GetBool(L"beta", L"Noblesse", false))
+{
+}
+
+Config::Custom::Custom(Config *config) :
+	removeKamaelRace(config->GetBool(L"custom", L"RemoveKamaelRace", false)),
+	removeVitalitySystem(config->GetBool(L"custom", L"RemoveVitalitySystem", false))
 {
 }
 

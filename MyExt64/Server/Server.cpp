@@ -59,6 +59,9 @@ void Server::Init()
 	SetBuffSlots();
 	SetFixedPCCafePoints(Config::Instance()->server->fixedPCCafePoints);
 	SetVitalityLevels();
+	if (Config::Instance()->custom->removeKamaelRace) {
+		RemoveKamaelRace();
+	}
 	CWorld::Init();
 	CUser::Init();
 	CUserSocket::Init();
@@ -386,5 +389,11 @@ void Server::SetVitalityLevels()
 Server::Plugin* Server::GetPlugin()
 {
 	return plugin;
+}
+
+void Server::RemoveKamaelRace()
+{
+	WriteMemoryBYTE(0x925297, 0x35);
+	WriteMemoryBYTE(0x925288, 0x35);
 }
 

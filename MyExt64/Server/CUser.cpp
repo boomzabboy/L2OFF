@@ -41,6 +41,8 @@ void CUser::Init()
 	WriteInstructionCall(0x89EE61, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
 	WriteInstructionCall(0x8A191F, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
 	WriteInstructionCall(0x8CFE24, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
+	WriteInstructionCall(0x5E2048, reinterpret_cast<UINT32>(SetVitalityPointWrapper));
+	WriteInstructionCall(0x89CA16, reinterpret_cast<UINT32>(SetVitalityPointWrapper));
 
 	WriteMemoryQWORD(0xC546F8, reinterpret_cast<UINT64>(SendCharInfoWrapper));
 	WriteInstructionCall(0x93A05C, reinterpret_cast<UINT32>(OfflineTradePartyInvite));
@@ -330,7 +332,12 @@ void __cdecl CUser::AddVitalityPointWrapper(CUser *self, const int points, const
 }
 
 void CUser::AddVitalityPoint(const int points, const int type, const bool b)
-{ GUARDED
+{
+	GUARDED;
+
+	if (Config::Instance()->custom->removeVitalitySystem) {
+		return;
+	}
 
 	int points_ = points;
 	if (points_ < 0) {
@@ -348,6 +355,24 @@ void CUser::AddVitalityPoint(const int points, const int type, const bool b)
 	}
 
 	reinterpret_cast<void(*)(CUser*, const int, const int, const bool)>(0x89C918)(this, points_, type, b);
+}
+
+void __cdecl CUser::SetVitalityPointWrapper(CUser *self, const int points, const bool b)
+{
+	self->SetVitalityPoint(points, b);
+}
+
+void CUser::SetVitalityPoint(const int points, const bool b)
+{
+	GUARDED;
+
+	int pointsToSet = points;
+
+	if (Config::Instance()->custom->removeVitalitySystem) {
+		pointsToSet = 0;
+	}
+
+	reinterpret_cast<void(*)(CUser*, const int, const bool)>(0x89C66C)(this, pointsToSet, b);
 }
 
 void CUser::StartOfflineTrade()

@@ -16,7 +16,8 @@ public:
 	/* 0x0068 */ INT32 isAlive;
 	/* 0x006C */ unsigned char padding0x006C[0x007C-0x006C];
 	/* 0x007C */ UINT32 noblesseType;
-	/* 0x0080 */ unsigned char padding0x0080[0x009C-0x0080];
+	/* 0x0080 */ unsigned char padding0x0080[0x0098-0x0080];
+	/* 0x0098 */ INT32 race;
 	/* 0x009C */ INT32 class_;
 	/* 0x00A0 */ INT32 sex;
 	/* 0x00A4 */ WCHAR name[25];
