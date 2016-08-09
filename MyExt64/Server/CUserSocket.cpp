@@ -341,10 +341,12 @@ void CUserSocket::BindUser(CUser *user)
 {
 	GUARDED;
 
-	ext.offlineSocketHandleCopy = socketHandleCopy;
 	if (!user || (Config::Instance()->custom->removeKamaelRace && user->sd->race > 4)) {
 		Close();
+		return;
 	}
+
+	ext.offlineSocketHandleCopy = socketHandleCopy;
 	return reinterpret_cast<void(*)(CUserSocket*, CUser*)>(0x9246DC)(this, user);
 }
 
