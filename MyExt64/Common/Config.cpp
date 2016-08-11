@@ -54,7 +54,8 @@ Config::Server::Server(Config *config) :
 	oneScriptDirectory(config->GetBool(L"server", L"OneScriptDirectory", false)),
 	autoRemoveFromGMList(config->GetBool(L"server", L"AutoRemoveFromGMList", true)),
 	loadDlls(config->GetString(L"server", L"LoadDlls", L"")),
-	plugin(config->GetString(L"server", L"Plugin", L""))
+	plugin(config->GetString(L"server", L"Plugin", L"")),
+	hookWriteProcessMemory(config->GetBool(L"server", L"HookWriteProcessMemory", false))
 {
 }
 

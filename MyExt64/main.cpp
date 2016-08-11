@@ -55,17 +55,18 @@ __declspec(dllexport) BOOL APIENTRY DllMain(HMODULE hDllModule, DWORD reason, LP
         PROCESS_ALL_ACCESS | PROCESS_VM_READ | PROCESS_VM_WRITE,
         FALSE, GetCurrentProcessId());
 
-	WriteProcessMemoryCopy = reinterpret_cast<BOOL(*)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*)>(reinterpret_cast<void*>(WriteProcessMemory));
-
-	ReadMemoryBYTES(reinterpret_cast<UINT32>(WriteProcessMemory), WriteProcessMemoryCopyBuffer, 0x38+5);
-	DWORD oldProtect;
-	VirtualProtectEx(server, WriteProcessMemoryCopyBuffer, 0x38+5, PAGE_EXECUTE_READWRITE, &oldProtect);
-	WriteInstructionJmp(reinterpret_cast<UINT32>(WriteProcessMemoryCopyBuffer) + 0x38,
-		reinterpret_cast<UINT32>(WriteProcessMemory) + 0x38);
-	WriteProcessMemoryCopy = reinterpret_cast<BOOL(*)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*)>(
-		reinterpret_cast<void*>(WriteProcessMemoryCopyBuffer));
-
-	Config::Instance();
+	if (Config::Instance()->server->hookWriteProcessMemory) {
+		WriteProcessMemoryCopy = reinterpret_cast<BOOL(*)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*)>(reinterpret_cast<void*>(WriteProcessMemory));
+		ReadMemoryBYTES(reinterpret_cast<UINT32>(WriteProcessMemory), WriteProcessMemoryCopyBuffer, 0x38+5);
+		DWORD oldProtect;
+		VirtualProtectEx(server, WriteProcessMemoryCopyBuffer, 0x38+5, PAGE_EXECUTE_READWRITE, &oldProtect);
+		WriteInstructionJmp(reinterpret_cast<UINT32>(WriteProcessMemoryCopyBuffer) + 0x38,
+			reinterpret_cast<UINT32>(WriteProcessMemory) + 0x38);
+		WriteProcessMemoryCopy = reinterpret_cast<BOOL(*)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*)>(
+			reinterpret_cast<void*>(WriteProcessMemoryCopyBuffer));
+	} else {
+		WriteProcessMemoryCopy = WriteProcessMemory;
+	}
 
 	{
 		std::wstringstream ss;

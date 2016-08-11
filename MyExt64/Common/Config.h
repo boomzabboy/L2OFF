@@ -36,6 +36,7 @@ public:
 		bool autoRemoveFromGMList;
 		std::wstring loadDlls;
 		std::wstring plugin;
+		bool hookWriteProcessMemory;
 	} *server;
 
 	struct VoiceCommands {
