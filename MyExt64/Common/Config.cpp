@@ -90,24 +90,24 @@ Config::Rate::Rate(Config *config) :
 }
 
 Config::ClanRestrictions::ClanRestrictions(Config *config) :
-	pledgeWarTimeout(config->GetInt(L"clan-restrictions", L"PledgeWarTimeout", 3600)),
-	pledgeOustPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeOustPenaltyTimeout", 18000)),
-	pledgeWithdrawPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeWithdrawPenaltyTimeout", 18000)),
-	pledgeOustedPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeOustedPenaltyTimeout", 18000)),
-	pledgeRechallengePenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeRechallengePenaltyTimeout", 18000)),
-	pledgeRechallengeDespiteRejectionPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeRechallengeDespiteRejectionPenaltyTimeout", 18000)),
-	pledgeDismissTimeout(config->GetInt(L"clan-restrictions", L"PledgeDismissTimeout", 25200)),
-	pledgeDismissPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeDismissPenaltyTimeout", 36000)),
-	pledgeDismissByNPC(config->GetInt(L"clan-restrictions", L"PledgeDismissByNPC", 3600)),
-	allianceCanAcceptNewMemberPledge(config->GetInt(L"clan-restrictions", L"AllianceCanAcceptNewMemberPledge", 3600)),
-	allianceOustPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceOustPenaltyTimeout", 3600)),
-	allianceWithdrawPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceWithdrawPenaltyTimeout", 3600)),
-	allianceOustedPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceOustedPenaltyTimeout", 3600)),
-	allianceDismissPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceDismissPenaltyTimeout", 36000)),
-	allianceRechallengePenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceRechallengePenaltyTimeout", 18000)),
-	allianceRechallengeDespiteRejectionPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceRechallengeDespiteRejectionPenaltyTimeout", 18000)),
-	castleAnnounceTime(config->GetInt(L"clan-restrictions", L"CastleAnnounceTime", 3600)),
-	castleStandbyTime(config->GetInt(L"clan-restrictions", L"CastleStandbyTime", 3600))
+	pledgeWarTimeout(config->GetInt(L"clan-restrictions", L"PledgeWarTimeout", 86400)),
+	pledgeOustPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeOustPenaltyTimeout", 86400)),
+	pledgeWithdrawPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeWithdrawPenaltyTimeout", 86400)),
+	pledgeOustedPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeOustedPenaltyTimeout", 86400)),
+	pledgeRechallengePenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeRechallengePenaltyTimeout", 432000)),
+	pledgeRechallengeDespiteRejectionPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeRechallengeDespiteRejectionPenaltyTimeout", 432000)),
+	pledgeDismissTimeout(config->GetInt(L"clan-restrictions", L"PledgeDismissTimeout", 604800)),
+	pledgeDismissPenaltyTimeout(config->GetInt(L"clan-restrictions", L"PledgeDismissPenaltyTimeout", 864000)),
+	pledgeDismissByNPC(config->GetInt(L"clan-restrictions", L"PledgeDismissByNPC", 604800)),
+	allianceCanAcceptNewMemberPledge(config->GetInt(L"clan-restrictions", L"AllianceCanAcceptNewMemberPledge", 604800)),
+	allianceOustPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceOustPenaltyTimeout", 86400)),
+	allianceWithdrawPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceWithdrawPenaltyTimeout", 86400)),
+	allianceOustedPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceOustedPenaltyTimeout", 86400)),
+	allianceDismissPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceDismissPenaltyTimeout", 86400)),
+	allianceRechallengePenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceRechallengePenaltyTimeout", 432000)),
+	allianceRechallengeDespiteRejectionPenaltyTimeout(config->GetInt(L"clan-restrictions", L"AllianceRechallengeDespiteRejectionPenaltyTimeout", 432000)),
+	castleAnnounceTime(config->GetInt(L"clan-restrictions", L"CastleAnnounceTime", 86400)),
+	castleStandbyTime(config->GetInt(L"clan-restrictions", L"CastleStandbyTime", 86400))
 {
 }
 
