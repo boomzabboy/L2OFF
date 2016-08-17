@@ -327,24 +327,24 @@ void Server::SetMaxLevel(const int main, const int subClass)
 
 void Server::InitClanRestrictions()
 {
-	WriteMemoryDWORD(0xE5ABE8, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeWarTimeout));
-	WriteMemoryDWORD(0xE5ABEC, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeOustPenaltyTimeout));
-	WriteMemoryDWORD(0xE5ABF0, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeWithdrawPenaltyTimeout));
-	WriteMemoryDWORD(0xE5ABF4, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeOustedPenaltyTimeout));
-	WriteMemoryDWORD(0xE5ABF8, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeRechallengePenaltyTimeout));
-	WriteMemoryDWORD(0xE5ABFC, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeRechallengeDespiteRejectionPenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC00, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeDismissTimeout));
-	WriteMemoryDWORD(0xE5AC04, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeDismissPenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC08, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->pledgeDismissByNPC));
-	WriteMemoryDWORD(0xE5AC00, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceCanAcceptNewMemberPledge));
-	WriteMemoryDWORD(0xE5AC0C, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceOustPenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC10, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceWithdrawPenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC14, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceOustedPenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC18, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceDismissPenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC1C, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceRechallengePenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC20, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->allianceRechallengeDespiteRejectionPenaltyTimeout));
-	WriteMemoryDWORD(0xE5AC24, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->castleAnnounceTime));
-	WriteMemoryDWORD(0xE5AC28, reinterpret_cast<UINT32>(&Config::Instance()->clanRestrictions->castleStandbyTime));
+	WriteMemoryDWORD(0xE5ABE8, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeWarTimeout));
+	WriteMemoryDWORD(0xE5ABEC, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeOustPenaltyTimeout));
+	WriteMemoryDWORD(0xE5ABF0, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeWithdrawPenaltyTimeout));
+	WriteMemoryDWORD(0xE5ABF4, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeOustedPenaltyTimeout));
+	WriteMemoryDWORD(0xE5ABF8, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeRechallengePenaltyTimeout));
+	WriteMemoryDWORD(0xE5ABFC, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeRechallengeDespiteRejectionPenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC00, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeDismissTimeout));
+	WriteMemoryDWORD(0xE5AC04, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeDismissPenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC08, static_cast<UINT32>(Config::Instance()->clanRestrictions->pledgeDismissByNPC));
+	WriteMemoryDWORD(0xE5AC00, static_cast<UINT32>(Config::Instance()->clanRestrictions->allianceCanAcceptNewMemberPledge));
+	WriteMemoryDWORD(0xE5AC0C, static_cast<UINT32>(Config::Instance()->clanRestrictions->allianceOustPenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC10, static_cast<UINT32>(Config::Instance()->clanRestrictions->allianceWithdrawPenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC14, static_cast<UINT32>(Config::Instance()->clanRestrictions->allianceOustedPenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC18, static_cast<UINT32>(Config::Instance()->clanRestrictions->allianceDismissPenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC1C, static_cast<UINT32>(Config::Instance()->clanRestrictions->allianceRechallengePenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC20, static_cast<UINT32>(Config::Instance()->clanRestrictions->allianceRechallengeDespiteRejectionPenaltyTimeout));
+	WriteMemoryDWORD(0xE5AC24, static_cast<UINT32>(Config::Instance()->clanRestrictions->castleAnnounceTime));
+	WriteMemoryDWORD(0xE5AC28, static_cast<UINT32>(Config::Instance()->clanRestrictions->castleStandbyTime));
 }
 
 void Server::ApplyMiscMXCFixes()
