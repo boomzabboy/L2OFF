@@ -102,7 +102,7 @@ public:
 	};
 
 	UINT64 GetItemCount(UINT32 itemId);
-	void TakeItem(UINT32 itemId, UINT64 count);
+	bool TakeItem(UINT32 itemId, UINT64 count);
 	void Say(const wchar_t *message);
 	void StartOfflineTrade();
 	INT64 ExpInc(const INT64 exp, const bool b);
@@ -111,6 +111,7 @@ public:
 	class CParty* GetParty();
 	void ResetNicknameAndColor();
 	void SendCharInfo(class CUserSocket *socket, const bool b);
+	void SendUserInfo(class CUserSocket *socket = 0);
 	void EnterWorld();
 	void LeaveWorld();
 	class CMultiPartyCommandChannel* GetMPCC();

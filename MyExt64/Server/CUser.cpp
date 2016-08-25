@@ -184,10 +184,11 @@ UINT64 CUser::GetItemCount(UINT32 itemId)
 		reinterpret_cast<void*>(reinterpret_cast<char*>(this) + 0xaa8), itemId, 0);
 }
 
-void CUser::TakeItem(UINT32 itemId, UINT64 count)
-{ GUARDED
+bool CUser::TakeItem(UINT32 itemId, UINT64 count)
+{
+	GUARDED;
 
-	reinterpret_cast<void(*)(CUser*, UINT32, UINT64, int)>(
+	return reinterpret_cast<bool(*)(CUser*, UINT32, UINT64, int)>(
 		*reinterpret_cast<void**>(
 			reinterpret_cast<char*>(*reinterpret_cast<void**>(this)) + 0x830))(
 				this, itemId, count, 0);
@@ -428,27 +429,38 @@ void* __cdecl CUser::OfflineTradePartyInvite(void *a, void *b, void *c)
 }
 
 void __cdecl CUser::SendCharInfoWrapper(CUser *self, CUserSocket *socket, const bool b)
-{ GUARDED
-
+{
 	self->SendCharInfo(socket, b);
-	if (self->ext.isOffline) {
-		switch (self->sd->storeMode) {
+}
+
+void CUser::SendCharInfo(CUserSocket *socket, const bool b)
+{
+	GUARDED;
+
+	reinterpret_cast<void(*)(CUser*, CUserSocket*, const bool)>(0x90C3E0)(this, socket, b);
+
+	if (ext.isOffline) {
+		switch (sd->storeMode) {
 		case 1:	case 3:	case 5:	case 8:
 			return;
 		default:
 			break;
 		}
 
-		CUserSocket *socket2 = self->socket;
+		CUserSocket *socket2 = this->socket;
+		if (!socket2) {
+			return;
+		}
+
 		socket2->ext.offlineUser = 0;
-		socket2->user = self;
+		socket2->user = this;
 		socket2->OnClose();
 	}
 }
 
-void CUser::SendCharInfo(CUserSocket *socket, const bool b)
+void __cdecl CUser::SendUserInfo(CUserSocket *socket)
 {
-	reinterpret_cast<void(*)(CUser*, CUserSocket*, const bool)>(0x90C3E0)(this, socket, b);
+	reinterpret_cast<void(*)(CUser*, CUserSocket*)>(0x909D84)(this, socket);
 }
 
 void __cdecl CUser::EnterWorldWrapper(CUser *self)

@@ -108,6 +108,11 @@ void Beta::Bypass(CUser *user, const std::wstring &command)
 			reinterpret_cast<unsigned char*>(user->sd) + 0x5D4, 235, 1);
 		reinterpret_cast<void(*)(CDB*, CUser*)>(0x598680)(CDB::Instance(), user);
 		user->sdLock->Leave(__FILEW__, __LINE__);
+	} else if (command.find(L"give_sp") == 0) {
+		user->sdLock->Enter(__FILEW__, __LINE__);
+		user->sd->sp = 2147483647;
+		user->sdLock->Leave(__FILEW__, __LINE__);
+		user->SendUserInfo();
 	}
 }
 
