@@ -177,7 +177,7 @@ void Server::DisableSendMail()
 void Server::HideWarnings()
 {
 	NOPMemory(0x42E44A, 5);
-	WriteMemoryBYTES(0x5EA1E2, "\x66\x31\xF6\x90\x90", 5);
+	NOPMemory(0x5EA1E2, 5);
 	NOPMemory(0x6D323A, 5);
 }
 
