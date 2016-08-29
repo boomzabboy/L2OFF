@@ -40,6 +40,19 @@ void ReplaceOutExOpcode(unsigned int address, BYTE opcode)
 	WriteMemoryBYTE(address + 9, static_cast<BYTE>(0xFE - opcode));
 }
 
+UINT32 RejectedPacketHelper(CUserSocket *socket, BYTE *packet, BYTE opcode, BYTE status)
+{
+	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
+	if (Server::GetPlugin()) {
+		Server::GetPlugin()->decrypt(socket->ext.pluginData, socket->ext.pluginCS, const_cast<BYTE*>(packet), packetLen, opcode);
+	}
+	if (status) {
+		return 0x92EE20;
+	} else {
+		return 0x92EE40;
+	}
+}
+
 }
 
 void CUserSocket::Init()
@@ -54,6 +67,22 @@ void CUserSocket::Init()
 	WriteInstructionCallJmpEax(0x92EF0B, reinterpret_cast<UINT32>(OutGamePacketHandlerWrapper), 0x92EF17);
 	WriteInstructionCallJmpEax(0x92EDFE, reinterpret_cast<UINT32>(InGamePacketHandlerWrapper), 0x92EE0C);
 	WriteInstructionCall(0x92EAE9, reinterpret_cast<UINT32>(InGamePacketExHandlerWrapper), 0x92EB03);
+
+	const static char *rejectedPacketHelperBuffer = \
+		/* 0x00 */ "\x48\x63\xC3"							// mov rax, ebx
+		/* 0x03 */ "\x48\x8D\x0D\x00\x00\x00\x00"			// lea rcx, ????
+		/* 0x0A */ "\x4C\x0F\xB6\x8C\x08\xA0\x11\xDC\x11"	// movzx r9, BYTE PTR [rax+rcx+0x11DC11A0]
+		/* 0x13 */ "\x4C\x63\xC3"							// movsxd r8, ebx
+		/* 0x16 */ "\x48\x8B\x86\xC0\x00\x00\x00"			// mov rax, [rsi+0xC0]
+		/* 0x1D */ "\x4C\x8B\xAC\x24\xA0\x00\x00\x00"		// mov r13, [rsp+98h+arg_0]
+		/* 0x25 */ "\x4B\x8D\x54\x2E\x01"					// lea rdx, [r14+r13+1]
+		/* 0x2A */ "\x48\x8B\xCE"							// mov rcx, rsi
+		/* 0x2D */ "\x90\x90\x90\x90\x90\x90\x90";			// placeholder for call with jump
+
+	WriteAddress(reinterpret_cast<UINT32>(&rejectedPacketHelperBuffer[0x03 + 3]), 0x400000);
+	WriteInstructionCallJmpEax(reinterpret_cast<UINT32>(&rejectedPacketHelperBuffer[0x2D]), reinterpret_cast<UINT32>(RejectedPacketHelper));
+	WriteInstructionJmp(0x92EE0C, reinterpret_cast<UINT32>(rejectedPacketHelperBuffer));
+	MakeExecutable(reinterpret_cast<UINT32>(rejectedPacketHelperBuffer), 0x34);
 
 	switch (Server::GetProtocolVersion()) {
 	case Server::ProtocolVersionGraciaFinal:
