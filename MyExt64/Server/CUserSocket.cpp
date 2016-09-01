@@ -42,8 +42,8 @@ void ReplaceOutExOpcode(unsigned int address, BYTE opcode)
 
 UINT32 RejectedPacketHelper(CUserSocket *socket, BYTE *packet, BYTE opcode, BYTE status)
 {
-	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
 	if (Server::GetPlugin()) {
+		const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
 		Server::GetPlugin()->decrypt(socket->ext.pluginData, socket->ext.pluginCS, const_cast<BYTE*>(packet), packetLen, opcode);
 	}
 	if (status) {
@@ -253,6 +253,16 @@ void CUserSocket::SendSystemMessage(UINT32 id)
 void CUserSocket::SendSystemMessage(const wchar_t *sender, const wchar_t *message)
 {
 	reinterpret_cast<void(*)(CUserSocket*, const wchar_t*, const wchar_t*)>(0x9244F0)(this, sender, message);
+}
+
+void CUserSocket::SendSystemMessageFmt(const wchar_t *sender, const wchar_t *format, ...)
+{
+	va_list args;
+	wchar_t buffer[4096];
+	va_start (args, format);
+	vswprintf_s(buffer, sizeof(buffer) / sizeof(buffer[0]), format, args);
+	va_end(args);
+	SendSystemMessage(sender, buffer);
 }
 
 void CUserSocket::Close()

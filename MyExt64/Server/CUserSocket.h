@@ -50,6 +50,7 @@ public:
 	void SendV(const char *format, va_list va);
 	void SendSystemMessage(UINT32 id);
 	void SendSystemMessage(const wchar_t *sender, const wchar_t *message);
+	void SendSystemMessageFmt(const wchar_t *sender, const wchar_t *format, ...);
 	void Close();
 	void OnClose();
 	void BindUser(class CUser *user);

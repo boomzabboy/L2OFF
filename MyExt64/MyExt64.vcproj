@@ -376,6 +376,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CObjectDB.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CObjectDB.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\COlympiadDefaultSetting.cpp"
 				>
 			</File>
