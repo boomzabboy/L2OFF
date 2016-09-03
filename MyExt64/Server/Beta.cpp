@@ -8,7 +8,7 @@
 
 void Beta::Bypass(CUser *user, const std::wstring &command)
 {
-	if (command.find(L"set_level?level=") == 0) {
+	if (command.find(L"set_level?level=") == 0 && Config::Instance()->beta->level) {
 		std::wstringstream ws;
 		ws << command.substr(10 + 5 + 1);
 		int level = -1;
@@ -17,7 +17,7 @@ void Beta::Bypass(CUser *user, const std::wstring &command)
 			const UINT64 *exp = reinterpret_cast<const UINT64*>(0xA77848);
 			user->ExpInc(exp[level] - user->sd->exp, false);
 		}
-	} else if (command.find(L"set_class?class=") == 0) {
+	} else if (command.find(L"set_class?class=") == 0 && Config::Instance()->beta->class_) {
 		std::wstringstream ws;
 		ws << command.substr(10 + 5 + 1);
 		int newClass = -1;
@@ -99,20 +99,22 @@ void Beta::Bypass(CUser *user, const std::wstring &command)
 			reinterpret_cast<bool(*)(CUser*, int)>(0x8A0C2C)(user, newClass);
 		}
 		user->sdLock->Leave(__FILEW__, __LINE__);
-	} else if (command.find(L"give_adena") == 0) {
+	} else if (command.find(L"give_adena") == 0 && Config::Instance()->beta->adena) {
 		user->AddItemToInventory(57, 100000000);
-	} else if (command.find(L"make_noblesse") == 0) {
+	} else if (command.find(L"make_noblesse") == 0 && Config::Instance()->beta->noblesse) {
 		reinterpret_cast<void(*)(CDB*, CUser*, UINT32)>(0x5990A8)(CDB::Instance(), user, 1);
 		user->sdLock->Enter(__FILEW__, __LINE__);
 		reinterpret_cast<void(*)(unsigned char*, int, BYTE)>(0x443730)(
 			reinterpret_cast<unsigned char*>(user->sd) + 0x5D4, 235, 1);
 		reinterpret_cast<void(*)(CDB*, CUser*)>(0x598680)(CDB::Instance(), user);
 		user->sdLock->Leave(__FILEW__, __LINE__);
-	} else if (command.find(L"give_sp") == 0) {
+	} else if (command.find(L"give_sp") == 0 && Config::Instance()->beta->sp) {
 		user->sdLock->Enter(__FILEW__, __LINE__);
 		user->sd->sp = 2147483647;
 		user->sdLock->Leave(__FILEW__, __LINE__);
 		user->SendUserInfo();
+	} else if (command.find(L"give_fame") == 0 && Config::Instance()->beta->fame) {
+		user->SavePoint(5, 50000);
 	}
 }
 

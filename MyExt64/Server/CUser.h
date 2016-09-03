@@ -130,6 +130,7 @@ public:
 	UINT32 GetDbId();
 	class CSummon* GetSummonOrPet();
 	bool AddItemToInventory2(class CItem *item);
+	void SavePoint(int type, int value);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);

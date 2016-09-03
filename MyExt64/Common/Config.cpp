@@ -130,7 +130,9 @@ Config::Beta::Beta(Config *config) :
 	level(config->GetBool(L"beta", L"Level", false)),
 	class_(config->GetBool(L"beta", L"Class", false)),
 	adena(config->GetBool(L"beta", L"Adena", false)),
-	noblesse(config->GetBool(L"beta", L"Noblesse", false))
+	noblesse(config->GetBool(L"beta", L"Noblesse", false)),
+	sp(config->GetBool(L"beta", L"Sp", false)),
+	fame(config->GetBool(L"beta", L"Fame", false))
 {
 }
 

@@ -119,6 +119,8 @@ public:
 		bool class_;
 		bool adena;
 		bool noblesse;
+		bool sp;
+		bool fame;
 	} *beta;
 
 	struct Custom {

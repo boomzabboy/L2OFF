@@ -729,6 +729,11 @@ bool CUser::AddItemToInventory2(CItem *item)
 	return reinterpret_cast<bool(*)(CUser*, CItem*)>(0x8D6F98)(this, item);
 }
 
+void CUser::SavePoint(int type, int value)
+{
+	reinterpret_cast<void(*)(CUser*, int, int)>(0x891F90)(this, type, value);
+}
+
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
 CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);
 CompileTimeOffsetCheck(CUser, isVitalityReplenishing, 0x38B0);
