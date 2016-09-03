@@ -10,10 +10,13 @@ void CAttackAction::Init()
 }
 
 bool CAttackAction::CheckAttackValidity(CCreature *attacker, CCreature *target)
-{ GUARDED
+{
+	GUARDED;
 
 	if (target && target->IsBoss() && target->sd->npcClassId == 1029028) { // valakas
-		return attacker->sd->z >= -1500; // too high?
+		if (abs(attacker->sd->z - target->sd->z) > 256) {
+			return false;
+		}
 	}
 	return reinterpret_cast<bool(*)(CCreature*, CCreature*)>(0x6FC288)(attacker, target);
 }

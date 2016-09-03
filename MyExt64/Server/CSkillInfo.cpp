@@ -18,10 +18,13 @@ bool __cdecl CSkillInfo::IsValidTargetWrapper(CSkillInfo *self, CCreature *attac
 }
 
 bool CSkillInfo::IsValidTarget(CCreature *attacker, CCreature *target, bool b)
-{ GUARDED
+{
+	GUARDED;
 
 	if (target && target->IsBoss() && target->sd->npcClassId == 1029028) { // valakas
-		return attacker->sd->z >= -1500; // too high?
+		if (abs(attacker->sd->z - target->sd->z) > 256) {
+			return false;
+		}
 	}
 	return reinterpret_cast<bool(*)(void*, CCreature*, CCreature*, bool)>(0x81CF38)(this, attacker, target, b);
 }
