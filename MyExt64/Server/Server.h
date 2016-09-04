@@ -53,6 +53,7 @@ protected:
 	static void SetFixedPCCafePoints(const INT32 points);
 	static void SetVitalityLevels();
 	static void RemoveKamaelRace();
+	static void RelogKeepSongsDances();
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 

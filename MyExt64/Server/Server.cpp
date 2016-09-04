@@ -57,6 +57,9 @@ void Server::Init()
 	InitClanRestrictions();
 	ApplyMiscMXCFixes();
 	SetBuffSlots();
+	if (Config::Instance()->fixes->relogKeepSongsDances) {
+		RelogKeepSongsDances();
+	}
 	SetFixedPCCafePoints(Config::Instance()->server->fixedPCCafePoints);
 	SetVitalityLevels();
 	if (Config::Instance()->custom->removeKamaelRace) {
@@ -395,5 +398,10 @@ void Server::RemoveKamaelRace()
 {
 	WriteMemoryBYTE(0x925297, 0x35);
 	WriteMemoryBYTE(0x925288, 0x35);
+}
+
+void Server::RelogKeepSongsDances()
+{
+	WriteMemoryBYTE(0x8F9E3B, 0xF0);
 }
 

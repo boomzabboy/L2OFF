@@ -57,6 +57,7 @@ public:
 		bool commandChannelFriendly;
 		int repeatSkillOnDistanceFailSeconds;
 		bool disallowTradeInOlympiad;
+		bool relogKeepSongsDances;
 	} *fixes;
 
 	struct Rate {
