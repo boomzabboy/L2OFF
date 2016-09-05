@@ -51,6 +51,8 @@ protected:
 	static void ApplyMiscMXCFixes();
 	static void SetBuffSlots();
 	static void SetFixedPCCafePoints(const INT32 points);
+	static void EnableVitaminManager();
+	static void EnableVitaminManagerNonPremiumItems();
 	static void SetVitalityLevels();
 	static void RemoveKamaelRace();
 	static void RelogKeepSongsDances();

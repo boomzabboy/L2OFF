@@ -61,6 +61,9 @@ void Server::Init()
 		RelogKeepSongsDances();
 	}
 	SetFixedPCCafePoints(Config::Instance()->server->fixedPCCafePoints);
+	if (Config::Instance()->server->enableVitaminManager && Config::Instance()->server->enableVitaminManagerNonPremiumItems) {
+		EnableVitaminManagerNonPremiumItems();
+	}
 	SetVitalityLevels();
 	if (Config::Instance()->custom->removeKamaelRace) {
 		RemoveKamaelRace();
@@ -109,13 +112,17 @@ void Server::Init()
 }
 
 void Server::Load()
-{ GUARDED
+{
+	GUARDED;
 
 	if (GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
 		GraciaEpilogue::Load();
 	}
 	EventDrop::Load();
 	EnchantItem::Load();
+	if (Config::Instance()->server->enableVitaminManager) {
+		EnableVitaminManager();
+	}
 }
 
 bool Server::IsDebug()
@@ -368,6 +375,16 @@ void Server::SetFixedPCCafePoints(const INT32 points)
 		WriteMemoryBYTE(0x891E1E, 0xB9);
 		WriteMemoryDWORD(0x891E1F, static_cast<UINT32>(points));
 	}
+}
+
+void Server::EnableVitaminManager()
+{
+	WriteMemoryBYTE(0xF0C7FE, 0);
+}
+
+void Server::EnableVitaminManagerNonPremiumItems()
+{
+	WriteMemoryBYTE(0x8E147F, 0xEB);
 }
 
 void Server::SetVitalityLevels()

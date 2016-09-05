@@ -32,6 +32,8 @@ public:
 		double vitalityMultiplier;
 		std::vector<INT64> vitalityLevels;
 		INT32 fixedPCCafePoints;
+		bool enableVitaminManager;
+		bool enableVitaminManagerNonPremiumItems;
 		bool oneScriptDirectory;
 		bool autoRemoveFromGMList;
 		std::wstring loadDlls;

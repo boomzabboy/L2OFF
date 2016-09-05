@@ -51,6 +51,8 @@ Config::Server::Server(Config *config) :
 	vitalityMultiplier(config->GetDouble(L"server", L"VitalityMultiplier", 1.0)),
 	vitalityLevels(config->GetIntList(L"server", L"VitalityLevels", std::vector<INT64>())),
 	fixedPCCafePoints(config->GetInt(L"server", L"FixedPCCafePoints", -1)),
+	enableVitaminManager(config->GetBool(L"server", L"EnableVitaminManager", false)),
+	enableVitaminManagerNonPremiumItems(config->GetBool(L"server", L"EnableVitaminManagerNonPremiumItems", false)),
 	oneScriptDirectory(config->GetBool(L"server", L"OneScriptDirectory", false)),
 	autoRemoveFromGMList(config->GetBool(L"server", L"AutoRemoveFromGMList", true)),
 	loadDlls(config->GetString(L"server", L"LoadDlls", L"")),
