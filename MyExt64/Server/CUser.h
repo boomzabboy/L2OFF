@@ -143,7 +143,7 @@ public:
 	static bool __cdecl IsEnemyToWrapper(CUser *self, CCreature *creature);
 	static int __cdecl GetRelationToWrapper(CUser *self, CUser *user);
 	static bool __cdecl OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool ctrl, bool shift);
-	static void __cdecl FixPendingSkill(CUser *user);
+	static void __cdecl FixPendingSkill(CCreature *creature);
 	static bool __cdecl IsInBlockListWrapper(CUser *self, int id);
 	static bool __cdecl DeleteItemInInventoryBeforeCommitWrapper(CUser *self, const UINT32 itemId, const UINT64 itemCount);
 	static bool __cdecl MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute);

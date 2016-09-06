@@ -616,8 +616,15 @@ bool CUser::OnMagicSkillUsePacketOriginal(int skillId, bool ctrl, bool shift)
 	return reinterpret_cast<bool(*)(CUser*, int, bool, bool)>(0x8AD2E8)(this, skillId, ctrl, shift);
 }
 
-void __cdecl CUser::FixPendingSkill(CUser *user)
-{ GUARDED
+void __cdecl CUser::FixPendingSkill(CCreature *creature)
+{
+	GUARDED;
+
+	if (!creature || !creature->IsUser()) {
+		return;
+	}
+
+	CUser *user = reinterpret_cast<CUser*>(creature);
 
 	if (Config::Instance()->fixes->repeatSkillOnDistanceFailSeconds < 0 || !user->ext.lastSkill.skillId) {
 		CUserSocket *socket = user->socket;
