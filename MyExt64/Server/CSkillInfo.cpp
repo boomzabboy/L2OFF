@@ -22,7 +22,7 @@ bool CSkillInfo::IsValidTarget(CCreature *attacker, CCreature *target, bool b)
 	GUARDED;
 
 	if (target && target->IsBoss() && target->sd->npcClassId == 1029028) { // valakas
-		if (abs(attacker->sd->z - target->sd->z) > 256) {
+		if (abs(attacker->sd->z - target->sd->z) > 128) {
 			return false;
 		}
 	}
