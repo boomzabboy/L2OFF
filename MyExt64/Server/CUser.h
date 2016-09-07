@@ -126,6 +126,7 @@ public:
 	bool IsInOlympiad() const;
 	bool DeleteItemInInventoryBeforeCommit(const UINT32 itemId, const UINT64 itemCount);
 	bool IsNowTrade() const;
+	void TradeCancel();
 	bool MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute);
 	UINT32 GetDbId();
 	class CSummon* GetSummonOrPet();

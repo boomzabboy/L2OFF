@@ -698,6 +698,11 @@ bool CUser::IsNowTrade() const
 	return reinterpret_cast<bool(*)(const CUser*)>(0x8A4E8C)(this);
 }
 
+void CUser::TradeCancel()
+{
+	reinterpret_cast<void(*)(CUser*)>(0x8A4C34)(this);
+}
+
 bool __cdecl CUser::MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute)
 {
 	return self->MultiSellChoose(listId, entryId, quantity, enchant, optionKey, baseAttribute);

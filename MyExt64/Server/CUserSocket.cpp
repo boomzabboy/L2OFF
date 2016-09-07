@@ -499,7 +499,8 @@ bool CUserSocket::HtmlCmdObserver(CUser *user, const wchar_t *s1, const wchar_t 
 }
 
 bool __cdecl CUserSocket::TradeAddItemsPacketWrapper(CUserSocket *socket, const BYTE *packet)
-{ GUARDED
+{
+	GUARDED;
 
 	CUser *user = socket->user;
 	if (!user) {
@@ -509,6 +510,32 @@ bool __cdecl CUserSocket::TradeAddItemsPacketWrapper(CUserSocket *socket, const 
 		return false;
 	}
 	return reinterpret_cast<bool(*)(CUserSocket*, const BYTE*)>(0x91C998)(socket, packet);
+}
+
+bool __cdecl CUserSocket::LinkHtmlPacketWrapper(CUserSocket *socket, const BYTE *packet)
+{
+	GUARDED;
+
+	wchar_t buffer[0x800];
+	Disassemble(packet, "S", sizeof(buffer) / sizeof(buffer[0]), buffer);
+
+	std::wstring link(buffer);
+
+	if (link.find(L"..") != std::wstring::npos) {
+		return false;
+	}
+
+	size_t pos = link.rfind(L".");
+	if (pos == std::wstring::npos) {
+		return false;
+	}
+
+	std::wstring extension = link.substr(pos + 1);
+	if (extension != L"htm" && extension != L"html") {
+		return false;
+	}
+
+	return reinterpret_cast<bool(*)(CUserSocket*, const BYTE*)>(0x94A098)(socket, packet);
 }
 
 void CUserSocket::SetGuard(UINT32 &i)
@@ -741,6 +768,8 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 	}
 
 	switch (opcode) {
+	case 0x22: // RequestLinkHtml
+		return LinkHtmlPacketWrapper(this, packet);
 	case 0x23: // RequestBypassToServer
 	{
 		if (!user) {

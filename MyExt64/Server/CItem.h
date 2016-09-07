@@ -13,8 +13,10 @@ public:
 		/* 0x0008 */ double x;
 		/* 0x0010 */ double y;
 		/* 0x0018 */ double z;
-		/* 0x0020 */ unsigned char padding0x0020[0x0030];
+		/* 0x0020 */ unsigned char padding0x0020[0x0050 - 0x0020];
 		/* 0x0050 */ bool pickable;
+		/* 0x0051 */ unsigned char padding0x0051[0x0068 - 0x0051];
+		/* 0x0068 */ UINT64 count;
 	};
 
 	class CContributeData* GetContributeData();

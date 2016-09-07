@@ -14,6 +14,8 @@ public:
 	static void Add(const int type, const wchar_t* format, ...);
 	static void AddV(const int type, const wchar_t *format, va_list va);
 	static void LogCallStack(const int type);
+	static void Debug(const int type, const wchar_t* format, ...);
+	static void DebugV(const int type, const wchar_t *format, va_list va);
 
 	static CLog *instance;
 	static UINT32 logfn;
