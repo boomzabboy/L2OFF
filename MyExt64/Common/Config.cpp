@@ -29,6 +29,7 @@ Config::Config(const wchar_t *filename) :
 	autoLoot = new AutoLoot(this);
 	beta = new Beta(this);
 	custom = new Custom(this);
+	npcd = new Npcd(this);
 }
 
 Config::Server::Server(Config *config) :
@@ -142,6 +143,12 @@ Config::Beta::Beta(Config *config) :
 Config::Custom::Custom(Config *config) :
 	removeKamaelRace(config->GetBool(L"custom", L"RemoveKamaelRace", false)),
 	removeVitalitySystem(config->GetBool(L"custom", L"RemoveVitalitySystem", false))
+{
+}
+
+Config::Npcd::Npcd(Config *config) :
+	useSplittedAI(config->GetBool(L"npcd", L"UseSplittedAI", false)),
+	aiBufferSizeMB(config->GetInt(L"npcd", L"AIBufferSizeMB", 512))
 {
 }
 

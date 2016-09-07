@@ -133,6 +133,13 @@ public:
 		bool removeVitalitySystem;
 	} *custom;
 
+	struct Npcd {
+		Npcd(Config *config);
+
+		bool useSplittedAI;
+		size_t aiBufferSizeMB;
+	} *npcd;
+
 protected:
 	Config(const wchar_t *filename);
 	std::wstring GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue);

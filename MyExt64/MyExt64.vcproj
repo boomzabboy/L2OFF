@@ -255,6 +255,14 @@
 				RelativePath=".\NPCd\NPCd.h"
 				>
 			</File>
+			<File
+				RelativePath=".\NPCd\SplittedAI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\SplittedAI.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Server"

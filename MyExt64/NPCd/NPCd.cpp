@@ -1,13 +1,18 @@
 
 #include <NPCd/NPCd.h>
+#include <NPCd/SplittedAI.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
+#include <Common/Config.h>
 
 void NPCd::Init()
 {
 	DisableSendMail();
 	HookStart();
 	ChangePaths();
+	if (Config::Instance()->npcd->useSplittedAI) {
+		SplittedAI::Init();
+	}
 }
 
 void NPCd::DisableSendMail()

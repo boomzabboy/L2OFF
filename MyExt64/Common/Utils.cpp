@@ -1,5 +1,6 @@
 
 #include <Common/Utils.h>
+#include <Common/CLog.h>
 #include <algorithm>
 
 HANDLE server = NULL;
@@ -220,4 +221,23 @@ std::basic_string<wchar_t> Widen(const std::string &s)
 size_t Guard::off1 = 0;
 size_t Guard::off2 = 0;
 size_t Guard::off3 = 0;
+
+std::pair<unsigned char*, size_t> ReadWholeFile(const wchar_t *filename)
+{
+	HANDLE h = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (!h) {
+		return std::pair<unsigned char*, size_t>(0, 0);
+	}
+	DWORD size = GetFileSize(h, 0);
+	DWORD res = 0;
+	unsigned char *buffer = new unsigned char[size];
+	ReadFile(h, buffer, size, &res, NULL);
+	if (res != size) {
+		CloseHandle(h);
+		delete [] buffer;
+		return std::pair<unsigned char*, size_t>(0, 0);
+	}
+	CloseHandle(h);
+	return std::pair<unsigned char*, size_t>(buffer, size);
+}
 

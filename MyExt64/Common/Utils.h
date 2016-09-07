@@ -89,3 +89,5 @@ struct FVector {
 	double z;
 };
 
+std::pair<unsigned char*, size_t> ReadWholeFile(const wchar_t *filename);
+
