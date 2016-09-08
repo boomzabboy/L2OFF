@@ -256,11 +256,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NPCd\SplittedAI.cpp"
+				RelativePath=".\NPCd\SplitAI.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\NPCd\SplittedAI.h"
+				RelativePath=".\NPCd\SplitAI.h"
 				>
 			</File>
 		</Filter>

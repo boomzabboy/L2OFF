@@ -1,31 +1,31 @@
 
 #pragma warning(disable : 996)
 
-#include <NPCd/SplittedAI.h>
+#include <NPCd/SplitAI.h>
 #include <Common/CLog.h>
 #include <Common/Utils.h>
 #include <Common/Config.h>
 #include <fstream>
 #include <iterator>
 
-unsigned char *SplittedAI::buffer = 0;
+unsigned char *SplitAI::buffer = 0;
 
-void SplittedAI::Init()
+void SplitAI::Init()
 {
-	WriteInstructionCall(0x5CBA17, reinterpret_cast<UINT32>(ReadSplittedAI));
+	WriteInstructionCall(0x5CBA17, reinterpret_cast<UINT32>(ReadSplitAI));
 }
 
-void* SplittedAI::ReadSplittedAI(const wchar_t *filename, UINT32 *filesize)
+void* SplitAI::ReadSplitAI(const wchar_t *filename, UINT32 *filesize)
 {
 	wchar_t fullPathBuffer[1024];
 	GetFullPathNameW(L"..", 1024, fullPathBuffer, 0);
 	std::wstring fullPath(L"\\\\?\\");
 	fullPath.append(fullPathBuffer);
 
-	CLog::Add(CLog::Blue, L"Loading splitted AI");
+	CLog::Add(CLog::Blue, L"Loading Split AI");
 	std::ifstream ifs("..\\ai\\classes.txt");
 	if (!ifs) {
-		CLog::Add(CLog::Red, L"Loading splitted AI: Can't load file classes.txt");
+		CLog::Add(CLog::Red, L"Loading Split AI: Can't load file classes.txt");
 		return 0;
 	}
 	unsigned int size = 1024 * 1024 * Config::Instance()->npcd->aiBufferSizeMB;
@@ -61,7 +61,7 @@ void* SplittedAI::ReadSplittedAI(const wchar_t *filename, UINT32 *filesize)
 		}
 		for (size_t i = 0 ; i < file.second ; ++i) {
 			if (ptr >= end - 1) {
-				CLog::Add(CLog::Red, L"Loading splitted AI: Can't fit AI to buffer");
+				CLog::Add(CLog::Red, L"Loading Split AI: Can't fit AI to buffer");
 				delete [] file.first;
 				delete [] buffer;
 				return 0;

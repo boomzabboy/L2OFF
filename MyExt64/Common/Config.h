@@ -136,7 +136,7 @@ public:
 	struct Npcd {
 		Npcd(Config *config);
 
-		bool useSplittedAI;
+		bool useSplitAI;
 		size_t aiBufferSizeMB;
 	} *npcd;
 
