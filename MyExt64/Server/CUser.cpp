@@ -205,9 +205,10 @@ void CUser::ResetNicknameAndColor()
 }
 
 void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
-{ GUARDED
+{
+	GUARDED;
 
-	if (message[0] != L'.' || !Config::Instance()->voiceCommands->enabled) {
+	if (message[0] != L'.' || !Config::Instance()->voiceCommands->enabled || !message[1]) {
 		self->Say(message);
 		return;
 	}
