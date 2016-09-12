@@ -105,7 +105,7 @@ void* SplitAI::ReadSplitAI(const wchar_t *filename, UINT32 *filesize)
 
 SplitAI::IdMapping::IdMapping() :
 	header(true),
-    lastLabelId(1),
+	lastLabelId(1),
 	lastStringId(1)
 {
 }
