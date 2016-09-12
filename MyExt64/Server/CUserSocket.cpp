@@ -555,27 +555,27 @@ void CUserSocket::CheckGuard(const UINT32 &i) const
 }
 
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
-{ GUARDED
+{
+	GUARDED;
 
 	BYTE opcodeRemapped = opcode;
 
 	try {
-		return self->OutGamePacketHandler(packet, opcodeRemapped) ? 0x92F0BD : 0x92EF17;
-	} catch (const CUserSocket::IgnorePacket &e) {
-		return 0x92EE0C;
-	}
+		if (self->OutGamePacketHandler(packet, opcodeRemapped)) return 0x92F0BD;
+	} catch (const CUserSocket::IgnorePacket &e) { }
+	return 0x92EF17;
 }
 
 UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
-{ GUARDED
+{
+	GUARDED;
 
 	BYTE opcodeRemapped = opcode;
 
 	try {
-		return self->InGamePacketHandler(packet, opcodeRemapped) ? 0x92F08A : 0x92EE48;
-	} catch (const CUserSocket::IgnorePacket &e) {
-		return 0x92EE0C;
-	}
+		if (self->InGamePacketHandler(packet, opcodeRemapped)) return 0x92F08A;
+	} catch (const CUserSocket::IgnorePacket &e) { }
+	return 0x92EE48;
 }
 
 bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const BYTE* packet, WORD opcodeEx)
