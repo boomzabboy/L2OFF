@@ -45,6 +45,8 @@ void GraciaEpilogue::InitPackets()
 	WriteInstructionCall(0x7B3435, reinterpret_cast<UINT32>(AssemblePetItemListItem2));
 	WriteInstructionCall(0x77F552, reinterpret_cast<UINT32>(AssemblePartyMember));
 	WriteInstructionCall(0x8DBAA6, reinterpret_cast<UINT32>(AssemblePackageSendableListItem));
+	WriteInstructionCall(0x93ABD9, reinterpret_cast<UINT32>(SendSystemMessageLogoutWrapper));
+	WriteInstructionCall(0x93AB74, reinterpret_cast<UINT32>(SendLogoutWrapper));
 }
 
 int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem1(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
@@ -201,5 +203,20 @@ int __cdecl GraciaEpilogue::AssemblePackageSendableListItem(char *buffer, int ma
 {
 	//                                abcdefghijklmnopqrs000
 	return Assemble(buffer, maxSize, "hddQhhdhhhdhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, 0, 0, 0);
+}
+
+void __cdecl GraciaEpilogue::SendSystemMessageLogoutWrapper(CUserSocket *socket, unsigned int id)
+{
+	socket->Send("cd", 0x71, 0);
+	socket->SendSystemMessage(id);
+}
+
+void __cdecl GraciaEpilogue::SendLogoutWrapper(CUser *user)
+{
+	CUserSocket *socket = user->socket;
+	if (socket) {
+		socket->Send("cd", 0x71, 1);
+	}
+	reinterpret_cast<void(*)(CUser*)>(0x8A3A14)(user);
 }
 

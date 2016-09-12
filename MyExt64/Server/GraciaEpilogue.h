@@ -31,6 +31,8 @@ public:
 	static int __cdecl AssemblePetItemListItem2(char *buffer, int maxSize, const char *format, UINT16 a, UINT16 b, UINT32 c, UINT32 d, UINT64 e, UINT16 f, UINT16 g, UINT16 h, UINT32 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s);
 	static int __cdecl AssemblePartyMember(char *buffer, int maxSize, const char *format, UINT32 a, const wchar_t *b, UINT32 c, UINT32 d, UINT32 e, UINT32 f, UINT32 g, UINT32 h, UINT32 i, UINT32 j, UINT32 k, UINT32 l);
 	static int __cdecl AssemblePackageSendableListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT32 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s);
+	static void __cdecl SendSystemMessageLogoutWrapper(CUserSocket *socket, unsigned int id);
+	static void __cdecl SendLogoutWrapper(class CUser *user);
 
 	// buy/sell
 	static void InitBuySell();
