@@ -241,3 +241,20 @@ std::pair<unsigned char*, size_t> ReadWholeFile(const wchar_t *filename)
 	return std::pair<unsigned char*, size_t>(buffer, size);
 }
 
+std::vector<std::string> Tokenize(const std::string &text)
+{
+	std::vector<std::string> result;
+	std::string part;
+	for (size_t i = 0 ; i < text.size() ; ++i) {
+		bool white = (text[i] == ' ' || text[i] == '\t' || text[i] == '\r' || text[i] == '\n');
+		if (!white) {
+			part.push_back(text[i]);
+		}
+		if ((white || i == text.size() - 1) && !part.empty()) {
+			result.push_back(part);
+			part.clear();
+		}
+	}
+	return result;
+}
+

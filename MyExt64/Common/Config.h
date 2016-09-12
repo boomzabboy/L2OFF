@@ -138,6 +138,7 @@ public:
 
 		bool useSplitAI;
 		size_t aiBufferSizeMB;
+		bool dumpSplitAI;
 	} *npcd;
 
 protected:

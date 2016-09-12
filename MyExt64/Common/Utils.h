@@ -5,6 +5,7 @@
 #include <yvals.h>
 #include <cstddef>
 #include <string>
+#include <vector>
 
 extern HANDLE server;
 
@@ -90,4 +91,6 @@ struct FVector {
 };
 
 std::pair<unsigned char*, size_t> ReadWholeFile(const wchar_t *filename);
+
+std::vector<std::string> Tokenize(const std::string &text);
 

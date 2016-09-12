@@ -148,7 +148,8 @@ Config::Custom::Custom(Config *config) :
 
 Config::Npcd::Npcd(Config *config) :
 	useSplitAI(config->GetBool(L"npcd", L"UseSplitAI", false)),
-	aiBufferSizeMB(config->GetInt(L"npcd", L"AIBufferSizeMB", 512))
+	aiBufferSizeMB(config->GetInt(L"npcd", L"AIBufferSizeMB", 512)),
+	dumpSplitAI(config->GetBool(L"npcd", L"DumpSplitAI", false))
 {
 }
 
