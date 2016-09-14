@@ -22,6 +22,7 @@ public:
 	};
 
 	static void Init();
+	static DWORD PremiumIpRefresh(void *v);
 
 	static CUser* __cdecl Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
 									  unsigned int characterId, unsigned int accountId,
@@ -132,6 +133,9 @@ public:
 	class CSummon* GetSummonOrPet();
 	bool AddItemToInventory2(class CItem *item);
 	void SavePoint(int type, int value);
+	void TimerExpired(int id);
+	int GetPremiumLevel();
+	void ProcessPremium();
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -148,10 +152,14 @@ public:
 	static bool __cdecl IsInBlockListWrapper(CUser *self, int id);
 	static bool __cdecl DeleteItemInInventoryBeforeCommitWrapper(CUser *self, const UINT32 itemId, const UINT64 itemCount);
 	static bool __cdecl MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute);
+	static void __cdecl TimerExpiredWrapper(CUser *self, int id);
+	static int __cdecl GetPremiumLevelWrapper(CUser *self);
 
 	static CriticalSection onlineOfflineTradeUsersCS;
 	static std::set<CUser*> onlineUsers;
 	static std::set<CUser*> offlineTradeUsers;
+	static CriticalSection premiumIpAddressesCS;
+	static std::set<UINT32> premiumIpAddresses;
 
 	/* 0x1CB0 */ unsigned char padding0x1CB0[0x2248 - 0x1CB0];
 	/* 0x2248 */ void *economy;

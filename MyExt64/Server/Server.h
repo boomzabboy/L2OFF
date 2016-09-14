@@ -56,6 +56,7 @@ protected:
 	static void SetVitalityLevels();
 	static void RemoveKamaelRace();
 	static void RelogKeepSongsDances();
+	static void FixPremiumBoost();
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 

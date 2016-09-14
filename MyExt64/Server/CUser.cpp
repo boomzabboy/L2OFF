@@ -9,11 +9,14 @@
 #include <Common/Config.h>
 #include <new>
 #include <sstream>
+#include <fstream>
 #include <time.h>
 
 CriticalSection CUser::onlineOfflineTradeUsersCS;
 std::set<CUser*> CUser::onlineUsers;
 std::set<CUser*> CUser::offlineTradeUsers;
+CriticalSection CUser::premiumIpAddressesCS;
+std::set<UINT32> CUser::premiumIpAddresses;
 
 CUser::CUser()
 {
@@ -31,6 +34,7 @@ void CUser::Init()
 	WriteInstruction(0x8D4340, reinterpret_cast<UINT32>(Destructor), 0xE8);
 	WriteMemoryQWORD(0xC54088, reinterpret_cast<UINT64>(SayWrapper));
 	WriteMemoryQWORD(0xC54128, reinterpret_cast<UINT64>(ExpIncWrapper));
+	WriteMemoryQWORD(0xC53BD8, reinterpret_cast<UINT64>(TimerExpiredWrapper));
 	WriteInstructionCall(0x487FCE, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
 	WriteInstructionCall(0x73731E, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
 	WriteInstructionCall(0x75CAF2, reinterpret_cast<UINT32>(AddVitalityPointWrapper));
@@ -70,6 +74,40 @@ void CUser::Init()
 	WriteMemoryQWORD(0xC543F8, reinterpret_cast<UINT64>(DeleteItemInInventoryBeforeCommitWrapper));
 
 	WriteInstructionCall(0x928850, reinterpret_cast<UINT32>(MultiSellChooseWrapper));
+
+	WriteInstructionCall(0x471922, reinterpret_cast<UINT32>(GetPremiumLevelWrapper));
+	WriteInstructionCall(0x971651, reinterpret_cast<UINT32>(GetPremiumLevelWrapper));
+
+	bool ipBasedPremiumSystem = Config::Instance()->custom->ipBasedPremiumSystem;
+	int ipBasedFixedPCCafePoints = Config::Instance()->custom->ipBasedFixedPCCafePoints;
+	if (ipBasedPremiumSystem || ipBasedFixedPCCafePoints >= 0) {
+		CreateThread(0, 0, PremiumIpRefresh, 0, 0, 0);
+	}
+}
+
+DWORD CUser::PremiumIpRefresh(void *v)
+{
+	(void) v;
+	for (;;) {
+		Sleep(15000);
+		std::set<UINT32> addresses;
+		std::ifstream ifs("premiumip.dat", std::ios::binary);
+		if (ifs) {
+			for (;;) {
+				if (ifs.eof()) {
+					break;
+				}
+				UINT32 address = 0;
+				ifs.read(reinterpret_cast<char*>(&address), 4);
+				if (address) {
+					addresses.insert(address);
+				}
+			}
+			ifs.close();
+			ScopedLock lock(premiumIpAddressesCS);
+			premiumIpAddresses = addresses;
+		}
+	}
 }
 
 CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* accountName,
@@ -104,9 +142,7 @@ CUser* __cdecl CUser::Constructor(CUser *self, wchar_t* characterName, wchar_t* 
 		pUnkBuff, uUnk10, uUnk11, uUnk12, uUnk13, uUnk14, uUnk15, uUnk16, uUnk17,
 		uUnk18, uUnk19, uUnk20, uUnk21, uUnk22, bUnk23);
 	new (&ret->ext) Ext();
-	if (Config::Instance()->server->fixedPCCafePoints >= 0) {
-		ret->sd->pcPoints = Config::Instance()->server->fixedPCCafePoints;
-	}
+	ret->ProcessPremium();
 	return ret;
 }
 
@@ -725,6 +761,71 @@ bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchan
 	}
 	return reinterpret_cast<bool(*)(CUser*, int, int, UINT64, int, UINT32*, UINT16*)>(
 		0x8E9640)(this, listId, entryId, quantity, enchant, optionKey, baseAttribute);
+}
+
+void __cdecl CUser::TimerExpiredWrapper(CUser *self, int id)
+{
+	self->TimerExpired(id);
+}
+
+void CUser::TimerExpired(int id)
+{
+	reinterpret_cast<void(*)(CUser*, int)>(0x8BE4C8)(this, id);
+	ProcessPremium();
+}
+
+int __cdecl CUser::GetPremiumLevelWrapper(CUser *self)
+{
+	return self->GetPremiumLevel();
+}
+
+int CUser::GetPremiumLevel()
+{
+	if (Config::Instance()->custom->ipBasedPremiumSystem) {
+		return sd->isPremiumUser ? 1 : 0;
+	} else {
+		return reinterpret_cast<int(*)(CUser*)>(0x477284)(this);
+	}
+}
+
+void CUser::ProcessPremium()
+{
+	CUserSocket *socket = this->socket;
+	if (!socket) {
+		return;
+	}
+	bool ipBasedPremiumSystem = Config::Instance()->custom->ipBasedPremiumSystem;
+	int ipBasedFixedPCCafePoints = Config::Instance()->custom->ipBasedFixedPCCafePoints;
+	if (socket->clientIP.S_un.S_addr && (ipBasedPremiumSystem || ipBasedFixedPCCafePoints >= 0)) {
+		bool isPremiumIp = false;
+		{
+			ScopedLock lock(premiumIpAddressesCS);
+			isPremiumIp = premiumIpAddresses.find(socket->clientIP.S_un.S_addr) != premiumIpAddresses.end();
+		}
+		if (Config::Instance()->custom->ipBasedPremiumSystem) {
+			sd->isPremiumUser = isPremiumIp;
+			UINT16 packetId = 0xAA;
+			if (Server::GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
+				packetId = 0xBC;
+			} else if (Server::GetProtocolVersion() == Server::ProtocolVersionGraciaFinalUpdate1) {
+				packetId = 0xAB;
+			}
+			socket->Send("chdc", 0xFE, packetId, objectId, sd->isPremiumUser);
+		}
+		if (Config::Instance()->custom->ipBasedFixedPCCafePoints >= 0) {
+			int points = 0;
+			if (isPremiumIp) {
+				points = Config::Instance()->custom->ipBasedFixedPCCafePoints;
+			} else if (Config::Instance()->server->fixedPCCafePoints >= 0) {
+				points = Config::Instance()->server->fixedPCCafePoints;
+			}
+			sd->pcPoints = points;
+		} else if (Config::Instance()->server->fixedPCCafePoints >= 0) {
+			sd->pcPoints = Config::Instance()->server->fixedPCCafePoints;
+		}
+	} else if (Config::Instance()->server->fixedPCCafePoints >= 0) {
+		sd->pcPoints = Config::Instance()->server->fixedPCCafePoints;
+	}
 }
 
 UINT32 CUser::GetDbId()

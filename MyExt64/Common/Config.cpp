@@ -142,7 +142,9 @@ Config::Beta::Beta(Config *config) :
 
 Config::Custom::Custom(Config *config) :
 	removeKamaelRace(config->GetBool(L"custom", L"RemoveKamaelRace", false)),
-	removeVitalitySystem(config->GetBool(L"custom", L"RemoveVitalitySystem", false))
+	removeVitalitySystem(config->GetBool(L"custom", L"RemoveVitalitySystem", false)),
+	ipBasedPremiumSystem(config->GetBool(L"custom", L"IPBasedPremiumSystem", false)),
+	ipBasedFixedPCCafePoints(config->GetInt(L"custom", L"IPBasedFixedPCCafePoints", -1))
 {
 }
 

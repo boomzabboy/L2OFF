@@ -123,6 +123,7 @@ void Server::Load()
 	if (Config::Instance()->server->enableVitaminManager) {
 		EnableVitaminManager();
 	}
+	FixPremiumBoost();
 }
 
 bool Server::IsDebug()
@@ -420,5 +421,14 @@ void Server::RemoveKamaelRace()
 void Server::RelogKeepSongsDances()
 {
 	WriteMemoryBYTE(0x8F9E3B, 0xF0);
+}
+
+void Server::FixPremiumBoost()
+{
+	for (size_t i = 0 ; i < 4 ; ++i) {
+		UINT64 value = ReadMemoryQWORD(0xE53840 + i*8);
+		*reinterpret_cast<double*>(&value) *= 0.01;
+		WriteMemoryQWORD(0xE53840 + i*8, value);
+	}
 }
 

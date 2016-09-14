@@ -131,6 +131,9 @@ public:
 
 		bool removeKamaelRace;
 		bool removeVitalitySystem;
+
+		bool ipBasedPremiumSystem;
+		int ipBasedFixedPCCafePoints;
 	} *custom;
 
 	struct Npcd {
