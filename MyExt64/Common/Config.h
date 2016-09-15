@@ -134,6 +134,8 @@ public:
 
 		bool ipBasedPremiumSystem;
 		int ipBasedFixedPCCafePoints;
+		bool ipBasedPremiumSystemShowTime;
+		int ipBasedPremiumSystemShowTimeSkillId;
 	} *custom;
 
 	struct Npcd {

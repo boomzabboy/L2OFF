@@ -75,6 +75,7 @@ public:
 	static bool __cdecl HtmlCmdObserverWrapper(CUserSocket *self, class CUser *user, const wchar_t *s1, const wchar_t *s2);
 	static bool __cdecl LinkHtmlPacketWrapper(CUserSocket *socket, const BYTE *packet);
 	static bool __cdecl TradeAddItemsPacketWrapper(CUserSocket *socket, const BYTE *packet);
+	static void __cdecl SendSendAbnormalStatusInfoWrapper(CUserSocket *socket, const char *format, BYTE opcode, UINT16 count, UINT32 size, void *data);
 
 	static void *offlineTradeVtable[0x16];
 

@@ -100,6 +100,7 @@ public:
 		LastSkill lastSkill;
 		Guard guard;
 		bool autoloot;
+		UINT32 premiumEndTime;
 	};
 
 	UINT64 GetItemCount(UINT32 itemId);
@@ -136,6 +137,7 @@ public:
 	void TimerExpired(int id);
 	int GetPremiumLevel();
 	void ProcessPremium();
+	void SendAbnormalStatusInfo();
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -159,7 +161,7 @@ public:
 	static std::set<CUser*> onlineUsers;
 	static std::set<CUser*> offlineTradeUsers;
 	static CriticalSection premiumIpAddressesCS;
-	static std::set<UINT32> premiumIpAddresses;
+	static std::map<UINT32, UINT32> premiumIpAddresses;
 
 	/* 0x1CB0 */ unsigned char padding0x1CB0[0x2248 - 0x1CB0];
 	/* 0x2248 */ void *economy;

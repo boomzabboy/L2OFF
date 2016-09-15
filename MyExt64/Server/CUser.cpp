@@ -16,7 +16,7 @@ CriticalSection CUser::onlineOfflineTradeUsersCS;
 std::set<CUser*> CUser::onlineUsers;
 std::set<CUser*> CUser::offlineTradeUsers;
 CriticalSection CUser::premiumIpAddressesCS;
-std::set<UINT32> CUser::premiumIpAddresses;
+std::map<UINT32, UINT32> CUser::premiumIpAddresses;
 
 CUser::CUser()
 {
@@ -88,9 +88,10 @@ void CUser::Init()
 DWORD CUser::PremiumIpRefresh(void *v)
 {
 	(void) v;
+	const bool showTime = Config::Instance()->custom->ipBasedPremiumSystemShowTime;
 	for (;;) {
 		Sleep(15000);
-		std::set<UINT32> addresses;
+		std::map<UINT32, UINT32> addresses;
 		std::ifstream ifs("premiumip.dat", std::ios::binary);
 		if (ifs) {
 			for (;;) {
@@ -98,9 +99,13 @@ DWORD CUser::PremiumIpRefresh(void *v)
 					break;
 				}
 				UINT32 address = 0;
+				UINT32 time = 0;
 				ifs.read(reinterpret_cast<char*>(&address), 4);
+				if (showTime) {
+					ifs.read(reinterpret_cast<char*>(&time), 4);
+				}
 				if (address) {
-					addresses.insert(address);
+					addresses.insert(std::pair<UINT32, UINT32>(address, time));
 				}
 			}
 			ifs.close();
@@ -798,19 +803,33 @@ void CUser::ProcessPremium()
 	int ipBasedFixedPCCafePoints = Config::Instance()->custom->ipBasedFixedPCCafePoints;
 	if (socket->clientIP.S_un.S_addr && (ipBasedPremiumSystem || ipBasedFixedPCCafePoints >= 0)) {
 		bool isPremiumIp = false;
+		UINT32 endTime = 0;
 		{
 			ScopedLock lock(premiumIpAddressesCS);
-			isPremiumIp = premiumIpAddresses.find(socket->clientIP.S_un.S_addr) != premiumIpAddresses.end();
+			std::map<UINT32, UINT32>::const_iterator it = premiumIpAddresses.find(socket->clientIP.S_un.S_addr);
+			if (it != premiumIpAddresses.end()) {
+				isPremiumIp = true;
+				endTime = it->second;
+			}
+		}
+		UINT32 now = time(0);
+		if (endTime && endTime < now) {
+			isPremiumIp = false;
+			endTime = 0;
 		}
 		if (Config::Instance()->custom->ipBasedPremiumSystem) {
-			sd->isPremiumUser = isPremiumIp;
-			UINT16 packetId = 0xAA;
-			if (Server::GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
-				packetId = 0xBC;
-			} else if (Server::GetProtocolVersion() == Server::ProtocolVersionGraciaFinalUpdate1) {
-				packetId = 0xAB;
+			if (bool(sd->isPremiumUser) != isPremiumIp || ext.premiumEndTime != endTime) {
+				sd->isPremiumUser = isPremiumIp;
+				ext.premiumEndTime = endTime;
+				UINT16 packetId = 0xAA;
+				if (Server::GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
+					packetId = 0xBC;
+				} else if (Server::GetProtocolVersion() == Server::ProtocolVersionGraciaFinalUpdate1) {
+					packetId = 0xAB;
+				}
+				socket->Send("chdc", 0xFE, packetId, objectId, sd->isPremiumUser);
+				SendAbnormalStatusInfo();
 			}
-			socket->Send("chdc", 0xFE, packetId, objectId, sd->isPremiumUser);
 		}
 		if (Config::Instance()->custom->ipBasedFixedPCCafePoints >= 0) {
 			int points = 0;
@@ -846,6 +865,11 @@ bool CUser::AddItemToInventory2(CItem *item)
 void CUser::SavePoint(int type, int value)
 {
 	reinterpret_cast<void(*)(CUser*, int, int)>(0x891F90)(this, type, value);
+}
+
+void CUser::SendAbnormalStatusInfo()
+{
+	reinterpret_cast<void(*)(CUser*)>(0x8AF7E4)(this);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

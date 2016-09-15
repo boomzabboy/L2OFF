@@ -16,6 +16,7 @@
 #include <Common/CSharedCreatureData.h>
 #include <new>
 #include <sstream>
+#include <time.h>
 
 CUserSocket::PacketHandler *CUserSocket::exHandlers = reinterpret_cast<CUserSocket::PacketHandler*>(0x121C0D60);
 void *CUserSocket::offlineTradeVtable[0x16];
@@ -194,6 +195,8 @@ void CUserSocket::Init()
 	WriteMemoryQWORD(0xE5FC78, reinterpret_cast<UINT64>(HtmlCmdObserverWrapper));
 
 	WriteAddress(0xA2D92F, reinterpret_cast<UINT32>(TradeAddItemsPacketWrapper));
+
+	WriteInstructionCall(0x8AF9B8, reinterpret_cast<UINT32>(SendSendAbnormalStatusInfoWrapper));
 
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // DummyPacket not to disconnect user
 }
@@ -855,6 +858,35 @@ bool CUserSocket::InGamePacketExHandler(const BYTE *packet, BYTE opcode)
 		break;
 	}
 	return CallPacketExHandler(opcode, packet);
+}
+
+void __cdecl CUserSocket::SendSendAbnormalStatusInfoWrapper(CUserSocket *socket, const char *format, BYTE opcode, UINT16 count, UINT32 size, void *data)
+{
+	if (!Config::Instance()->custom->ipBasedPremiumSystem
+		|| !Config::Instance()->custom->ipBasedPremiumSystemShowTime
+		|| Config::Instance()->custom->ipBasedPremiumSystemShowTimeSkillId < 0) {
+
+		socket->Send(format, opcode, count, size, data);
+	}
+	CUser *user = socket->user;
+	if (!user) {
+		socket->Send(format, opcode, count, size, data);
+		return;
+	}
+	UINT32 premiumEndTime = user->ext.premiumEndTime;
+	if (!premiumEndTime) {
+		socket->Send(format, opcode, count, size, data);
+		return;
+	}
+	UINT32 now = time(0);
+	if (premiumEndTime < now) {
+		socket->Send(format, opcode, count, size, data);
+		return;
+	}
+	UINT32 duration = premiumEndTime - now;
+	socket->Send("chdhdb", opcode, count + 1,
+		Config::Instance()->custom->ipBasedPremiumSystemShowTimeSkillId,
+		1, duration, size, data);
 }
 
 CompileTimeOffsetCheck(CUserSocket, packetTable, 0x00C0);
