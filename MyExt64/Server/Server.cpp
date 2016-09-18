@@ -4,6 +4,7 @@
 #include <Server/CUser.h>
 #include <Server/CUserSocket.h>
 #include <Server/SkillEnchantOperator.h>
+#include <Server/GraciaFinal87.h>
 #include <Server/GraciaEpilogue.h>
 #include <Server/DropRate.h>
 #include <Server/EventDrop.h>
@@ -74,6 +75,8 @@ void Server::Init()
 	SkillEnchantOperator::Init();
 	if (GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
 		GraciaEpilogue::Init();
+	} else if (GetProtocolVersion() == Server::ProtocolVersionGraciaFinalUpdate1) {
+		GraciaFinal87::Init();
 	}
 	if (!Config::Instance()->server->plugin.empty()) {
 		if (HMODULE mod = LoadLibrary(Config::Instance()->server->plugin.c_str())) {

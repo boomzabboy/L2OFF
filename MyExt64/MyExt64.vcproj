@@ -532,6 +532,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\GraciaFinal87.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\GraciaFinal87.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\NpcServer.cpp"
 				>
 			</File>
