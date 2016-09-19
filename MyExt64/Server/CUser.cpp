@@ -751,7 +751,8 @@ bool __cdecl CUser::MultiSellChooseWrapper(CUser *self, int listId, int entryId,
 }
 
 bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute)
-{ GUARDED
+{
+	GUARDED;
 
 	if (!this) {
 		return false;
@@ -761,7 +762,11 @@ bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchan
 	if (ext.guard.lastMultisellListId != listId) {
 		return false;
 	}
-	if (target->sd->npcClassId != ext.guard.lastMultisellNpcId) {
+	if (!target) {
+		return false;
+	}
+	CSharedCreatureData *sd = target->sd;
+	if (!sd || sd->npcClassId != ext.guard.lastMultisellNpcId) {
 		return false;
 	}
 	return reinterpret_cast<bool(*)(CUser*, int, int, UINT64, int, UINT32*, UINT16*)>(
