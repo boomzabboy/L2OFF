@@ -86,7 +86,6 @@ void CUserSocket::Init()
 		ReplaceOutExOpcode(0x47613C, 0xA8); // FE:A7 -> FE:A8
 		ReplaceOutExOpcode(0x476383, 0xA8); // FE:A7 -> FE:A8
 		ReplaceOutExOpcode(0x915BE1, 0xA9); // FE:A8 -> FE:A9
-		ReplaceOutExOpcode(0x596FD1, 0xAA); // FE:A9 -> FE:AA
 		ReplaceOutExOpcode(0x5AB7D2, 0xAA); // FE:A9 -> FE:AA
 		ReplaceOutExOpcode(0x5ABD02, 0xAA); // FE:A9 -> FE:AA
 		ReplaceOutExOpcode(0x7EE2EB, 0xAA); // FE:A9 -> FE:AA
@@ -111,7 +110,6 @@ void CUserSocket::Init()
 		ReplaceOutExOpcode(0x47613C, 0xB9); // FE:A7 -> FE:B9
 		ReplaceOutExOpcode(0x476383, 0xB9); // FE:A7 -> FE:B9
 		ReplaceOutExOpcode(0x915BE1, 0xBA); // FE:A8 -> FE:BA
-		ReplaceOutExOpcode(0x596FD1, 0xBB); // FE:A9 -> FE:BB
 		ReplaceOutExOpcode(0x5AB7D2, 0xBB); // FE:A9 -> FE:BB
 		ReplaceOutExOpcode(0x5ABD02, 0xBB); // FE:A9 -> FE:BB
 		ReplaceOutExOpcode(0x7EE2EB, 0xBB); // FE:A9 -> FE:BB
