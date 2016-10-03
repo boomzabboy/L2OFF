@@ -50,19 +50,21 @@ extern Disassemble_t Disassemble;
 
 std::basic_string<wchar_t> Widen(const std::string &s);
 
+UINT32 GetThreadIndex();
+
 class Guard {
 public:
 	__forceinline Guard(const wchar_t* functionName)
 	{
 		if (!off1 || !off2 || !off3) return;
-		UINT32 threadIndex = *reinterpret_cast<UINT32*>(*reinterpret_cast<UINT64*>(__readgsqword(0x58)) + off1);
+		UINT32 threadIndex = GetThreadIndex();
 		reinterpret_cast<const wchar_t**>(off2)[threadIndex * 1000 + reinterpret_cast<UINT32*>(off3)[threadIndex]++] = functionName;
 	}
 
 	__forceinline ~Guard()
 	{
 		if (!off1 || !off2 || !off3) return;
-		UINT32 threadIndex = *reinterpret_cast<UINT32*>(*reinterpret_cast<UINT64*>(__readgsqword(0x58)) + off1);
+		UINT32 threadIndex = GetThreadIndex();
 		--reinterpret_cast<UINT32*>(off3)[threadIndex];
 	}
 

@@ -344,6 +344,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CIOBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CIOBufferPool.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CItem.cpp"
 				>
 			</File>

@@ -1,5 +1,6 @@
 
 #include <Server/Server.h>
+#include <Server/CIOBufferPool.h>
 #include <Server/CWorld.h>
 #include <Server/CUser.h>
 #include <Server/CUserSocket.h>
@@ -38,6 +39,8 @@ Server::Plugin *Server::plugin = 0;
 
 void Server::Init()
 {
+	CIOBufferPool<8192>::Init();
+	CIOBufferPool<16384>::Init();
 	SetProtocolVersion(Config::Instance()->server->protocolVersion);
 	SetDebug(Config::Instance()->server->debug);
 	SetMaxIndex(Config::Instance()->server->maxIndex);

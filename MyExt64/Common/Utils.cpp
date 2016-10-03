@@ -211,6 +211,11 @@ void WriteAddress(unsigned int uAddress, UINT32 absAddr)
 Assemble_t Assemble = 0;
 Disassemble_t Disassemble = 0;
 
+UINT32 GetThreadIndex()
+{
+	return *reinterpret_cast<UINT32*>(*reinterpret_cast<UINT64*>(__readgsqword(0x58)) + Guard::off1);
+}
+
 std::basic_string<wchar_t> Widen(const std::string &s)
 {
 	std::wstring result;
