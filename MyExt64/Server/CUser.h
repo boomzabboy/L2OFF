@@ -138,6 +138,7 @@ public:
 	int GetPremiumLevel();
 	void ProcessPremium();
 	void SendAbnormalStatusInfo();
+	bool CanOpenPrivateShop(int type);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -156,6 +157,7 @@ public:
 	static bool __cdecl MultiSellChooseWrapper(CUser *self, int listId, int entryId, UINT64 quantity, int enchant, UINT32 *optionKey, UINT16 *baseAttribute);
 	static void __cdecl TimerExpiredWrapper(CUser *self, int id);
 	static int __cdecl GetPremiumLevelWrapper(CUser *self);
+	static bool __cdecl CanOpenPrivateShopWrapper(CUser *self, int type);
 
 	static CriticalSection onlineOfflineTradeUsersCS;
 	static std::set<CUser*> onlineUsers;

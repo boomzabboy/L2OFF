@@ -83,6 +83,10 @@ void CUser::Init()
 	if (ipBasedPremiumSystem || ipBasedFixedPCCafePoints >= 0) {
 		CreateThread(0, 0, PremiumIpRefresh, 0, 0, 0);
 	}
+
+	WriteInstructionCall(0x8DB130 + 0x69, reinterpret_cast<UINT32>(CanOpenPrivateShopWrapper));
+	WriteInstructionCall(0x8DB1F8 + 0x69, reinterpret_cast<UINT32>(CanOpenPrivateShopWrapper));
+	WriteInstructionCall(0x8DB2C0 + 0x69, reinterpret_cast<UINT32>(CanOpenPrivateShopWrapper));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -875,6 +879,55 @@ void CUser::SavePoint(int type, int value)
 void CUser::SendAbnormalStatusInfo()
 {
 	reinterpret_cast<void(*)(CUser*)>(0x8AF7E4)(this);
+}
+
+bool CUser::CanOpenPrivateShopWrapper(CUser *self, int type)
+{
+	return self->CanOpenPrivateShop(type);
+}
+
+bool CUser::CanOpenPrivateShop(int type)
+{
+	bool result = reinterpret_cast<bool(*)(CUser*, int)>(0x8DADA8)(this, type);
+	if (!result) {
+		return false;
+	}
+	double minDistance = Config::Instance()->custom->minShopDistance;
+	if (minDistance <= 0) {
+		return true;
+	}
+	minDistance *= minDistance;
+	{
+		ScopedLock lock(onlineOfflineTradeUsersCS);
+		for (std::set<CUser*>::const_iterator i = onlineUsers.begin() ; i != onlineUsers.end() ; ++i) {
+			if (*i == this) {
+				continue;
+			}
+			CSharedCreatureData *otherSd = (*i)->sd;
+			if (!otherSd) {
+				continue;
+			}
+			switch (otherSd->storeMode) {
+				case 1:	case 3:	case 5:	case 8: break;
+				default: continue;
+			}
+			double dx = otherSd->x - sd->x;
+			double dy = otherSd->y - sd->y;
+			if (dx * dx + dy * dy < minDistance) {
+				result = false;
+				break;
+			}
+		}
+	}
+	if (!result) {
+		CUserSocket *s = socket;
+		if (s) {
+			s->SendSystemMessage(
+				Config::Instance()->server->name.c_str(),
+				L"You can't open private store here, you must find some empty spot");
+		}
+	}
+	return result;
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

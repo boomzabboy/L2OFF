@@ -146,7 +146,8 @@ Config::Custom::Custom(Config *config) :
 	ipBasedPremiumSystem(config->GetBool(L"custom", L"IPBasedPremiumSystem", false)),
 	ipBasedFixedPCCafePoints(config->GetInt(L"custom", L"IPBasedFixedPCCafePoints", -1)),
 	ipBasedPremiumSystemShowTime(config->GetBool(L"custom", L"IPBasedPremiumSystemShowTime", false)),
-	ipBasedPremiumSystemShowTimeSkillId(config->GetInt(L"custom", L"IPBasedPremiumSystemShowTimeSkillId", -1))
+	ipBasedPremiumSystemShowTimeSkillId(config->GetInt(L"custom", L"IPBasedPremiumSystemShowTimeSkillId", -1)),
+	minShopDistance(config->GetInt(L"custom", L"MinShopDistance", -1))
 {
 }
 

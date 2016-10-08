@@ -136,6 +136,8 @@ public:
 		int ipBasedFixedPCCafePoints;
 		bool ipBasedPremiumSystemShowTime;
 		int ipBasedPremiumSystemShowTimeSkillId;
+
+		int minShopDistance;
 	} *custom;
 
 	struct Npcd {
