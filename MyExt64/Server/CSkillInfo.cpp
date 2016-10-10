@@ -29,3 +29,9 @@ bool CSkillInfo::IsValidTarget(CCreature *attacker, CCreature *target, bool b)
 	return reinterpret_cast<bool(*)(void*, CCreature*, CCreature*, bool)>(0x81CF38)(this, attacker, target, b);
 }
 
+void CSkillInfo::ActivateSkill(CCreature *caster, CObject *target, double unknown1, void *unknown2, int unknown3, double unknown4)
+{
+	reinterpret_cast<void(*)(CSkillInfo*, CCreature*, CObject*, double, void*, int, double)>(0x81F3F0)(
+		this, caster, target, unknown1, unknown2, unknown3, unknown4);
+}
+

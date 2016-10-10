@@ -312,28 +312,6 @@ void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 		} else {
 			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Autoloot already turned off");
 		}
-	} else if (Server::IsDebug() && command == L"dbginzone") {
-		wchar_t buffer[1024];
-		wsprintf(buffer, L"inZoneRestrictionMap1 (size %d)", self->inZoneRestrictionMap1.size());
-		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
-		for (std::map<UINT32, InZoneRestriction>::const_iterator i = self->inZoneRestrictionMap1.begin() ;
-			i != self->inZoneRestrictionMap1.end() ;
-			++i) {
-
-			wsprintf(buffer, L"    %d: %d, %d, %d",
-				i->first, i->second.time, i->second.cnt, i->second.unknown);
-			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
-		}
-		wsprintf(buffer, L"inZoneRestrictionMap2 (size %d)", self->inZoneRestrictionMap2.size());
-		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
-		for (std::map<UINT32, InZoneRestriction>::const_iterator i = self->inZoneRestrictionMap2.begin() ;
-			i != self->inZoneRestrictionMap2.end() ;
-			++i) {
-
-			wsprintf(buffer, L"    %d: %d, %d, %d",
-				i->first, i->second.time, i->second.cnt, i->second.unknown);
-			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), buffer);
-		}
 	} else {
 		self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Available voice commands:");
 		if (Config::Instance()->voiceCommands->expOnOff) {

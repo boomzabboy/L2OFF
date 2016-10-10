@@ -60,6 +60,7 @@ public:
 		int repeatSkillOnDistanceFailSeconds;
 		bool disallowTradeInOlympiad;
 		bool relogKeepSongsDances;
+		bool fixSpiritshotLag;
 	} *fixes;
 
 	struct Rate {

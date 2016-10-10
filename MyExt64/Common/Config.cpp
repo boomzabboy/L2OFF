@@ -77,7 +77,8 @@ Config::Fixes::Fixes(Config *config) :
 	commandChannelFriendly(config->GetBool(L"fixes", L"CommandChannelFriendly", true)),
 	repeatSkillOnDistanceFailSeconds(config->GetInt(L"fixes", L"RepeatSkillOnDistanceFailSeconds", -1)),
 	disallowTradeInOlympiad(config->GetBool(L"fixes", L"DisallowTradeInOlympiad", true)),
-	relogKeepSongsDances(config->GetBool(L"fixes", L"RelogKeepSongsDances", true))
+	relogKeepSongsDances(config->GetBool(L"fixes", L"RelogKeepSongsDances", true)),
+	fixSpiritshotLag(config->GetBool(L"fixes", L"FixSpiritshotLag", false))
 {
 }
 

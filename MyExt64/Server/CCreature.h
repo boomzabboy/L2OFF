@@ -24,9 +24,10 @@ public:
 	CCreature* GetTarget();
 	unsigned long GetSkillUsedTime(const int skillId);
 	int GetRemainReuseDelaySec(const int skillId);
+	bool UseItem(class CItem *item, int i);
 
 	static int __cdecl GetRemainReuseDelaySecWrapper(CCreature *self, const int skillId);
-
+	static bool __cdecl UseItemWrapper(CCreature *self, class CItem *item, int i);
 
 	/* 0x0000 */ unsigned char padding0x0000[0x0018 - 0x0000];
 	/* 0x0018 */ UINT32 objectId;

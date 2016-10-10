@@ -1,9 +1,12 @@
 
 #include <Server/CCreature.h>
 #include <Server/CItem.h>
+#include <Server/CUser.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CYieldLock.h>
 #include <Common/Utils.h>
+#include <Common/Config.h>
+#include <Common/CLog.h>
 #include <math.h>
 
 void CCreature::Init()
@@ -15,6 +18,9 @@ void CCreature::Init()
 	WriteInstructionCall(0x847364 + 0xA0, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
 	WriteInstructionCall(0x847364 + 0xBD, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
 	WriteInstructionCall(0x895AE0 + 0x79, reinterpret_cast<UINT32>(GetRemainReuseDelaySecWrapper));
+
+	WriteInstructionCall(0x8DD566, reinterpret_cast<UINT32>(UseItemWrapper));
+	WriteMemoryQWORD(0xC54348, reinterpret_cast<UINT64>(UseItemWrapper));
 }
 
 CCreature::CCreature()
@@ -111,6 +117,47 @@ int CCreature::GetRemainReuseDelaySec(const int skillId)
 int __cdecl CCreature::GetRemainReuseDelaySecWrapper(CCreature *self, const int skillId)
 {
 	return self->GetRemainReuseDelaySec(skillId);
+}
+
+bool CCreature::UseItem(CItem *item, int i)
+{
+	GUARDED;
+
+	if (!reinterpret_cast<bool(*)(CCreature*, CItem*, int)>(0x54C4FC)(this, item, i)) {
+		return false;
+	}
+
+	if (!this || !IsUser()) {
+		return true;
+	}
+
+	CUser *user = reinterpret_cast<CUser*>(this);
+
+	if (!user->spiritshotOn || !Config::Instance()->fixes->fixSpiritshotLag) {
+		return true;
+	}
+
+	if ((item->itemId < 2509 || item->itemId > 2514)
+		&& (item->itemId < 3947 || item->itemId > 3952)
+		&& item->itemId != 5790) {
+
+		return true;
+	}
+
+	for (std::vector<CSkillInfo*>::iterator i = item->skills.begin() ; i != item->skills.end() ; ++i) {
+		if (!(*i)) {
+			continue;
+		}
+		(*i)->ActivateSkill(this, this, 0, 0, 0, 0);
+		user->spiritshotOn = true;
+	}
+
+	return true;
+}
+
+bool __cdecl CCreature::UseItemWrapper(CCreature *self, CItem *item, int i)
+{
+	return self->UseItem(item, i);
 }
 
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);

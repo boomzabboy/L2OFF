@@ -3,7 +3,9 @@
 
 #include <Server/CObject.h>
 #include <Server/CContributeData.h>
+#include <Server/CSkillInfo.h>
 #include <windows.h>
+#include <vector>
 
 class CItem : CObject {
 public:
@@ -25,7 +27,9 @@ public:
 	/* 0x001C */ UINT32 itemId;
 	/* 0x0020 */ unsigned char padding0x0020[0x0048 - 0x0020];
 	/* 0x0048 */ WorldInfo *worldInfo;
-	/* 0x0050 */ unsigned char padding0x0050[0x00B8 - 0x0050];
+	/* 0x0050 */ unsigned char padding0x0050[0x0078 - 0x0050];
+	/* 0x0078 */ std::vector<CSkillInfo*> skills;
+	/* 0x0098 */ unsigned char padding0x0098[0x00B8 - 0x0098];
 	/* 0x00B8 */ UINT32 contributeDataObjectId;
 };
 
