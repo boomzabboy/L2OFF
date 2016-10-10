@@ -823,6 +823,20 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 		}
 		break;
 	}
+	case 0x31: // sell + package sell
+	case 0x9A: // buy
+	case 0xBB: // dwarven + general manufacture
+		{
+			CUser *user_ = user;
+			if (user_ && !user_->CanOpenPrivateShop(user_->sd->storeMode)) {
+				switch (opcode) {
+				case 0x31: return CallPacketHandler(0x96, packet);
+				case 0x9A: return CallPacketHandler(0x9C, packet);
+				case 0xBB: return CallPacketHandler(0xBC, packet);
+				default: return false;
+				}
+			}
+		}
 	default:
 		break;
 	}

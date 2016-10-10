@@ -896,25 +896,35 @@ bool CUser::CanOpenPrivateShop(int type)
 	if (minDistance <= 0) {
 		return true;
 	}
+	switch (sd->storeMode) {
+		case 1:	case 3:	case 5:	case 8: return true;
+		default: break;
+	}
 	minDistance *= minDistance;
 	{
 		ScopedLock lock(onlineOfflineTradeUsersCS);
-		for (std::set<CUser*>::const_iterator i = onlineUsers.begin() ; i != onlineUsers.end() ; ++i) {
-			if (*i == this) {
-				continue;
+		for (size_t j = 0 ; j < 2 ; ++j) {
+			std::set<CUser*> *list = j ? &offlineTradeUsers : &onlineUsers;
+			for (std::set<CUser*>::const_iterator i = list->begin() ; i != list->end() ; ++i) {
+				if (*i == this) {
+					continue;
+				}
+				CSharedCreatureData *otherSd = (*i)->sd;
+				if (!otherSd) {
+					continue;
+				}
+				switch (otherSd->storeMode) {
+					case 1:	case 3:	case 5:	case 8: break;
+					default: continue;
+				}
+				double dx = otherSd->x - sd->x;
+				double dy = otherSd->y - sd->y;
+				if (dx * dx + dy * dy < minDistance) {
+					result = false;
+					break;
+				}
 			}
-			CSharedCreatureData *otherSd = (*i)->sd;
-			if (!otherSd) {
-				continue;
-			}
-			switch (otherSd->storeMode) {
-				case 1:	case 3:	case 5:	case 8: break;
-				default: continue;
-			}
-			double dx = otherSd->x - sd->x;
-			double dy = otherSd->y - sd->y;
-			if (dx * dx + dy * dy < minDistance) {
-				result = false;
+			if (!result) {
 				break;
 			}
 		}
