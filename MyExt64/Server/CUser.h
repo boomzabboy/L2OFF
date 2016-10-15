@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <Server/CCreature.h>
+#include <Server/CShortCut.h>
 #include <Common/CriticalSection.h>
 #include <Common/CYieldLock.h>
 #include <string>
@@ -139,6 +140,7 @@ public:
 	void ProcessPremium();
 	void SendAbnormalStatusInfo();
 	bool CanOpenPrivateShop(int type);
+	void SendSkillList(class CUserSocket *socket, bool sendShortCutInfo);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -169,7 +171,9 @@ public:
 	/* 0x2248 */ void *economy;
 	/* 0x2250 */ unsigned char padding0x2250[0x22DA - 0x2250];
 	/* 0x22DA */ bool spiritshotOn;
-	/* 0x22DB */ unsigned char padding0x22DB[0x3264 - 0x22DB];
+	/* 0x22DB */ unsigned char padding0x22DB[0x2428 - 0x22DB];
+	/* 0x2428 */ CShortCut shortCut;
+	/* 0x3210 */ unsigned char padding0x3210[0x3264 - 0x3210];
 	/* 0x3264 */ CYieldLock htmlLock;
 	/* 0x3270 */ unsigned char padding0x3270[0x3298 - 0x3270];
 	/* 0x3298 */ unsigned int olympiadStatus;

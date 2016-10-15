@@ -918,6 +918,11 @@ bool CUser::CanOpenPrivateShop(int type)
 	return result;
 }
 
+void CUser::SendSkillList(CUserSocket *socket, bool sendShortCutInfo)
+{
+	reinterpret_cast<void(*)(CUser*, CUserSocket*, bool)>(0x8F6C04)(this, socket, sendShortCutInfo);
+}
+
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
 CompileTimeOffsetCheck(CUser, padding0x35D9, 0x35D9);
 CompileTimeOffsetCheck(CUser, isVitalityReplenishing, 0x38B0);

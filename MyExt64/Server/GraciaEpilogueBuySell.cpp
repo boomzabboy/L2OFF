@@ -1,6 +1,7 @@
 
 #include <Server/GraciaEpilogue.h>
 #include <Server/CUser.h>
+#include <Server/CShortCut.h>
 #include <Common/CLog.h>
 #include <Common/CYieldLock.h>
 #include <Common/CSharedCreatureData.h>
@@ -261,8 +262,13 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 }
 
 void __cdecl GraciaEpilogue::UserShowHTMLAfterBuySell(CUser *user, const wchar_t *s1, const wchar_t *s2, unsigned int i)
-{ GUARDED
+{
+	GUARDED;
 
+	if (!user) {
+		return;
+	}
+	user->shortCut.SendShortCutInfo();
 	NpcSocketSendHtmlCmdMenuSelectFirst(
 		user, "cddddQd", 0xC, user->sd->index, user->objectId, user->ext.buySell.storedNpcSdIndex,
 		user->ext.buySell.storedAsk, user->ext.buySell.storedReply, user->ext.buySell.storedState, false);

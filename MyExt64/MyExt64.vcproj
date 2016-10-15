@@ -424,6 +424,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CShortCut.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CShortCut.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CSkillEnchantDB.cpp"
 				>
 			</File>
