@@ -564,8 +564,14 @@ UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const
 	BYTE opcodeRemapped = opcode;
 
 	try {
-		if (self->OutGamePacketHandler(packet, opcodeRemapped)) return 0x92F0BD;
-	} catch (const CUserSocket::IgnorePacket &e) { }
+		if (self->OutGamePacketHandler(packet, opcodeRemapped)) {
+			CLog::Debug(CLog::Blue, L"OutGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: 1", opcode, opcodeRemapped);
+			return 0x92F0BD;
+		}
+		CLog::Debug(CLog::Blue, L"InGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: 0", opcode, opcodeRemapped);
+	} catch (const CUserSocket::IgnorePacket &e) {
+		CLog::Debug(CLog::Blue, L"OutGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: ignore", opcode, opcodeRemapped);
+	}
 	return 0x92EF17;
 }
 
@@ -576,60 +582,80 @@ UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const 
 	BYTE opcodeRemapped = opcode;
 
 	try {
-		if (self->InGamePacketHandler(packet, opcodeRemapped)) return 0x92F08A;
-	} catch (const CUserSocket::IgnorePacket &e) { }
+		if (self->InGamePacketHandler(packet, opcodeRemapped)) {
+			CLog::Debug(CLog::Blue, L"InGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: 1", opcode, opcodeRemapped);
+			return 0x92F08A;
+		}
+		CLog::Debug(CLog::Blue, L"InGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: 0", opcode, opcodeRemapped);
+	} catch (const CUserSocket::IgnorePacket &e) {
+		CLog::Debug(CLog::Blue, L"InGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: ignore", opcode, opcodeRemapped);
+	}
 	return 0x92EE48;
 }
 
 bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const BYTE* packet, WORD opcodeEx)
-{ GUARDED
+{
+	GUARDED
 
 	if (opcodeEx > maxOpcodeEx) {
+		CLog::Debug(CLog::Blue, L"InGamePacketExHandlerWrapper: opcodeEx=%d > maxOpcodeEx=%d", opcodeEx, maxOpcodeEx);
 		return true;
 	}
 
 	WORD opcodeExRemapped = opcodeEx;
 	if (Server::GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
 		switch (opcodeEx) {
-		case 0x69: return false; // not implemented
-		case 0x6A: return false; // not implemented
-		case 0x6B: return false; // not implemented
-		case 0x6C: return false; // not implemented
-		case 0x6D: return false; // not implemented
-		case 0x6E: return false; // not implemented
-		case 0x6F: return false; // not implemented
-		case 0x70: return false; // not implemented
-		case 0x71: return false; // not implemented
-		case 0x72: return false; // not implemented
-		case 0x73: return false; // not implemented
-		case 0x74: return false; // not implemented
-		case 0x75: return false; // not implemented
-		case 0x76: return false; // not implemented
-		case 0x77: return false; // not implemented
+		case 0x69: // not implemented
+		case 0x6A: // not implemented
+		case 0x6B: // not implemented
+		case 0x6C: // not implemented
+		case 0x6D: // not implemented
+		case 0x6E: // not implemented
+		case 0x6F: // not implemented
+		case 0x70: // not implemented
+		case 0x71: // not implemented
+		case 0x72: // not implemented
+		case 0x73: // not implemented
+		case 0x74: // not implemented
+		case 0x75: // not implemented
+		case 0x76: // not implemented
+		case 0x77: // not implemented
+		case 0x7C: // not implemented
+		case 0x7D: // not implemented
+		case 0x7E: // not implemented
+		case 0x7F: // not implemented
+			CLog::Debug(CLog::Blue, L"InGamePacketExHandlerWrapper: opcodeEx=%d not implemented", opcodeEx);
+			return false;
 		case 0x78: opcodeExRemapped = 0x65; break;
 		case 0x79: opcodeExRemapped = 0x66; break;
 		case 0x7A: opcodeExRemapped = 0x67; break;
 		case 0x7B: opcodeExRemapped = 0x68; break;
-		case 0x7C: return false; // not implemented
-		case 0x7D: return false; // not implemented
-		case 0x7E: return false; // not implemented
-		case 0x7F: return false; // not implemented
 		default: break;
 		}
 	}
 
 	try {
 		bool ret = self->InGamePacketExHandler(packet, static_cast<BYTE>(opcodeExRemapped));
+		CLog::Debug(CLog::Blue, L"InGamePacketExHandlerWrapper: opcodeEx=%d opcodeExRemapped=%d: %d",
+			opcodeEx, opcodeExRemapped, ret);
 		return ret;
 	} catch (const CUserSocket::IgnorePacket &e) {
+		CLog::Debug(CLog::Blue, L"InGamePacketExHandlerWrapper: opcodeEx=%d opcodeExRemapped=%d: ignore",
+			opcodeEx, opcodeExRemapped);
 		return true;
 	}
 }
 
 bool CUserSocket::CallPacketHandler(const BYTE opcode, const BYTE *packet)
-{ GUARDED
+{
+	GUARDED
 
 	if (Server::GetProtocolVersion() >= Server::ProtocolVersionGraciaEpilogue) {
+		if (Server::GetProtocolVersion() == Server::ProtocolVersionGraciaEpilogueUpdate1) {
+			if (opcode == 0x1E) {
+				return GraciaEpilogue::DiagPacket(this, packet, opcode);
+			}
+		}
 		switch (opcode) {
 		case 0x37: return GraciaEpilogue::BuyPacket(this, packet, opcode);
 		case 0x40: return GraciaEpilogue::SellPacket(this, packet, opcode);

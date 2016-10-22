@@ -12,5 +12,6 @@ public:
 	static bool DropItemEach(class CUserSocket *socket, class CUser *user, class CCreature *target, const BYTE *packet, const std::wstring &buffer);
 	static bool Give(class CUserSocket *socket, class CUser *user, class CCreature *target, const BYTE *packet, const std::wstring &buffer);
 	static bool Take(class CUserSocket *socket, class CUser *user, class CCreature *target, const BYTE *packet, const std::wstring &buffer);
+	static bool Diag(class CUserSocket *socket, class CUser *user, class CCreature *target, const BYTE *packet, const std::wstring &buffer);
 };
 

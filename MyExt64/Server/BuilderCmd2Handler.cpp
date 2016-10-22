@@ -3,9 +3,11 @@
 #include <Server/CUser.h>
 #include <Server/CUserSocket.h>
 #include <Server/CObjectDB.h>
+#include <Server/Server.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 #include <Common/Config.h>
+#include <Common/CSharedCreatureData.h>
 #include <sstream>
 
 void BuilderCmd2Handler::Init()
@@ -55,6 +57,8 @@ bool __cdecl BuilderCmd2Handler::Handler(CUserSocket *socket, const BYTE *packet
 		return Give(socket, user, target, packet, buffer);
 	} else if (buffer.substr(0, 5) == L"take ") {
 		return Take(socket, user, target, packet, buffer);
+	} else if (buffer.substr(0, 5) == L"diag ") {
+		return Diag(socket, user, target, packet, buffer);
 	} else {
 		return reinterpret_cast<bool(*)(CUserSocket*, const BYTE*)>(0x4E2BA0)(socket, packet);
 	}
@@ -156,6 +160,40 @@ bool BuilderCmd2Handler::Take(CUserSocket *socket, CUser *user, CCreature *targe
 			L"Failed to take %dx item %s (%d) from %s",
 			count, itemType.c_str(), itemTypeId, target->GetName());
 	}
+	return false;
+}
+
+bool BuilderCmd2Handler::Diag(CUserSocket *socket, CUser *user, CCreature *target, const BYTE *packet, const std::wstring &buffer)
+{
+	if (!target) {
+		socket->SendSystemMessageFmt(Config::Instance()->server->name.c_str(),
+			L"No target selected");
+		return false;
+	}
+	if (!target->IsUser()) {
+		socket->SendSystemMessageFmt(Config::Instance()->server->name.c_str(),
+			L"Target not user");
+		return false;
+	}
+	CUserSocket *targetSocket = reinterpret_cast<CUser*>(target)->socket;
+	if (!targetSocket) {
+		socket->SendSystemMessageFmt(Config::Instance()->server->name.c_str(),
+			L"Target has no socket");
+		return false;
+	}
+	std::wstringstream s;
+	s << buffer;
+	std::wstring cmd;
+	int diagType;
+	s >> cmd >> diagType;
+	if (diagType < 1 || diagType > 255) {
+		socket->SendSystemMessageFmt(Config::Instance()->server->name.c_str(),
+			L"Invalid diagtype");
+		return false;
+	}
+	targetSocket->Send("cdddddddddhbddd", 0x48, target->objectId, target->objectId,
+		32767, diagType, 100, 100, target->sd->x, target->sd->y, target->sd->z, 0,
+		target->sd->x, target->sd->y, target->sd->z);
 	return false;
 }
 

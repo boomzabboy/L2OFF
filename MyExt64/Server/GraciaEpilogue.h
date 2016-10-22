@@ -64,5 +64,7 @@ public:
 	static void __cdecl TakeEnchantItems(CUser *user, UINT32 enchantType, int skillId, int skillLevel);
 	static INT64 __cdecl SkillEnchantOperatorCalculateEXP(SkillEnchantOperator *self, class CSkillEnchantInfo *info, int level);
 	static int __cdecl SkillEnchantOperatorCalculateSP(SkillEnchantOperator *self, class CSkillEnchantInfo *info, int level);
+
+	static bool __cdecl DiagPacket(CUserSocket *self, const BYTE *packet, BYTE opcode);
 };
 
