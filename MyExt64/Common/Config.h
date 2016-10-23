@@ -149,8 +149,22 @@ public:
 		bool dumpSplitAI;
 	} *npcd;
 
+	void Reload();
+
 protected:
 	Config(const wchar_t *filename);
+
+	template<class T>
+	void Load(T **entity)
+	{
+		T *tmp = new T(this);
+		T *old = *entity;
+		*entity = tmp;
+		if (old) {
+			delete old;
+		}
+	}
+
 	std::wstring GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue);
 	INT64 GetInt(const wchar_t *section, const wchar_t *name, const INT64 defaultValue);
 	bool GetBool(const wchar_t *section, const wchar_t *name, const bool defaultValue);

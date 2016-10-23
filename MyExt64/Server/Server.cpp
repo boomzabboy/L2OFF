@@ -114,6 +114,7 @@ void Server::Init()
 	AugmentationStatFix::Init();
 	CMultiSellList::Init();
 	CInstantZone::Init();
+	HookWndProc();
 	HideWarnings(); // call this at last!
 }
 
@@ -281,7 +282,19 @@ HWND Server::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWind
 {
 	std::wstring name(lpWindowName);
 	name += L" - patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)";
-	return ::CreateWindowEx(dwExStyle, lpClassName, name.c_str(), dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+	HWND hwnd = ::CreateWindowEx(dwExStyle, lpClassName, name.c_str(), dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+	HMENU menu = GetMenu(hwnd);
+	HMENU reloadSubmenu = GetSubMenu(menu, 5);
+	MENUITEMINFO mii;
+	memset(&mii, 0, sizeof(mii));
+	mii.cbSize = sizeof(mii);
+    mii.fMask = MIIM_FTYPE | MIIM_ID | MIIM_STRING;
+	mii.fType = MFT_STRING;
+	mii.wID = 0x1001;
+	mii.cch = 15;
+    mii.dwTypeData = L"Extender config";
+	InsertMenuItem(reloadSubmenu, 3, TRUE, &mii);
+	return hwnd;
 }
 
 void Server::StartHook(void *logger, int level, const wchar_t *fmt, const wchar_t *build)
@@ -436,6 +449,22 @@ void Server::FixPremiumBoost()
 		UINT64 value = ReadMemoryQWORD(0xE53840 + i*8);
 		*reinterpret_cast<double*>(&value) *= 0.01;
 		WriteMemoryQWORD(0xE53840 + i*8, value);
+	}
+}
+
+void Server::HookWndProc()
+{
+	WriteAddress(0x6B129D + 3, reinterpret_cast<UINT32>(WndProc));
+}
+
+LRESULT __cdecl Server::WndProc(HWND hWnd, UINT32 message, WPARAM wParam, LPARAM lParam)
+{
+	if (message == 0x111 && wParam == 0x1001 && !lParam) {
+		Config::Instance()->Reload();
+		CLog::Add(CLog::Blue, L"Config reloaded");
+		return 0;
+	} else {
+		return reinterpret_cast<LRESULT(*)(HWND, UINT32, WPARAM, LPARAM)>(0x6AF4B4)(hWnd, message, wParam, lParam);
 	}
 }
 

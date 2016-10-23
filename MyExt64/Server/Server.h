@@ -57,11 +57,14 @@ protected:
 	static void RemoveKamaelRace();
 	static void RelogKeepSongsDances();
 	static void FixPremiumBoost();
+	static void HookWndProc();
 
 	static void __cdecl OnLoadEnd(UINT64 classBase);
 
 	static void __cdecl CPledgeInitPledge();
 	static void __cdecl CDominionInitDominion();
+
+	static LRESULT __cdecl WndProc(HWND hWnd, UINT32 message, WPARAM wParam, LPARAM lParam);
 
 	static int protocolVersion;
 	static bool debug;
