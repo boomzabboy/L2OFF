@@ -26,9 +26,7 @@ bool __cdecl GraciaEpilogue::DiagPacket(CUserSocket *self, const BYTE *packet, B
 	if (user) {
 		username = user->GetName();
 	}
-	CLog::Add(CLog::Blue, L"DiagPacket from user %s:", username);
-	CLog::Add(CLog::Blue, L"%s", Widen(data).c_str());
-	CLog::Add(CLog::Blue, L"--");
+	CLog::Add(CLog::Blue, L"DiagPacket from user %s: %s", username, Widen(data).c_str());
 	return false;
 }
 
