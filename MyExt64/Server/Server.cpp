@@ -114,7 +114,7 @@ void Server::Init()
 	AugmentationStatFix::Init();
 	CMultiSellList::Init();
 	CInstantZone::Init();
-	//HookWndProc();
+	HookWndProc();
 	HideWarnings(); // call this at last!
 }
 
@@ -284,7 +284,7 @@ HWND Server::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWind
 	std::wstring name(lpWindowName);
 	name += L" - patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)";
 	HWND hwnd = ::CreateWindowEx(dwExStyle, lpClassName, name.c_str(), dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
-	/*HMENU menu = GetMenu(hwnd);
+	HMENU menu = GetMenu(hwnd);
 	HMENU reloadSubmenu = GetSubMenu(menu, 5);
 	MENUITEMINFO mii;
 	memset(&mii, 0, sizeof(mii));
@@ -294,7 +294,7 @@ HWND Server::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWind
 	mii.wID = 0x1001;
 	mii.cch = 15;
     mii.dwTypeData = L"Extender config";
-	InsertMenuItem(reloadSubmenu, 3, TRUE, &mii);*/
+	InsertMenuItem(reloadSubmenu, 3, TRUE, &mii);
 	return hwnd;
 }
 
