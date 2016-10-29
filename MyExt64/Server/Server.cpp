@@ -281,7 +281,6 @@ HWND Server::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWind
 {
 	std::wstring name(lpWindowName);
 	name += L" - patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)";
-	HWND hwnd = ::CreateWindowEx(dwExStyle, lpClassName, name.c_str(), dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 	return ::CreateWindowEx(dwExStyle, lpClassName, name.c_str(), dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 }
 
