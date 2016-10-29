@@ -20,21 +20,16 @@ Config::Config(const wchar_t *filename) :
 	beta(0),
 	custom(0)
 {
-	Reload();
-}
-
-void Config::Reload()
-{
-	Load(&server);
-	Load(&voiceCommands);
-	Load(&fixes);
-	Load(&rate);
-	Load(&clanRestrictions);
-	Load(&buffSystem);
-	Load(&autoLoot);
-	Load(&beta);
-	Load(&custom);
-	Load(&npcd);
+	server = new Server(this);
+	voiceCommands = new VoiceCommands(this);
+	fixes = new Fixes(this);
+	rate = new Rate(this);
+	clanRestrictions = new ClanRestrictions(this);
+	buffSystem = new BuffSystem(this);
+	autoLoot = new AutoLoot(this);
+	beta = new Beta(this);
+	custom = new Custom(this);
+	npcd = new Npcd(this);
 }
 
 Config::Server::Server(Config *config) :
