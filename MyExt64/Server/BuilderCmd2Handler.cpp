@@ -191,7 +191,7 @@ bool BuilderCmd2Handler::Diag(CUserSocket *socket, CUser *user, CCreature *targe
 			L"Invalid diagtype");
 		return false;
 	}
-	targetSocket->Send("cdddddddddhbddd", 0x48, target->objectId, target->objectId,
+	targetSocket->Send("cdddddddddhddd", 0x48, target->objectId, target->objectId,
 		32767, diagType, 100, 100, target->sd->x, target->sd->y, target->sd->z, 0,
 		target->sd->x, target->sd->y, target->sd->z);
 	return false;
