@@ -61,6 +61,7 @@ public:
 		bool disallowTradeInOlympiad;
 		bool relogKeepSongsDances;
 		bool fixSpiritshotLag;
+		bool forceMonthlyOlympiad;
 	} *fixes;
 
 	struct Rate {
