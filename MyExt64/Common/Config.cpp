@@ -78,7 +78,8 @@ Config::Fixes::Fixes(Config *config) :
 	repeatSkillOnDistanceFailSeconds(config->GetInt(L"fixes", L"RepeatSkillOnDistanceFailSeconds", -1)),
 	disallowTradeInOlympiad(config->GetBool(L"fixes", L"DisallowTradeInOlympiad", true)),
 	relogKeepSongsDances(config->GetBool(L"fixes", L"RelogKeepSongsDances", true)),
-	fixSpiritshotLag(config->GetBool(L"fixes", L"FixSpiritshotLag", false))
+	fixSpiritshotLag(config->GetBool(L"fixes", L"FixSpiritshotLag", false)),
+	forceMonthlyOlympiad(config->GetBool(L"fixes", L"ForceMonthlyOlympiad", false))
 {
 }
 
