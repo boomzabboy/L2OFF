@@ -72,6 +72,22 @@ void GraciaEpilogue::InitBuySell()
 	WriteMemoryBYTE(0x5B5B7A + 2, 0); // don't show inventory after buy
 	WriteMemoryBYTE(0x5B63B3 + 2, 0); // don't show inventory after sell
 	WriteMemoryBYTE(0x5B63C4 + 2, 0); // don't show inventory after sell
+
+	// retain user pointer in rbx
+	WriteMemoryBYTES(0x6CAF58,
+		/* 6CAF58 */ "\x44\x8B\xC7"			// mov r8d, edi
+		/* 6CAF5B */ "\x48\x8D\x54\x24\x58"		// lea rdx, [rsp+0x58]
+		/* 6CAF60 */ "\x48\x8D\x0D...."			// lea rcx, ....
+		/* 6CAF67 */ "....."				// call 0x448F14
+		/* 6CAF6C */ "\x90"				// nop
+		/* 6CAF6D */ "\x48\x8B\x83\x90\x0A\x00\x00"	// mov rax, [rbx+0xA90]
+		/* 6CAF74 */ "\x44\x8B\x40\x28"			// mov r8d, [rax+0x28]
+		/* 6CAF78 */ "\x90\x90"				// nop nop
+		/* 6CAF7A */ , 0x6CAF7A - 0x6CAF58);
+
+	WriteAddress(0x6CAF63, 0x10DE4580);
+	WriteInstructionCall(0x6CAF67, 0x448F14);
+	WriteInstructionCall(0x6CAFF2, reinterpret_cast<UINT32>(NpcSocketSendHtmlCmdManorMenuSelect));
 }
 
 int __cdecl GraciaEpilogue::AssembleBuySellListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT64 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s)
@@ -355,13 +371,15 @@ bool __cdecl GraciaEpilogue::BuyPacket(CUserSocket *socket, const BYTE *packet, 
 }
 
 void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelect(CUser *user, const char *format, BYTE opcode, UINT32 userSdIndex, UINT32 userObjectId, UINT32 npcSdIndex, INT32 ask, INT64 reply, INT32 state)
-{ GUARDED
+{
+	GUARDED;
 
 	NpcSocketSendHtmlCmdMenuSelectFirst(user, format, opcode, userSdIndex, userObjectId, npcSdIndex, ask, reply, state, true);
 }
 
 void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelectFirst(CUser *user, const char *format, BYTE opcode, UINT32 userSdIndex, UINT32 userObjectId, UINT32 npcSdIndex, INT32 ask, INT64 reply, INT32 state, bool first)
-{ GUARDED
+{
+	GUARDED;
 
 	void *npcSocket = reinterpret_cast<void*>(0x1634170);
 	typedef void (__cdecl *t)(void*, const char*, BYTE, UINT32, UINT32, UINT32, INT32, INT64, INT32);
@@ -382,6 +400,24 @@ void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelectFirst(CUser *user, co
 	user->ext.buySell.buySellSwitched = false;
 	user->sdLock->Leave(__FILEW__, __LINE__);
 
-	f(npcSocket, format, opcode, userSdIndex, userObjectId, npcSdIndex, ask, reply, state);
+	CLog::Add(CLog::Blue, L"AAA user objectId = %d", user->objectId);
+
+	f(npcSocket, format, opcode, userSdIndex, user->objectId, npcSdIndex, ask, reply, state);
+}
+
+void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdManorMenuSelect(void *npcSocket, const char *format, BYTE opcode, CUser *user, UINT32 npcSdIndex, INT32 ask, INT32 state, INT32 time)
+{
+	user->sdLock->Enter(__FILEW__, __LINE__);
+	CUserReleaseEconomy(user);
+	user->ext.buySell.fakeSell = false;
+	user->ext.buySell.firstBuySell = true;
+	user->ext.buySell.storedAsk = ask;
+	user->ext.buySell.storedReply = 0;
+	user->ext.buySell.storedState = state;
+	user->ext.buySell.storedNpcSdIndex = npcSdIndex;
+	user->ext.buySell.buySellSwitched = false;
+	user->sdLock->Leave(__FILEW__, __LINE__);
+	reinterpret_cast<void(*)(void*, const char*, BYTE, UINT32, UINT32, INT32, INT32, INT32)>(0x72D09C)(
+		npcSocket, format, opcode, user->sd->index, npcSdIndex, ask, state, time);
 }
 
