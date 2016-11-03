@@ -19,6 +19,7 @@ public:
 	};
 
 	static void Init();
+	static void ReloadConfig();
 	static void SetDebug(bool debug);
 	static bool IsDebug();
 	static void SetProtocolVersion(int version);

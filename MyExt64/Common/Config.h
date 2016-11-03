@@ -5,13 +5,15 @@
 #include <set>
 #include <vector>
 #include <windows.h>
+#include <Common/CriticalSection.h>
 
 class Config {
 public:
 	static Config* Instance();
+	void Reload();
 
 	struct Server {
-		Server(Config *config);
+		void Load(Config *config);
 
 		std::wstring name;
 		int protocolVersion;
@@ -42,7 +44,7 @@ public:
 	} *server;
 
 	struct VoiceCommands {
-		VoiceCommands(Config *config);
+		void Load(Config *config);
 
 		bool enabled;
 		bool expOnOff;
@@ -53,7 +55,7 @@ public:
 	} *voiceCommands;
 
 	struct Fixes {
-		Fixes(Config *config);
+		void Load(Config *config);
 
 		int maxReplenishedVitalityPoints;
 		bool commandChannelFriendly;
@@ -65,7 +67,7 @@ public:
 	} *fixes;
 
 	struct Rate {
-		Rate(Config *config);
+		void Load(Config *config);
 
 		double adenaRate;
 		double dropRate;
@@ -78,7 +80,7 @@ public:
 	} *rate;
 
 	struct ClanRestrictions {
-		ClanRestrictions(Config *config);
+		void Load(Config *config);
 
 		UINT32 pledgeWarTimeout;
 		UINT32 pledgeOustPenaltyTimeout;
@@ -101,14 +103,14 @@ public:
 	} *clanRestrictions;
 
 	struct BuffSystem {
-		BuffSystem(Config *config);
+		void Load(Config *config);
 
 		int maxSlots;
 		int maxDivineInspirationBonusSlots;
 	} *buffSystem;
 
 	struct AutoLoot {
-		AutoLoot(Config *config);
+		void Load(Config *config);
 
 		bool autoLootMobDrop;
 		bool autoLootBossDrop;
@@ -117,7 +119,7 @@ public:
 	} *autoLoot;
 
 	struct Beta {
-		Beta(Config *config);
+		void Load(Config *config);
 
 		bool enabled;
 		bool level;
@@ -129,7 +131,7 @@ public:
 	} *beta;
 
 	struct Custom {
-		Custom(Config *config);
+		void Load(Config *config);
 
 		bool removeKamaelRace;
 		bool removeVitalitySystem;
@@ -143,7 +145,7 @@ public:
 	} *custom;
 
 	struct Npcd {
-		Npcd(Config *config);
+		void Load(Config *config);
 
 		bool useSplitAI;
 		size_t aiBufferSizeMB;
@@ -161,5 +163,6 @@ protected:
 
 	std::wstring filename;
 	static Config *instance;
+	static CriticalSection instanceCS;
 };
 

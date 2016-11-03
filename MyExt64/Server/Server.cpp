@@ -117,6 +117,19 @@ void Server::Init()
 	HideWarnings(); // call this at last!
 }
 
+void Server::ReloadConfig()
+{
+	Config::Instance()->Reload();
+	DeadlockTimeout(Config::Instance()->server->deadlockTimeout * 1000 * 1000);
+	SetMaxLevel(Config::Instance()->server->maxLevelMain, Config::Instance()->server->maxLevelSubclass);
+	SetShutdownSeconds(Config::Instance()->server->shutdownDuration);
+	SetPledgeLoadTimeout(Config::Instance()->server->pledgeLoadTimeout);
+	SetPledgeWarLoadTimeout(Config::Instance()->server->pledgeWarLoadTimeout);
+	InitClanRestrictions();
+	SetBuffSlots();
+	SetVitalityLevels();
+}
+
 void Server::Load()
 {
 	GUARDED;
