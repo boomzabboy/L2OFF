@@ -399,9 +399,6 @@ void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelectFirst(CUser *user, co
 	user->ext.buySell.storedNpcSdIndex = npcSdIndex;
 	user->ext.buySell.buySellSwitched = false;
 	user->sdLock->Leave(__FILEW__, __LINE__);
-
-	CLog::Add(CLog::Blue, L"AAA user objectId = %d", user->objectId);
-
 	f(npcSocket, format, opcode, userSdIndex, user->objectId, npcSdIndex, ask, reply, state);
 }
 
