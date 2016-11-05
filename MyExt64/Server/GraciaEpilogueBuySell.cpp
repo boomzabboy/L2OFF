@@ -73,6 +73,7 @@ void GraciaEpilogue::InitBuySell()
 	WriteMemoryBYTE(0x5B63B3 + 2, 0); // don't show inventory after sell
 	WriteMemoryBYTE(0x5B63C4 + 2, 0); // don't show inventory after sell
 
+	if (false) { // needs fix
 	// retain user pointer in rbx
 	WriteMemoryBYTES(0x6CAF58,
 		/* 6CAF58 */ "\x44\x8B\xC7"			// mov r8d, edi
@@ -88,6 +89,7 @@ void GraciaEpilogue::InitBuySell()
 	WriteAddress(0x6CAF63, 0x10DE4580);
 	WriteInstructionCall(0x6CAF67, 0x448F14);
 	WriteInstructionCall(0x6CAFF2, reinterpret_cast<UINT32>(NpcSocketSendHtmlCmdManorMenuSelect));
+	}
 }
 
 int __cdecl GraciaEpilogue::AssembleBuySellListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT64 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s)
