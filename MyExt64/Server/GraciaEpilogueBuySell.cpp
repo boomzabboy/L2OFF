@@ -407,6 +407,12 @@ void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdMenuSelectFirst(CUser *user, co
 
 void __cdecl GraciaEpilogue::NpcSocketSendHtmlCmdManorMenuSelect(void *npcSocket, const char *format, BYTE opcode, CUser *user, UINT32 npcSdIndex, INT32 ask, INT32 state, INT32 time)
 {
+	if (!user) {
+		return;
+	}
+	if (!user->sdLock) {
+		return;
+	}
 	user->sdLock->Enter(__FILEW__, __LINE__);
 	CUserReleaseEconomy(user);
 	user->ext.buySell.fakeSell = false;
