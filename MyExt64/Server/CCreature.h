@@ -20,6 +20,7 @@ public:
 	bool IsUser() const;
 	bool IsSummon() const;
 	bool IsPet() const;
+	bool IsUserOrSummon() const;
 	bool AddItemToInventory(int itemId, UINT64 count);
 	CCreature* GetTarget();
 	unsigned long GetSkillUsedTime(const int skillId);
@@ -28,6 +29,7 @@ public:
 
 	static int __cdecl GetRemainReuseDelaySecWrapper(CCreature *self, const int skillId);
 	static bool __cdecl UseItemWrapper(CCreature *self, class CItem *item, int i);
+	static bool __cdecl IsUserOrSummonWrapper(CCreature *self);
 
 	/* 0x0000 */ unsigned char padding0x0000[0x0018 - 0x0000];
 	/* 0x0018 */ UINT32 objectId;

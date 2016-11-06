@@ -21,6 +21,10 @@ void CCreature::Init()
 
 	WriteInstructionCall(0x8DD566, reinterpret_cast<UINT32>(UseItemWrapper));
 	WriteMemoryQWORD(0xC54348, reinterpret_cast<UINT64>(UseItemWrapper));
+
+	if (Config::Instance()->fixes->territoryWarPetFix) {
+		WriteInstructionCall(0x8D1470, reinterpret_cast<UINT32>(IsUserOrSummonWrapper), 0x8D1476);
+	}
 }
 
 CCreature::CCreature()
@@ -67,6 +71,16 @@ bool CCreature::IsPet() const
 bool CCreature::IsSummon() const
 {
 	return reinterpret_cast<const UINT64*>(this)[0] == 0xBCB0F8 || IsPet();
+}
+
+bool CCreature::IsUserOrSummon() const
+{
+	return IsUser() || IsSummon();
+}
+
+bool __cdecl CCreature::IsUserOrSummonWrapper(CCreature *self)
+{
+	return self->IsUserOrSummon();
 }
 
 bool CCreature::AddItemToInventory(int itemId, UINT64 count)

@@ -88,6 +88,7 @@ void Config::Fixes::Load(Config *config)
 	relogKeepSongsDances = config->GetBool(L"fixes", L"RelogKeepSongsDances", true);
 	fixSpiritshotLag = config->GetBool(L"fixes", L"FixSpiritshotLag", false);
 	forceMonthlyOlympiad = config->GetBool(L"fixes", L"ForceMonthlyOlympiad", false);
+	territoryWarPetFix = config->GetBool(L"fixes", L"TerritoryWarPetFix", true);
 }
 
 void Config::Rate::Load(Config *config)

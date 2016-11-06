@@ -64,6 +64,7 @@ public:
 		bool relogKeepSongsDances;
 		bool fixSpiritshotLag;
 		bool forceMonthlyOlympiad;
+		bool territoryWarPetFix;
 	} *fixes;
 
 	struct Rate {
