@@ -17,6 +17,7 @@ Config::Config(const wchar_t *filename) :
 	rate(new Rate),
 	clanRestrictions(new ClanRestrictions),
 	buffSystem(new BuffSystem),
+	olympiad(new Olympiad),
 	autoLoot(new AutoLoot),
 	beta(new Beta),
 	custom(new Custom),
@@ -33,6 +34,7 @@ void Config::Reload()
 	rate->Load(this);
 	clanRestrictions->Load(this);
 	buffSystem->Load(this);
+	olympiad->Load(this);
 	autoLoot->Load(this);
 	beta->Load(this);
 	custom->Load(this);
@@ -129,6 +131,13 @@ void Config::BuffSystem::Load(Config *config)
 {
 	maxSlots = config->GetInt(L"buff-system", L"MaxSlots", 20);
 	maxDivineInspirationBonusSlots = config->GetInt(L"buff-system", L"MaxDivineInspirationBonusSlots", 4);
+}
+
+void Config::Olympiad::Load(Config *config)
+{
+	entryCountTeam = config->GetInt(L"olympiad", L"EntryCountTeam", 9);
+	entryCountNonclass = config->GetInt(L"olympiad", L"EntryCountNonclass", 9);
+	entryCountClass = config->GetInt(L"olympiad", L"EntryCountClass", 5);
 }
 
 void Config::AutoLoot::Load(Config *config)

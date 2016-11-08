@@ -128,6 +128,7 @@ void Server::ReloadConfig()
 	InitClanRestrictions();
 	SetBuffSlots();
 	SetVitalityLevels();
+	OlympiadFixes::SetEntryCounts();
 }
 
 void Server::Load()
@@ -143,6 +144,7 @@ void Server::Load()
 		EnableVitaminManager();
 	}
 	FixPremiumBoost();
+	OlympiadFixes::SetEntryCounts();
 }
 
 bool Server::IsDebug()

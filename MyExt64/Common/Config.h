@@ -110,6 +110,14 @@ public:
 		int maxDivineInspirationBonusSlots;
 	} *buffSystem;
 
+	struct Olympiad {
+		void Load(Config *config);
+
+		int entryCountTeam;
+		int entryCountNonclass;
+		int entryCountClass;
+	} *olympiad;
+
 	struct AutoLoot {
 		void Load(Config *config);
 

@@ -13,6 +13,13 @@ void OlympiadFixes::Init()
 	WriteInstructionCall(0x6067B8, reinterpret_cast<UINT32>(SetOlympiadTermWrapper));
 }
 
+void OlympiadFixes::SetEntryCounts()
+{
+	WriteMemoryDWORD(0xBB4280, Config::Instance()->olympiad->entryCountTeam);
+	WriteMemoryDWORD(0xBB4284, Config::Instance()->olympiad->entryCountNonclass);
+	WriteMemoryDWORD(0xBB4288, Config::Instance()->olympiad->entryCountClass);
+}
+
 void __cdecl OlympiadFixes::PledgeSkillLock(unsigned long &a, int b, CUser *user, bool d, bool e, bool &f)
 { GUARDED
 
