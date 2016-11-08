@@ -153,7 +153,8 @@ bool CCreature::UseItem(CItem *item, int i)
 
 	if ((item->itemId < 2509 || item->itemId > 2514)
 		&& (item->itemId < 3947 || item->itemId > 3952)
-		&& item->itemId != 5790) {
+		&& item->itemId != 5790
+		&& (item->itemId < 22072 || item->itemId > 22081)) {
 
 		return true;
 	}
