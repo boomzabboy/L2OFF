@@ -2,6 +2,7 @@
 #include <Server/CCreature.h>
 #include <Server/CItem.h>
 #include <Server/CUser.h>
+#include <Server/CSummon.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CYieldLock.h>
 #include <Common/Utils.h>
@@ -23,7 +24,14 @@ void CCreature::Init()
 	WriteMemoryQWORD(0xC54348, reinterpret_cast<UINT64>(UseItemWrapper));
 
 	if (Config::Instance()->fixes->territoryWarPetFix) {
-		WriteInstructionCall(0x8D1470, reinterpret_cast<UINT32>(IsUserOrSummonWrapper), 0x8D1476);
+		WriteInstructionCall(0x8D1470, reinterpret_cast<UINT32>(GetUserOrMaster), 0x8D1476);
+		WriteMemoryBYTES(0x8D1476, "\x4C\x39\xE8", 3);
+		WriteMemoryBYTES(0x8D147B,
+			"\x44\x8B\x45\x18\x8B\x40\x18\x44"
+			"\x89\x44\x24\x30\x89\x44\x24\x20"
+			"\x48\x8B\x85\x90\x0A\x00\x00\x8B"
+			"\x90\x84\x0B\x00\x00\x89\x54\x24"
+			"\x28", 33);
 	}
 }
 
@@ -78,9 +86,14 @@ bool CCreature::IsUserOrSummon() const
 	return IsUser() || IsSummon();
 }
 
-bool __cdecl CCreature::IsUserOrSummonWrapper(CCreature *self)
+CCreature* __cdecl CCreature::GetUserOrMaster(CCreature *self)
 {
-	return self->IsUserOrSummon();
+	if (self->IsUser()) {
+		return self;
+	} else if (self->IsSummon()) {
+		return reinterpret_cast<CSummon*>(self)->GetUserOrMaster();
+	}
+	return 0;
 }
 
 bool CCreature::AddItemToInventory(int itemId, UINT64 count)
