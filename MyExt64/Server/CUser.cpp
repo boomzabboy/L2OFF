@@ -981,7 +981,6 @@ void CUser::ShowHTML(wchar_t *filename, wchar_t *data, unsigned int i)
 					UINT32 multisellId = 0;
 					ss >> multisellId;
 					if (ss) {
-						CLog::Add(CLog::Blue, L"Allow multisell %d", multisellId);
 						ext.guard.allowedMultisellIds.insert(multisellId);
 					}
 					break;
