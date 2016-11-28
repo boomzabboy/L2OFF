@@ -93,6 +93,7 @@ public:
 			CriticalSection lastMultisellLock;
 			UINT32 lastMultisellNpcId;
 			UINT32 lastMultisellListId;
+			std::set<UINT32> allowedMultisellIds;
 		};
 
 		BuySell buySell;
@@ -141,6 +142,7 @@ public:
 	void SendAbnormalStatusInfo();
 	bool CanOpenPrivateShop(int type);
 	void SendSkillList(class CUserSocket *socket, bool sendShortCutInfo);
+	void ShowHTML(wchar_t *filename, wchar_t *data, unsigned int i);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -160,6 +162,7 @@ public:
 	static void __cdecl TimerExpiredWrapper(CUser *self, int id);
 	static int __cdecl GetPremiumLevelWrapper(CUser *self);
 	static bool __cdecl CanOpenPrivateShopWrapper(CUser *self, int type);
+	static void __cdecl ShowHTMLWrapper(CUser *self, wchar_t *filename, wchar_t *data, unsigned int i);
 
 	static CriticalSection onlineOfflineTradeUsersCS;
 	static std::set<CUser*> onlineUsers;

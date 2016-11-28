@@ -5,6 +5,7 @@
 #include <Server/CSummon.h>
 #include <Server/Server.h>
 #include <Common/CSharedCreatureData.h>
+#include <Common/CLog.h>
 #include <Common/Utils.h>
 #include <Common/Config.h>
 #include <new>
@@ -87,6 +88,25 @@ void CUser::Init()
 	WriteInstructionCall(0x8DB130 + 0x69, reinterpret_cast<UINT32>(CanOpenPrivateShopWrapper));
 	WriteInstructionCall(0x8DB1F8 + 0x69, reinterpret_cast<UINT32>(CanOpenPrivateShopWrapper));
 	WriteInstructionCall(0x8DB2C0 + 0x69, reinterpret_cast<UINT32>(CanOpenPrivateShopWrapper));
+
+	WriteInstructionCall(0x40DC24 + 0x176, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x44521C + 0x13A, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x44A364 + 0x112, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x4525C8 + 0x6FC, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x54C4FC + 0x22BB, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x62A69C + 0x6D1, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x665180 + 0x1DE, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x73A4A4 + 0x123, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x746318 + 0xB93, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x74D154 + 0x6A1, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x74D960 + 0x2DD, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x76F01C + 0xF7, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x7787D0 + 0x179, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x7E6D2C + 0x225, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x81B2CC + 0x20F, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x81B4EC + 0x223, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x94A098 + 0x39B, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+	WriteInstructionCall(0x94A098 + 0x432, reinterpret_cast<UINT32>(ShowHTMLWrapper));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -742,6 +762,12 @@ bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchan
 	CCreature *target = GetTarget();
 	ScopedLock lock(ext.guard.lastMultisellLock);
 	if (ext.guard.lastMultisellListId != listId) {
+		CLog::Add(CLog::Red, L"User [%s] tried to buy from multisell %d (last = %d)", GetName(), listId,
+			ext.guard.lastMultisellListId);
+		return false;
+	}
+	if (!ext.guard.allowedMultisellIds.count(listId)) {
+		CLog::Add(CLog::Red, L"User [%s] tried to buy from multisell %d (not allowed)", GetName(), listId);
 		return false;
 	}
 	if (!target) {
@@ -921,6 +947,51 @@ bool CUser::CanOpenPrivateShop(int type)
 void CUser::SendSkillList(CUserSocket *socket, bool sendShortCutInfo)
 {
 	reinterpret_cast<void(*)(CUser*, CUserSocket*, bool)>(0x8F6C04)(this, socket, sendShortCutInfo);
+}
+
+void CUser::ShowHTMLWrapper(CUser *self, wchar_t *filename, wchar_t *data, unsigned int length)
+{
+	self->ShowHTML(filename, data, length);
+}
+
+void CUser::ShowHTML(wchar_t *filename, wchar_t *data, unsigned int i)
+{
+	static const std::wstring multisellBypass = L"action=\"bypass -h menu_select?ask=-303&reply=";
+	ScopedLock lock(ext.guard.lastMultisellLock);
+	ext.guard.allowedMultisellIds.clear();
+	if (data) {
+		std::wstring s(data);
+		size_t pos = 0;
+		for	(;;) {
+			if (pos >= s.size()) {
+				break;
+			}
+			pos = s.find(multisellBypass, pos);
+			if (pos == std::string::npos) {
+				break;
+			}
+			pos += multisellBypass.size();
+			std::wstringstream ss;
+			for (;;) {
+				if (pos >= s.size()) {
+					break;
+				} else if (s[pos] >= L'0' && s[pos] <= L'9') {
+					ss << s[pos++];
+				} else if (s[pos++] == L'"') {
+					UINT32 multisellId = 0;
+					ss >> multisellId;
+					if (ss) {
+						CLog::Add(CLog::Blue, L"Allow multisell %d", multisellId);
+						ext.guard.allowedMultisellIds.insert(multisellId);
+					}
+					break;
+				} else {
+					break;
+				}
+			}
+		}
+	}
+	reinterpret_cast<void(*)(CUser*, wchar_t*, wchar_t*, unsigned int)>(0x8D6594)(this, filename, data, i);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

@@ -3,6 +3,7 @@
 #include <Server/CUser.h>
 #include <Server/CNPC.h>
 #include <Common/CSharedCreatureData.h>
+#include <Common/CLog.h>
 
 void CMultiSellList::Init()
 {
@@ -15,7 +16,8 @@ void CMultiSellList::SendListWrapper(CMultiSellList *self, CUser *user, CNPC *np
 }
 
 void CMultiSellList::SendList(CUser *user, CNPC *npc)
-{ GUARDED
+{
+	GUARDED;
 
 	if (!user) {
 		return;
@@ -25,6 +27,12 @@ void CMultiSellList::SendList(CUser *user, CNPC *npc)
 	}
 	{
 		ScopedLock lock(user->ext.guard.lastMultisellLock);
+		if (!user->ext.guard.allowedMultisellIds.count(id)) {
+			user->ext.guard.lastMultisellNpcId = 0;
+			user->ext.guard.lastMultisellListId = 0;
+			CLog::Add(CLog::Red, L"User [%s] tried to list multisell %d (not allowed)", user->GetName(), id);
+			return;
+		}
 		user->ext.guard.lastMultisellNpcId = npc->sd->npcClassId;
 		user->ext.guard.lastMultisellListId = id;
 	}
