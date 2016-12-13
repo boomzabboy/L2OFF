@@ -1,6 +1,7 @@
 
 #include <Server/NpcServer.h>
 #include <Common/Utils.h>
+#include <Common/CLog.h>
 
 NpcServer::NpcServer()
 {
@@ -36,6 +37,11 @@ void NpcServer::Send(const char *format, ...)
 
 void NpcServer::SendV(const char *format, va_list va)
 {
-	reinterpret_cast<void(*)(void*, const char*, va_list)>(0x859934)(GetSocket(), format, va);
+	void *socket = GetSocket();
+	if (!socket) {
+		CLog::Add(CLog::Red, L"Attempt to write to null socket!");
+		return;
+	}
+	reinterpret_cast<void(*)(void*, const char*, va_list)>(0x859934)(socket, format, va);
 }
 
