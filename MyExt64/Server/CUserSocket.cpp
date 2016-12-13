@@ -199,6 +199,10 @@ void CUserSocket::Init()
 	WriteInstructionCall(0x8AF9B8, reinterpret_cast<UINT32>(SendSendAbnormalStatusInfoWrapper));
 
 	WriteMemoryBYTES(0x912880, "\x30\xC0", 2); // DummyPacket not to disconnect user
+
+	WriteMemoryQWORD(0xB9C2C8, reinterpret_cast<UINT64>(SendVWrapper));
+	WriteMemoryQWORD(0xC29AF8, reinterpret_cast<UINT64>(SendVWrapper));
+	WriteMemoryQWORD(0xC74728, reinterpret_cast<UINT64>(SendVWrapper));
 }
 
 CUserSocket* __cdecl CUserSocket::Constructor(CUserSocket *self, SOCKET s)
@@ -243,8 +247,17 @@ void CUserSocket::Send(const char *format, ...)
 	va_end(va);
 }
 
+void CUserSocket::SendVWrapper(CUserSocket* self, const char *format, va_list va)
+{
+	self->SendV(format, va);
+}
+
 void CUserSocket::SendV(const char *format, va_list va)
 {
+	if (!this) {
+		CLog::Add(CLog::Red, L"Attempt to write to null socket!");
+		return;
+	}
 	reinterpret_cast<void(*)(CUserSocket*, const char*, va_list)>(0x859934)(this, format, va);
 }
 
