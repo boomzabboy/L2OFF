@@ -26,6 +26,7 @@
 #include <Server/CMultiSellList.h>
 #include <Server/CInstantZone.h>
 #include <Server/SkillEnchantFix.h>
+#include <Server/NpcServer.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -114,6 +115,7 @@ void Server::Init()
 	AugmentationStatFix::Init();
 	CMultiSellList::Init();
 	CInstantZone::Init();
+	NpcServer::Init();
 	HideWarnings(); // call this at last!
 }
 
