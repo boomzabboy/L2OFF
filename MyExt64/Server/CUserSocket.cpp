@@ -541,7 +541,12 @@ bool __cdecl CUserSocket::LinkHtmlPacketWrapper(CUserSocket *socket, const BYTE 
 		return false;
 	}
 
-	size_t pos = link.rfind(L".");
+	size_t pos = link.rfind(L"#");
+	if (pos != std::wstring::npos) {
+		link = link.substr(0, pos);
+	}
+
+	pos = link.rfind(L".");
 	if (pos == std::wstring::npos) {
 		return false;
 	}
