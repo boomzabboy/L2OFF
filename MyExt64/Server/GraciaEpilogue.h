@@ -33,6 +33,7 @@ public:
 	static int __cdecl AssemblePackageSendableListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT32 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s);
 	static void __cdecl SendSystemMessageLogoutWrapper(CUserSocket *socket, unsigned int id);
 	static void __cdecl SendLogoutWrapper(class CUser *user);
+	static void __cdecl SendPetStatusUpdateWrapper(CUserSocket *socket, const char *format, class CCreature *pet, UINT32 a, UINT32 b, UINT32 c, UINT32 d, UINT32 e, const wchar_t *f, UINT32 g, UINT32 h, UINT32 i, UINT32 j, UINT32 k, UINT32 l, UINT32 m, UINT64 n, UINT64 o, UINT64 p);
 
 	// buy/sell
 	static void InitBuySell();

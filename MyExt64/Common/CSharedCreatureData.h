@@ -34,7 +34,10 @@ public:
 	/* 0x0938 */ UINT32 pcPoints;
 	/* 0x093C */ unsigned char padding0x093C;
 	/* 0x093D */ unsigned char isPremiumUser;
-	/* 0x093E */ unsigned char padding0x093E[0x0A7C-0x093E];
+	/* 0x093E */ unsigned char padding0x093E[0x0A5C-0x093E];
+	/* 0x0A5C */ UINT32 summonTime;
+	/* 0x0A60 */ UINT32 maxTime;
+	/* 0x0A64 */ unsigned char padding0x0A64[0x0A7C-0x0A64];
 	/* 0x0A7C */ UINT32 npcClassId;
 	/* 0x0A80 */ unsigned char padding0x0A80[0x0B30-0x0A80];
 	/* 0x0B30 */ UINT32 inZoneId;

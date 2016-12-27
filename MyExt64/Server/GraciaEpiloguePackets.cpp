@@ -47,6 +47,8 @@ void GraciaEpilogue::InitPackets()
 	WriteInstructionCall(0x8DBAA6, reinterpret_cast<UINT32>(AssemblePackageSendableListItem));
 	WriteInstructionCall(0x93ABD9, reinterpret_cast<UINT32>(SendSystemMessageLogoutWrapper));
 	WriteInstructionCall(0x93AB74, reinterpret_cast<UINT32>(SendLogoutWrapper));
+	WriteMemoryBYTES(0x7AF4AC, "\x4D\x89\xE8\x49\x8B\xCC", 6);
+	WriteInstructionCall(0x7AF4B9, reinterpret_cast<UINT32>(SendPetStatusUpdateWrapper), 0x7AF4BF);
 }
 
 int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem1(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
@@ -220,3 +222,20 @@ void __cdecl GraciaEpilogue::SendLogoutWrapper(CUser *user)
 	reinterpret_cast<void(*)(CUser*)>(0x8A3A14)(user);
 }
 
+void __cdecl GraciaEpilogue::SendPetStatusUpdateWrapper(CUserSocket *socket, const char *format, CCreature *pet, UINT32 a, UINT32 b, UINT32 c, UINT32 d, UINT32 e, const wchar_t *f, UINT32 g, UINT32 h, UINT32 i, UINT32 j, UINT32 k, UINT32 l, UINT32 m, UINT64 n, UINT64 o, UINT64 p)
+{
+	if (!g && !h) {
+		UINT32 expireTime = pet->sd->summonTime + pet->sd->maxTime;
+		UINT32 now = GetTickCount();
+		if (now > expireTime) {
+			g = 0;
+		} else {
+			g = expireTime - now;
+		}
+		h = pet->sd->maxTime;
+		if (g > h) {
+			g = h;
+		}
+	}
+	socket->Send(format, 0xB6, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
+}
