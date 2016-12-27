@@ -27,6 +27,7 @@
 #include <Server/CInstantZone.h>
 #include <Server/SkillEnchantFix.h>
 #include <Server/NpcServer.h>
+#include <Server/CItem.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -116,6 +117,7 @@ void Server::Init()
 	CMultiSellList::Init();
 	CInstantZone::Init();
 	NpcServer::Init();
+	CItem::Init();
 	HideWarnings(); // call this at last!
 }
 
