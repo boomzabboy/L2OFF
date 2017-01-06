@@ -1,6 +1,7 @@
 
 #include <NPCd/NPCd.h>
 #include <NPCd/SplitAI.h>
+#include <NPCd/Compiler.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 #include <Common/Config.h>
@@ -13,6 +14,7 @@ void NPCd::Init()
 	if (Config::Instance()->npcd->useSplitAI) {
 		SplitAI::Init();
 	}
+	Compiler::Init();
 }
 
 void NPCd::DisableSendMail()
