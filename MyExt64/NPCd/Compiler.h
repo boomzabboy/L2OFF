@@ -25,6 +25,7 @@ public:
 	static void Compile();
 	static void Done(bool status);
 
+	static std::wstring exeFilename;
 	static std::string filename;
 	static bool close;
 };

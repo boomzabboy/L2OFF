@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 
+std::wstring Compiler::exeFilename;
 std::string Compiler::filename;
 bool Compiler::close = false;
 
@@ -24,6 +25,7 @@ void Compiler::Init()
 			part.push_back(args[i]);
 		}
 	}
+	exeFilename = parts[0];
 	if (parts.size() > 1) {
 		for (size_t i = 1 ; i < parts.size() ; ++i) {
 			if (parts[i] == L"-c" || parts[i] == L"--close") {
@@ -33,9 +35,9 @@ void Compiler::Init()
 			} else {
 				wchar_t buffer[4096];
 				if (parts[0].size() < 2048) {
-					wsprintf(buffer, L"Usage:\r\n%s [-c|--close] [FILENAME]", parts[0].c_str());
+					wsprintf(buffer, L"Usage:\r\n%s [-c|--close] [FILENAME]", exeFilename.c_str());
 				} else {
-					wsprintf(buffer, L"Usage:\r\n%s... [-c|--close] [FILENAME]", parts[0].substr(0, 2048).c_str());
+					wsprintf(buffer, L"Usage:\r\n%s... [-c|--close] [FILENAME]", exeFilename.substr(0, 2048).c_str());
 				}
 				MessageBox(0, buffer, L"Invalid arguments", 0);
 				exit(0);
@@ -131,9 +133,7 @@ void Compiler::Compile()
 	std::wstring wfilename = Widen(filename);
 	std::wstring woutputFilename = Widen(outputFilename);
 
-	for (size_t i = 0 ; i < 10 ; ++i) {
-		CLog::Add(CLog::Blue, L" ");
-	}
+	CLog::Add(CLog::Blue, L" ");
 	CLog::Add(CLog::Blue, L"Going to compile %s to %s", wfilename.c_str(), woutputFilename.c_str());
 	CLog::Add(CLog::Blue, L" ");
 
