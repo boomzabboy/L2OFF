@@ -28,5 +28,6 @@ public:
 	static std::wstring exeFilename;
 	static std::string filename;
 	static bool close;
+	static bool closeOnError;
 };
 

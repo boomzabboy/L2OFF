@@ -8,6 +8,7 @@
 std::wstring Compiler::exeFilename;
 std::string Compiler::filename;
 bool Compiler::close = false;
+bool Compiler::closeOnError = false;
 
 void Compiler::Init()
 {
@@ -30,14 +31,16 @@ void Compiler::Init()
 		for (size_t i = 1 ; i < parts.size() ; ++i) {
 			if (parts[i] == L"-c" || parts[i] == L"--close") {
 				close = true;
+			} else if (parts[i] == L"-e" || parts[i] == L"--close-on-error") {
+				closeOnError = true;
 			} else if (filename.empty()) {
 				filename = Narrow(parts[i]);
 			} else {
 				wchar_t buffer[4096];
 				if (parts[0].size() < 2048) {
-					wsprintf(buffer, L"Usage:\r\n%s [-c|--close] [FILENAME]", exeFilename.c_str());
+					wsprintf(buffer, L"Usage:\r\n%s [-c|--close] [-e|--close-on-error] [FILENAME]", exeFilename.c_str());
 				} else {
-					wsprintf(buffer, L"Usage:\r\n%s... [-c|--close] [FILENAME]", exeFilename.substr(0, 2048).c_str());
+					wsprintf(buffer, L"Usage:\r\n%s... [-c|--close] [-e|--close-on-error] [FILENAME]", exeFilename.substr(0, 2048).c_str());
 				}
 				MessageBox(0, buffer, L"Invalid arguments", 0);
 				exit(0);
@@ -110,6 +113,7 @@ void Compiler::Init()
 	WriteInstructionJmp(0x42B140, reinterpret_cast<UINT32>(exit));
 	WriteMemoryBYTES(0x665D40, L"Global\\CONSOLE_LOG_NASC", 50);
 	WriteInstructionJmp(0x475826, 0x475846);
+	WriteAddress(0x5BE2EC + 3, 0x665030);
 }
 
 int Compiler::LogError(void*, const wchar_t* format, ...)
@@ -117,6 +121,7 @@ int Compiler::LogError(void*, const wchar_t* format, ...)
 	va_list va;
     va_start(va, format);
 	CLog::AddV(CLog::Red, format, va);
+	vwprintf(format, va);
     va_end(va);
 	return 1;
 }
@@ -160,10 +165,14 @@ void Compiler::Compile()
 		Done(false);
 	}
 
+	CLog::Add(CLog::Blue, L"Creating parser...");
+
 	if (!reinterpret_cast<bool(*)(Parser*, const wchar_t*)>(0x5BE2B4)(&parser, wfilename.c_str())) { // give file to parser
 		CLog::Add(CLog::Red, L"Failed to create parser");
 		Done(false);
 	}
+
+	CLog::Add(CLog::Blue, L"Registering constants...");
 
 	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_IDLE", 0);
 	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_MOVE_AROUND", 1);
@@ -194,12 +203,16 @@ void Compiler::Compile()
 	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PC", 3);
 	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"NPC", 4);
 
+	CLog::Add(CLog::Blue, L"Creating output file...");
+
 	reinterpret_cast<void(*)(const char*)>(0x419D84)(outputFilename.c_str()); // open output
 
 	reinterpret_cast<void(*)(int, int, int, int, int, int)>(0x419E40)( // write header
 		sizeof(void*), 69, 79, 2, 2, 0);
 
 	*reinterpret_cast<UINT32*>(reinterpret_cast<char*>(&parser) + 0x110) = 4; // mode?
+
+	CLog::Add(CLog::Blue, L"Compiling...");
 
 	bool error = reinterpret_cast<UINT32(*)(Parser*)>(0x5D7F70)(&parser); // compile
 	int errors = *reinterpret_cast<UINT32*>(0x37886C0); // get error count
@@ -208,6 +221,7 @@ void Compiler::Compile()
 
 	if (error || errors) {
 		CLog::Add(CLog::Red, L"Compilation failed, error count = %d", errors);
+		Done(false);
 	} else {
 		CLog::Add(CLog::Blue, L"Compilation done");
 	}
@@ -219,6 +233,9 @@ void Compiler::Done(bool status)
 {
 	if (close && status) {
 		exit(0);
+	}
+	if (closeOnError && !status) {
+		exit(1);
 	}
 	for (;;) {
 		Sleep(100);

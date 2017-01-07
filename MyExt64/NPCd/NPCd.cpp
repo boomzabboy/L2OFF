@@ -55,16 +55,19 @@ void NPCd::StartHook(void *logger, int level, const char *fmt)
 	CLog::Add(CLog::Blue, L"To use l2npc.exe as a NASC compiler, run it with parameters:");
 	CLog::Add(CLog::Blue, L" ");
 	if (Compiler::exeFilename.size() < 2048) {
-		CLog::Add(CLog::Blue, L"    %s [-c|--close] FILENAME", Compiler::exeFilename.c_str());
+		CLog::Add(CLog::Blue, L"    %s [-c|--close] [-e|--close-on-error] FILENAME", Compiler::exeFilename.c_str());
 	} else {
-		CLog::Add(CLog::Blue, L"    %s [-c|--close] FILENAME", Compiler::exeFilename.substr(0, 2048).c_str());
+		CLog::Add(CLog::Blue, L"    %s [-c|--close] [-e|--close-on-error] FILENAME", Compiler::exeFilename.substr(0, 2048).c_str());
 	}
 	CLog::Add(CLog::Blue, L" ");
-	CLog::Add(CLog::Blue, L"    -c, --close         Close after successful compilation");
-	CLog::Add(CLog::Blue, L"    FILENAME            NASC file to compile");
+	CLog::Add(CLog::Blue, L"    -c, --close           Close after successful compilation");
+	CLog::Add(CLog::Blue, L"    -e, --close-on-error  Close after unsuccessful compilation");
+	CLog::Add(CLog::Blue, L"    FILENAME              NASC file to compile");
 	CLog::Add(CLog::Blue, L" ");
 
-	ShellExecute(0, L"open", L"cmd.exe", L"/C mkdir bak", 0, SW_HIDE);
-	ShellExecute(0, L"open", L"cmd.exe", L"/C move LinError.txt.*.bak bak\\", 0, SW_HIDE);
+	if (Compiler::filename.empty()) {
+		ShellExecute(0, L"open", L"cmd.exe", L"/C mkdir bak", 0, SW_HIDE);
+		ShellExecute(0, L"open", L"cmd.exe", L"/C move LinError.txt.*.bak bak\\", 0, SW_HIDE);
+	}
 }
 
