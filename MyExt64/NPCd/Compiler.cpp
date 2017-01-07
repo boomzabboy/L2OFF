@@ -165,6 +165,35 @@ void Compiler::Compile()
 		Done(false);
 	}
 
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_IDLE", 0);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_MOVE_AROUND", 1);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_DO_NOTHING", 2);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_ATTACK", 3);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_CHASE", 4);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_FLEE", 5);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_GET_ITEM", 6);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_FOLLOW", 7);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_DECAYING", 8);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_MOVE_TO_WAY_POINT", 9);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_USE_SKILL", 10);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_MOVE_TO", 11);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_EFFECT_ACTION", 12);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_EFFECT_ACTION2", 13);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_PET_DEFAULT", 14);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_MOVE_TO_TARGET", 15);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_MOVE_SUPERPOINT", 16);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PSTATE_MOVE_FREEWAY", 17);
+
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"MSTATE_NORMAL", 0);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"MSTATE_BERSERK", 1);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"MS_SILENCE", 2);
+
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"FRIEND", 0);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"SAME_PARTY", 1);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"SAME_BLOODPLEDGE", 2);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"PC", 3);
+	reinterpret_cast<void(*)(unsigned char*, const wchar_t*, int)>(0x55B18C)(&parser.padding[0x1C8], L"NPC", 4);
+
 	reinterpret_cast<void(*)(const char*)>(0x419D84)(outputFilename.c_str()); // open output
 
 	reinterpret_cast<void(*)(int, int, int, int, int, int)>(0x419E40)( // write header
