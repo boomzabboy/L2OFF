@@ -115,12 +115,7 @@ CCreature* CCreature::GetTarget()
 {
 	GUARDED;
 
-	CCreature *result = 0;
-	UINT32 targetId_ = targetId;
-	if (targetId_ && (targetId_ & 0xF8000000) == 0x48000000) {
-		return reinterpret_cast<CCreature*(*)(UINT64, UINT32)>(0x41A3A4)(0xF1B250, targetId_);
-	}
-	return 0;
+	return GetCreatureByObjectId(targetId);
 }
 
 unsigned long CCreature::GetSkillUsedTime(const int skillId)
@@ -186,6 +181,33 @@ bool CCreature::UseItem(CItem *item, int i)
 bool __cdecl CCreature::UseItemWrapper(CCreature *self, CItem *item, int i)
 {
 	return self->UseItem(item, i);
+}
+
+CCreature* CCreature::GetCreatureByObjectId(UINT32 id)
+{
+	return reinterpret_cast<CCreature*(*)(UINT32*)>(0x86E4E4)(&id);
+}
+
+CCreature* CCreature::GetValidCreatureByObjectId(UINT32 id)
+{
+	GUARDED;
+
+	CCreature *creature = GetCreatureByObjectId(id);
+	if (!creature) {
+		return 0;
+	}
+	switch (*reinterpret_cast<UINT32**>(creature)[0]) {
+	case 0xA72FB8: case 0xAB8EC8: case 0xAC87E8: case 0xB1F278: case 0xB7CB18: case 0xB93748:
+	case 0xBCB0F8: case 0xBCC828: case 0xC317D8: case 0xC396C8: case 0xC3B568: case 0xC53BB8:
+	case 0xC8C148:
+		break;
+	default:
+		return 0;
+	}
+	if (!creature->sd) {
+		return 0;
+	}
+	return creature;
 }
 
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);

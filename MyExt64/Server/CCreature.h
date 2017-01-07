@@ -27,6 +27,9 @@ public:
 	int GetRemainReuseDelaySec(const int skillId);
 	bool UseItem(class CItem *item, int i);
 
+	static CCreature* GetCreatureByObjectId(UINT32 id);
+	static CCreature* GetValidCreatureByObjectId(UINT32 id);
+
 	static int __cdecl GetRemainReuseDelaySecWrapper(CCreature *self, const int skillId);
 	static bool __cdecl UseItemWrapper(CCreature *self, class CItem *item, int i);
 	static CCreature* __cdecl GetUserOrMaster(CCreature *self);
@@ -38,7 +41,9 @@ public:
 	/* 0x0A98 */ unsigned char padding0x0A98[0x0AA0 - 0x0A98];
 	/* 0x0AA0 */ class CYieldLock *sdLock;
 	/* 0x0AA8 */ CInventory inventory;
-	/* 0x0B78 */ unsigned char padding0x0B78[0x1460 - 0x0B78];
+	/* 0x0B78 */ unsigned char padding0x0B78[0x1210 - 0x0B78];
+	/* 0x1210 */ bool hide;
+	/* 0x1211 */ unsigned char padding0x1211[0x1460 - 0x1211];
 	/* 0x1460 */ UINT32 targetId;
 	/* 0x1464 */ unsigned char padding0x1464[0x1CB0 - 0x1464];
 	/* 0x1CB0 */

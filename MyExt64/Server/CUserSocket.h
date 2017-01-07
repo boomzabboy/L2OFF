@@ -61,6 +61,7 @@ public:
 
 	void SetGuard(UINT32 &i);
 	void CheckGuard(const UINT32 &i) const;
+	void CheckTargetInHide(const unsigned char *packet = 0, const size_t offset = 0);
 
 	static void __cdecl SendWrapper(CUserSocket *self, const char *format, ...);
 	static void __cdecl OfflineTradeDummyTimerExpired(CUserSocket*, int);

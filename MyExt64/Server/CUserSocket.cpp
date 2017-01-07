@@ -575,6 +575,27 @@ void CUserSocket::CheckGuard(const UINT32 &i) const
 	}
 }
 
+void CUserSocket::CheckTargetInHide(const unsigned char *packet, const size_t offset)
+{
+	CUser *user_ = user;
+	if (!user_) {
+		throw IgnorePacket(L"Packet without user");
+	}
+	UINT32 objectId = user_->objectId;
+	UINT32 targetId = user_->targetId;
+	if (packet) {
+		targetId = *reinterpret_cast<const UINT32*>(&packet[offset]);
+	}
+	if (objectId == targetId) {
+		return;
+	}
+	CCreature *creature = CCreature::GetValidCreatureByObjectId(targetId);
+	if (!creature || !creature->hide) {
+		return;
+	}
+	throw IgnorePacket(L"Target in hide");
+}
+
 UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
 {
 	GUARDED;
@@ -815,6 +836,13 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 	}
 
 	switch (opcode) {
+	case 0x1: // Attack
+	case 0x1F: // Action
+		CheckTargetInHide(packet);
+		break;
+	case 0x39: // RequestMagicSkillUse
+		CheckTargetInHide();
+		break;
 	case 0x22: // RequestLinkHtml
 		return LinkHtmlPacketWrapper(this, packet);
 	case 0x23: // RequestBypassToServer
