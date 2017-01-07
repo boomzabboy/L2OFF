@@ -77,6 +77,9 @@ void Compiler::Init()
 	WriteInstructionCall(0x5C3AC8+0x5531, reinterpret_cast<UINT32>(LogError));
 	WriteInstructionCall(0x5C3AC8+0x558F, reinterpret_cast<UINT32>(LogError));
 	WriteInstructionCall(0x54817C, reinterpret_cast<UINT32>(Compile));
+	WriteInstructionJmp(0x42B140, reinterpret_cast<UINT32>(exit));
+	WriteMemoryBYTES(0x665D40, L"Global\\CONSOLE_LOG_NASC", 50);
+	WriteInstructionJmp(0x475826, 0x475846);
 }
 
 int Compiler::LogError(void*, const wchar_t* format, ...)
@@ -112,6 +115,9 @@ void Compiler::Compile()
 	reinterpret_cast<void*(*)(void*)>(0x5C9980)(&parser); // construct parser
 
 	reinterpret_cast<void(*)(UINT64, UINT64, FILE*)>(0x55A890)(0x36E58D0, 0x649CA8, 0); // load pch db
+
+	// this is how we can add @variables
+	// reinterpret_cast<void(*)(UINT64, const wchar_t*, int)>(0x55B18C)(0x36E58D0, L"variable", 123);
 
 	InputFile inputFile;
 	reinterpret_cast<void(*)(InputFile*, const char*, int, int)>(0x4086F8)(&inputFile, filename.c_str(), 1, 1); // open input file
@@ -149,7 +155,6 @@ void Compiler::Compile()
 
 void Compiler::WaitForClose()
 {
-	WriteInstructionJmp(0x42B140, reinterpret_cast<UINT32>(exit));
 	for (;;) {
 		Sleep(100);
 	}

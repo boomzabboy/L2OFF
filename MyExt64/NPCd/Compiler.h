@@ -8,7 +8,8 @@ class Compiler {
 public:
 	class Parser {
 	public:
-		unsigned char padding[0x1B0];
+		//unsigned char padding[0x1B0];
+		unsigned char padding[0x1000];
 	};
 
 	class InputFile {
