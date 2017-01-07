@@ -223,6 +223,15 @@ std::basic_string<wchar_t> Widen(const std::string &s)
 	return result;
 }
 
+std::string Narrow(const std::basic_string<wchar_t> &s)
+{
+	std::string result;
+	for (size_t i = 0 ; i < s.size() ; ++i) {
+		result.push_back(static_cast<char>(s[i]));
+	}
+	return result;
+}
+
 size_t Guard::off1 = 0;
 size_t Guard::off2 = 0;
 size_t Guard::off3 = 0;

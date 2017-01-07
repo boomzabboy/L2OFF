@@ -2,16 +2,44 @@
 #include <NPCd/Compiler.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
+#include <vector>
+#include <fstream>
 
 std::string Compiler::filename;
+bool Compiler::close = false;
 
 void Compiler::Init()
 {
 	std::wstring args = GetCommandLineW();
-	size_t pos = args.find(L" ");
-	if (pos != std::string::npos) {
-		for (size_t i = pos + 1 ; i < args.size() ; ++i) {
-			filename.push_back(static_cast<char>(args[i]));
+	args.push_back(L' ');
+	std::vector<std::wstring> parts;
+	std::wstring part;
+	for (size_t i = 0 ; i < args.size() ; ++i) {
+		if (args[i] == L' ' || args[i] == L'\t') {
+			if (!part.empty()) {
+				parts.push_back(part);
+				part.clear();
+			}
+		} else {
+			part.push_back(args[i]);
+		}
+	}
+	if (parts.size() > 1) {
+		for (size_t i = 1 ; i < parts.size() ; ++i) {
+			if (parts[i] == L"-c" || parts[i] == L"--close") {
+				close = true;
+			} else if (filename.empty()) {
+				filename = Narrow(parts[i]);
+			} else {
+				wchar_t buffer[4096];
+				if (parts[0].size() < 2048) {
+					wsprintf(buffer, L"Usage:\r\n%s [-c|--close] [FILENAME]", parts[0].c_str());
+				} else {
+					wsprintf(buffer, L"Usage:\r\n%s... [-c|--close] [FILENAME]", parts[0].substr(0, 2048).c_str());
+				}
+				MessageBox(0, buffer, L"Invalid arguments", 0);
+				exit(0);
+			}
 		}
 	}
 	if (filename.empty()) {
@@ -109,6 +137,11 @@ void Compiler::Compile()
 	CLog::Add(CLog::Blue, L"Going to compile %s to %s", wfilename.c_str(), woutputFilename.c_str());
 	CLog::Add(CLog::Blue, L" ");
 
+	if (!std::wifstream(filename.c_str())) {
+		CLog::Add(CLog::Red, L"Can't open input file %s", wfilename.c_str());
+		Done(false);
+	}
+
 	*reinterpret_cast<int*>(0x37886B8) = 1; // enable logging
 
 	Parser parser;
@@ -124,12 +157,12 @@ void Compiler::Compile()
 
 	if (inputFile.something2[inputFile.something1] & 6) { // check input file OK
 		CLog::Add(CLog::Red, L"Can't open input file!");
-		WaitForClose();
+		Done(false);
 	}
 
 	if (!reinterpret_cast<bool(*)(Parser*, const wchar_t*)>(0x5BE2B4)(&parser, wfilename.c_str())) { // give file to parser
 		CLog::Add(CLog::Red, L"Failed to create parser");
-		WaitForClose();
+		Done(false);
 	}
 
 	reinterpret_cast<void(*)(const char*)>(0x419D84)(outputFilename.c_str()); // open output
@@ -150,11 +183,14 @@ void Compiler::Compile()
 		CLog::Add(CLog::Blue, L"Compilation done");
 	}
 
-	WaitForClose();
+	Done(true);
 }
 
-void Compiler::WaitForClose()
+void Compiler::Done(bool status)
 {
+	if (close && status) {
+		exit(0);
+	}
 	for (;;) {
 		Sleep(100);
 	}

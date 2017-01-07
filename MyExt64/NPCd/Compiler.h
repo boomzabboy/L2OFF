@@ -23,8 +23,9 @@ public:
 	static void Init();
 	static int LogError(void*, const wchar_t* format, ...);
 	static void Compile();
-	static void WaitForClose();
+	static void Done(bool status);
 
 	static std::string filename;
+	static bool close;
 };
 

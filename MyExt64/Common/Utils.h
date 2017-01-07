@@ -49,6 +49,7 @@ extern Assemble_t Assemble;
 extern Disassemble_t Disassemble;
 
 std::basic_string<wchar_t> Widen(const std::string &s);
+std::string Narrow(const std::basic_string<wchar_t> &s);
 
 UINT32 GetThreadIndex();
 
