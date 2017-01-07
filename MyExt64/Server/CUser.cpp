@@ -107,6 +107,9 @@ void CUser::Init()
 	WriteInstructionCall(0x81B4EC + 0x223, reinterpret_cast<UINT32>(ShowHTMLWrapper));
 	WriteInstructionCall(0x94A098 + 0x39B, reinterpret_cast<UINT32>(ShowHTMLWrapper));
 	WriteInstructionCall(0x94A098 + 0x432, reinterpret_cast<UINT32>(ShowHTMLWrapper));
+
+	WriteInstructionCall(0x445054 + 0x177, reinterpret_cast<UINT32>(ShowQuestHTMLWrapper));
+	WriteInstructionCall(0x44A18C + 0x116, reinterpret_cast<UINT32>(ShowQuestHTMLWrapper));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -949,12 +952,7 @@ void CUser::SendSkillList(CUserSocket *socket, bool sendShortCutInfo)
 	reinterpret_cast<void(*)(CUser*, CUserSocket*, bool)>(0x8F6C04)(this, socket, sendShortCutInfo);
 }
 
-void CUser::ShowHTMLWrapper(CUser *self, wchar_t *filename, wchar_t *data, unsigned int length)
-{
-	self->ShowHTML(filename, data, length);
-}
-
-void CUser::ShowHTML(wchar_t *filename, wchar_t *data, unsigned int i)
+void CUser::FindAllowedMultisellIds(wchar_t *data)
 {
 	static const std::wstring multisellBypass = L"action=\"bypass -h menu_select?ask=-303&reply=";
 	ScopedLock lock(ext.guard.lastMultisellLock);
@@ -990,7 +988,28 @@ void CUser::ShowHTML(wchar_t *filename, wchar_t *data, unsigned int i)
 			}
 		}
 	}
+}
+
+void CUser::ShowHTMLWrapper(CUser *self, wchar_t *filename, wchar_t *data, unsigned int length)
+{
+	self->ShowHTML(filename, data, length);
+}
+
+void CUser::ShowHTML(wchar_t *filename, wchar_t *data, unsigned int i)
+{
+	FindAllowedMultisellIds(data);
 	reinterpret_cast<void(*)(CUser*, wchar_t*, wchar_t*, unsigned int)>(0x8D6594)(this, filename, data, i);
+}
+
+void CUser::ShowQuestHTMLWrapper(CUser *self, wchar_t *filename, wchar_t *data, int length)
+{
+	self->ShowQuestHTML(filename, data, length);
+}
+
+void CUser::ShowQuestHTML(wchar_t *filename, wchar_t *data, int i)
+{
+	FindAllowedMultisellIds(data);
+	reinterpret_cast<void(*)(CUser*, wchar_t*, wchar_t*, int)>(0x8D61C8)(this, filename, data, i);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
