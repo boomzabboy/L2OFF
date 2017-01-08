@@ -5,6 +5,7 @@
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 #include <Common/Config.h>
+#include <NPCd/NPCFunction.h>
 
 void NPCd::Init()
 {
@@ -15,6 +16,7 @@ void NPCd::Init()
 		SplitAI::Init();
 	}
 	Compiler::Init();
+	NPCFunction::Init();
 }
 
 void NPCd::DisableSendMail()

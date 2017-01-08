@@ -1,0 +1,36 @@
+
+#include <NPCd/Functions/CNPC_AddLogByNpc2.h>
+#include <Common/CLog.h>
+
+CNPC_AddLogByNpc2::CNPC_AddLogByNpc2() :
+	NPCFunction(L"AddLogByNpc2", &AddLogByNpc2)
+{
+}
+
+void* CNPC_AddLogByNpc2::Call(void *caller, void **params)
+{
+	return reinterpret_cast<void*(*)(void*, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*)>(functionPtr.functionPtr)(
+		caller, params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
+}
+
+void CNPC_AddLogByNpc2::SetTypes()
+{
+	SetReturnType(TYPE_VOID);
+	AddParameter(TYPE_INT);
+	AddParameter(TYPE_CREATURE);
+	AddParameter(TYPE_STRING);
+	AddParameter(TYPE_STRING);
+	AddParameter(TYPE_INT);
+	AddParameter(TYPE_INT);
+	AddParameter(TYPE_INT);
+	AddParameter(TYPE_INT);
+	AddParameter(TYPE_INT);
+	AddParameter(TYPE_INT);
+}
+
+int CNPC_AddLogByNpc2::AddLogByNpc2(CNPC *npc, int logId, CSharedCreatureData *creature, wchar_t *str1, wchar_t *str2, INT64 param1, INT64 param2, INT64 param3, INT64 param4, INT64 param5, INT64 param6)
+{
+    CLog::Add(CLog::Blue, L"CNPC::AddLogByNpc2 stub");
+	return 0;
+}
+
