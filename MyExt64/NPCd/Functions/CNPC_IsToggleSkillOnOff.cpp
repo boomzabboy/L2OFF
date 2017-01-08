@@ -15,7 +15,7 @@ void* CNPC_IsToggleSkillOnOff::Call(void *caller, void **params)
 
 void CNPC_IsToggleSkillOnOff::SetTypes()
 {
-	SetReturnType(TYPE_INT);
+	SetReturnType(TYPE_VOID);
 	AddParameter(TYPE_CREATURE);
 	AddParameter(TYPE_INT);
 }

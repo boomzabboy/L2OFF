@@ -6,6 +6,7 @@
 #include <Common/CLog.h>
 #include <Common/Config.h>
 #include <NPCd/NPCFunction.h>
+#include <NPCd/NPCHandler.h>
 
 void NPCd::Init()
 {
@@ -17,6 +18,7 @@ void NPCd::Init()
 	}
 	Compiler::Init();
 	NPCFunction::Init();
+	NPCHandler::Init();
 }
 
 void NPCd::DisableSendMail()

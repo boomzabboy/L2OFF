@@ -284,6 +284,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NPCd\NPCHandler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\NPCHandler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NPCd\SplitAI.cpp"
 				>
 			</File>
