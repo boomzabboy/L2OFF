@@ -15,9 +15,9 @@ void* CNPC_ChangeNickName::Call(void *caller, void **params)
 
 void CNPC_ChangeNickName::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_STRING);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_STRING);
 }
 
 int CNPC_ChangeNickName::ChangeNickName(CNPC *npc, CSharedCreatureData *creature, wchar_t *name)

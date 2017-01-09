@@ -15,29 +15,29 @@ void* CNPC_SendPost::Call(void *caller, void **params)
 
 void CNPC_SendPost::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_SendPost::SendPost(CNPC *npc, int userDbId, wchar_t *title, wchar_t *message, int tradeMoney, int itemId1, int itemAmount1, int itemId2, int itemAmount2, int itemId3, int itemAmount3, int itemId4, int itemAmount4, int itemId5, int itemAmount5, int itemId6, int itemAmount6, int itemId7, int itemAmount7, int itemId8, int itemAmount8, int itemId9, int itemAmount9)

@@ -15,8 +15,8 @@ void* CNPC_Divorce::Call(void *caller, void **params)
 
 void CNPC_Divorce::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_Divorce::Divorce(CNPC *npc, int charIndex)

@@ -15,17 +15,17 @@ void* CNPC_AddLogByNpc2::Call(void *caller, void **params)
 
 void CNPC_AddLogByNpc2::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_AddLogByNpc2::AddLogByNpc2(CNPC *npc, int logId, CSharedCreatureData *creature, wchar_t *str1, wchar_t *str2, INT64 param1, INT64 param2, INT64 param3, INT64 param4, INT64 param5, INT64 param6)

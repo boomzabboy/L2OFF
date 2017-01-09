@@ -15,16 +15,16 @@ void* CNPC_GiveEventItem2::Call(void *caller, void **params)
 
 void CNPC_GiveEventItem2::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_GiveEventItem2::GiveEventItem2(CNPC *npc, CSharedCreatureData *target, int requiredItemId, INT64 requiredAmount, int giveItemId1, INT64 giveAmount1, int giveItemId2, INT64 giveAmount2, int id, int timeLimit)

@@ -15,9 +15,9 @@ void* CNPC_ChangeMoveType2::Call(void *caller, void **params)
 
 void CNPC_ChangeMoveType2::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_ChangeMoveType2::ChangeMoveType2(CNPC *npc, int moveType, int force)

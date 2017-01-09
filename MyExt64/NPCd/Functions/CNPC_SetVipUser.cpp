@@ -15,12 +15,12 @@ void* CNPC_SetVipUser::Call(void *caller, void **params)
 
 void CNPC_SetVipUser::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_STRING);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_STRING);
 }
 
 int CNPC_SetVipUser::SetVipUser(CNPC *npc, CSharedCreatureData *talker, int duration, int param1, int param2, wchar_t *param3)

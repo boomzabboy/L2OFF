@@ -256,7 +256,37 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NPCd\CNPC.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\NPCd\CNPC.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CNPCMaker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CNPCMaker.h"
 				>
 			</File>
 			<File
@@ -265,6 +295,22 @@
 			</File>
 			<File
 				RelativePath=".\NPCd\Compiler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CreatureData2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CreatureData2.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CreatureData2Type.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CreatureData2Type.h"
 				>
 			</File>
 			<File
@@ -299,17 +345,25 @@
 				RelativePath=".\NPCd\SplitAI.h"
 				>
 			</File>
+			<File
+				RelativePath=".\NPCd\Type.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\Type.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\Variable.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\Variable.h"
+				>
+			</File>
 			<Filter
 				Name="Functions"
 				>
-				<File
-					RelativePath=".\NPCd\Functions\CIntList_GetItemIndex.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\NPCd\Functions\CIntList_GetItemIndex.h"
-					>
-				</File>
 				<File
 					RelativePath=".\NPCd\Functions\CIntList_GetItemIndexNext.cpp"
 					>

@@ -15,8 +15,8 @@ void* CNPC_ShowOlympiadMatchList::Call(void *caller, void **params)
 
 void CNPC_ShowOlympiadMatchList::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
 }
 
 int CNPC_ShowOlympiadMatchList::ShowOlympiadMatchList(CNPC *npc, CSharedCreatureData *creature)

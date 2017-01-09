@@ -15,9 +15,9 @@ void* CNPC_ChangeNPCState::Call(void *caller, void **params)
 
 void CNPC_ChangeNPCState::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_ChangeNPCState::ChangeNPCState(CNPC *npc, CSharedCreatureData *creature, int state)

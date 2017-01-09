@@ -15,8 +15,8 @@ void* CNPC_IsVipUser::Call(void *caller, void **params)
 
 void CNPC_IsVipUser::SetTypes()
 {
-	SetReturnType(TYPE_INT);
-	AddParameter(TYPE_CREATURE);
+	SetReturnType(Type::TYPE_INT);
+	AddParameter(Type::TYPE_CREATURE);
 }
 
 int CNPC_IsVipUser::IsVipUser(CNPC *npc, CSharedCreatureData *talker)

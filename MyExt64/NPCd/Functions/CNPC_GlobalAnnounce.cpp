@@ -15,9 +15,9 @@ void* CNPC_GlobalAnnounce::Call(void *caller, void **params)
 
 void CNPC_GlobalAnnounce::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_STRING);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_STRING);
 }
 
 int CNPC_GlobalAnnounce::GlobalAnnounce(CNPC *npc, wchar_t *message)

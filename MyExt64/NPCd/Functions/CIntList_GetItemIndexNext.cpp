@@ -15,8 +15,8 @@ void* CIntList_GetItemIndexNext::Call(void *caller, void **params)
 
 void CIntList_GetItemIndexNext::SetTypes()
 {
-	SetReturnType(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CIntList_GetItemIndexNext::GetItemIndexNext(CIntList *intList, int value)

@@ -15,9 +15,9 @@ void* CNPC_Whisper::Call(void *caller, void **params)
 
 void CNPC_Whisper::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_STRING);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_STRING);
 }
 
 int CNPC_Whisper::Whisper(CNPC *npc, void *talker, const wchar_t *text)

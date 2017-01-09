@@ -15,10 +15,10 @@ void* CNPC_FastBuff::Call(void *caller, void **params)
 
 void CNPC_FastBuff::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_FastBuff::FastBuff(CNPC *npc, int index, int skillID, int skillLevel)

@@ -15,11 +15,11 @@ void* CNPC_ShowBuySell::Call(void *caller, void **params)
 
 void CNPC_ShowBuySell::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_BUYSELLLIST);
-	AddParameter(TYPE_BUYSELLLIST);
-	AddParameter(TYPE_FLOAT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_BUYSELLLIST);
+	AddParameter(Type::TYPE_BUYSELLLIST);
+	AddParameter(Type::TYPE_FLOAT);
 }
 
 int CNPC_ShowBuySell::ShowBuySell(CNPC *npc, CSharedCreatureData *talker, CBuySellList* buyList, CBuySellList* sellList, float rate)

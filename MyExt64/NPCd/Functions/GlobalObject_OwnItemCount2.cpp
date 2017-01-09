@@ -15,10 +15,10 @@ void* GlobalObject_OwnItemCount2::Call(void *caller, void **params)
 
 void GlobalObject_OwnItemCount2::SetTypes()
 {
-	SetReturnType(TYPE_INT);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_INT);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int GlobalObject_OwnItemCount2::OwnItemCount2(void*, CSharedCreatureData *creature, int itemClassId, int findAugment)

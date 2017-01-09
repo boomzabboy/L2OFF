@@ -15,9 +15,9 @@ void* CNPC_TeleportTo::Call(void *caller, void **params)
 
 void CNPC_TeleportTo::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_CREATURE);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_CREATURE);
 }
 
 int CNPC_TeleportTo::TeleportTo(CNPC *npc, CSharedCreatureData *target1, CSharedCreatureData *target2)

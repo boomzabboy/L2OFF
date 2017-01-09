@@ -15,9 +15,9 @@ void* CNPC_Marry::Call(void *caller, void **params)
 
 void CNPC_Marry::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_Marry::Marry(CNPC *npc, int charIndex1, int charIndex2)

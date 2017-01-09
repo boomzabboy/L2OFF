@@ -15,8 +15,8 @@ void* CNPC_FixMoveType::Call(void *caller, void **params)
 
 void CNPC_FixMoveType::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_FixMoveType::FixMoveType(CNPC *npc, int block)

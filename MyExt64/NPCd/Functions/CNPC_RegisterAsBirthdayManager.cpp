@@ -15,7 +15,7 @@ void* CNPC_RegisterAsBirthdayManager::Call(void *caller, void **params)
 
 void CNPC_RegisterAsBirthdayManager::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
+	SetReturnType(Type::TYPE_VOID);
 
 }
 

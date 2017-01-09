@@ -15,10 +15,10 @@ void* CNPC_ChangeDir::Call(void *caller, void **params)
 
 void CNPC_ChangeDir::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_ChangeDir::ChangeDir(CNPC *npc, CSharedCreatureData *creature, int targetId, int angle)

@@ -2,11 +2,13 @@
 #include <NPCd/NPCd.h>
 #include <NPCd/SplitAI.h>
 #include <NPCd/Compiler.h>
+#include <NPCd/CNPC.h>
+#include <NPCd/CNPCMaker.h>
+#include <NPCd/NPCFunction.h>
+#include <NPCd/NPCHandler.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 #include <Common/Config.h>
-#include <NPCd/NPCFunction.h>
-#include <NPCd/NPCHandler.h>
 
 void NPCd::Init()
 {
@@ -17,6 +19,8 @@ void NPCd::Init()
 		SplitAI::Init();
 	}
 	Compiler::Init();
+	CNPC::Init();
+	CNPCMaker::Init();
 	NPCFunction::Init();
 	NPCHandler::Init();
 }

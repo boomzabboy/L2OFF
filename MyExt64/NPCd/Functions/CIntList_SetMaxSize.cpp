@@ -15,8 +15,8 @@ void* CIntList_SetMaxSize::Call(void *caller, void **params)
 
 void CIntList_SetMaxSize::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CIntList_SetMaxSize::SetMaxSize(CIntList *intList, int maxSize)

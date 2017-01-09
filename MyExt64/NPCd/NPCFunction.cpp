@@ -33,59 +33,65 @@
 #include <NPCd/Functions/GlobalObject_OwnItemCount2.h>
 #include <NPCd/Functions/GlobalObject_OwnItemCountEx2.h>
 #include <NPCd/Functions/CIntList_SetMaxSize.h>
-#include <NPCd/Functions/CIntList_GetItemIndex.h>
 #include <NPCd/Functions/CIntList_GetItemIndexNext.h>
 #include <Common/Utils.h>
 
 void NPCFunction::AddFunctions()
 {
-	AddFunction<TYPE_NPC, CNPC_ShowBuySell>();
-	AddFunction<TYPE_NPC, CNPC_Marry>();
-	AddFunction<TYPE_NPC, CNPC_Divorce>();
-	AddFunction<TYPE_NPC, CNPC_GlobalAnnounce>();
-	AddFunction<TYPE_NPC, CNPC_FastBuff>();
-	AddFunction<TYPE_NPC, CNPC_SetAbilityItemDrop>();
-	AddFunction<TYPE_NPC, CNPC_TeleportTo>();
-	AddFunction<TYPE_NPC, CNPC_ChangeMasterName>();
-	AddFunction<TYPE_NPC, CNPC_GetNPCLogByID>();
-	AddFunction<TYPE_NPC, CNPC_IncreaseNPCLogByID>();
-	AddFunction<TYPE_NPC, CNPC_SetAttackable>();
-	AddFunction<TYPE_NPC, CNPC_ChangeDir>();
-	AddFunction<TYPE_NPC, CNPC_ChangeNickName>();
-	AddFunction<TYPE_NPC, CNPC_Whisper>();
-	AddFunction<TYPE_NPC, CNPC_BlockTimer>();
-	AddFunction<TYPE_NPC, CNPC_UnBlockTimer>();
-	AddFunction<TYPE_NPC, CNPC_AddLogByNpc2>();
-	AddFunction<TYPE_NPC, CNPC_ChangeUserTalkTarget>();
-	AddFunction<TYPE_NPC, CNPC_ChangeNPCState>();
-	AddFunction<TYPE_NPC, CNPC_ShowOlympiadMatchList>();
-	AddFunction<TYPE_NPC, CNPC_ChangeMoveType2>();
-	AddFunction<TYPE_NPC, CNPC_FixMoveType>();
-	AddFunction<TYPE_NPC, CNPC_SendPost>();
-	AddFunction<TYPE_NPC, CNPC_RegisterAsBirthdayManager>();
-	AddFunction<TYPE_NPC, CNPC_IsToggleSkillOnOff>();
-	AddFunction<TYPE_NPC, CNPC_GiveEventItem2>();
-	AddFunction<TYPE_NPC, CNPC_IsVipUser>();
-	AddFunction<TYPE_NPC, CNPC_SetVipUser>();
-	AddFunction<TYPE_GLOBALOBJECT, GlobalObject_BroadcastOnScreenNpcString>();
-	AddFunction<TYPE_GLOBALOBJECT, GlobalObject_ShowOnScreenNpcStringMsg>();
-	AddFunction<TYPE_GLOBALOBJECT, GlobalObject_OwnItemCount2>();
-	AddFunction<TYPE_GLOBALOBJECT, GlobalObject_OwnItemCountEx2>();
-	AddFunction<TYPE_INTLIST, CIntList_SetMaxSize>();
-	AddFunction<TYPE_INTLIST, CIntList_GetItemIndex>();
-	AddFunction<TYPE_INTLIST, CIntList_GetItemIndexNext>();
+	AddFunction<Type::TYPE_NPC, CNPC_ShowBuySell>();
+	AddFunction<Type::TYPE_NPC, CNPC_Marry>();
+	AddFunction<Type::TYPE_NPC, CNPC_Divorce>();
+	AddFunction<Type::TYPE_NPC, CNPC_GlobalAnnounce>();
+	AddFunction<Type::TYPE_NPC, CNPC_FastBuff>();
+	AddFunction<Type::TYPE_NPC, CNPC_SetAbilityItemDrop>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeleportTo>();
+	AddFunction<Type::TYPE_NPC, CNPC_ChangeMasterName>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetNPCLogByID>();
+	AddFunction<Type::TYPE_NPC, CNPC_IncreaseNPCLogByID>();
+	AddFunction<Type::TYPE_NPC, CNPC_SetAttackable>();
+	AddFunction<Type::TYPE_NPC, CNPC_ChangeDir>();
+	AddFunction<Type::TYPE_NPC, CNPC_ChangeNickName>();
+	AddFunction<Type::TYPE_NPC, CNPC_Whisper>();
+	AddFunction<Type::TYPE_NPC, CNPC_BlockTimer>();
+	AddFunction<Type::TYPE_NPC, CNPC_UnBlockTimer>();
+	AddFunction<Type::TYPE_NPC, CNPC_AddLogByNpc2>();
+	AddFunction<Type::TYPE_NPC, CNPC_ChangeUserTalkTarget>();
+	AddFunction<Type::TYPE_NPC, CNPC_ChangeNPCState>();
+	AddFunction<Type::TYPE_NPC, CNPC_ShowOlympiadMatchList>();
+	AddFunction<Type::TYPE_NPC, CNPC_ChangeMoveType2>();
+	AddFunction<Type::TYPE_NPC, CNPC_FixMoveType>();
+	AddFunction<Type::TYPE_NPC, CNPC_SendPost>();
+	AddFunction<Type::TYPE_NPC, CNPC_RegisterAsBirthdayManager>();
+	AddFunction<Type::TYPE_NPC, CNPC_IsToggleSkillOnOff>();
+	AddFunction<Type::TYPE_NPC, CNPC_GiveEventItem2>();
+	AddFunction<Type::TYPE_NPC, CNPC_IsVipUser>();
+	AddFunction<Type::TYPE_NPC, CNPC_SetVipUser>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_BroadcastOnScreenNpcString>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_ShowOnScreenNpcStringMsg>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_OwnItemCount2>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_OwnItemCountEx2>();
+	AddFunction<Type::TYPE_INTLIST, CIntList_SetMaxSize>();
+	AddFunction<Type::TYPE_INTLIST, CIntList_GetItemIndexNext>();
 }
 
 void NPCFunction::Init()
 {
-	WriteMemoryQWORD(0x6B2A58, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(RegisterFunctions<0x546CD8, TYPE_NPCMAKER>)));
-	WriteMemoryQWORD(0x690D40, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(RegisterFunctions<0x4F186C, TYPE_NPC>)));
-	WriteMemoryQWORD(0x65E470, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(RegisterFunctions<0x468CB0, TYPE_GLOBALOBJECT>)));
-	WriteMemoryQWORD(0x68F118, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(RegisterFunctions<0x4E48DC, TYPE_INTLIST>)));
+	WriteMemoryQWORD(0x6B2A58, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(
+		RegisterFunctions<0x546CD8, Type::TYPE_NPCMAKER>)));
+
+	WriteMemoryQWORD(0x690D40, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(
+		RegisterFunctions<0x4F186C, Type::TYPE_NPC>)));
+
+	WriteMemoryQWORD(0x65E470, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(
+		RegisterFunctions<0x468CB0, Type::TYPE_GLOBALOBJECT>)));
+
+	WriteMemoryQWORD(0x68F118, reinterpret_cast<UINT32>(reinterpret_cast<void(*)()>(
+		RegisterFunctions<0x4E48DC, Type::TYPE_INTLIST>)));
+
 	AddFunctions();
 }
 
-std::list<NPCFunction*> NPCFunction::functionsToRegister[TYPES_END];
+std::list<NPCFunction*> NPCFunction::functionsToRegister[Type::TYPES_END];
 
 NPCFunction::NPCFunction(const wchar_t *name, void *functionPtr)
 {
@@ -106,16 +112,16 @@ void* NPCFunction::CallFn(void *caller, void **params)
 	return Call(reinterpret_cast<void*>(caller_), params);
 }
 
-void NPCFunction::SetReturnType(Type type)
+void NPCFunction::SetReturnType(Type::TypeID type)
 {
 	void *ptr = reinterpret_cast<void*(*)()>(0x420A74)();
-	returnType = reinterpret_cast<void*(*)(void*, Type)>(0x422E0C)(ptr, type);
+	returnType = reinterpret_cast<void*(*)(void*, Type::TypeID)>(0x422E0C)(ptr, type);
 }
 
-void NPCFunction::AddParameter(Type type)
+void NPCFunction::AddParameter(Type::TypeID type)
 {
 	void *ptr = reinterpret_cast<void*(*)()>(0x420A74)();
-	void *parameter = reinterpret_cast<void*(*)(void*, Type)>(0x422E0C)(ptr, type);
+	void *parameter = reinterpret_cast<void*(*)(void*, Type::TypeID)>(0x422E0C)(ptr, type);
 	reinterpret_cast<void(*)(void**, void*)>(0x4583D4)(&parameters, parameter);
 }
 

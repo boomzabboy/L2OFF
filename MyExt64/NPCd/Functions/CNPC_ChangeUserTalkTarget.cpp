@@ -15,8 +15,8 @@ void* CNPC_ChangeUserTalkTarget::Call(void *caller, void **params)
 
 void CNPC_ChangeUserTalkTarget::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
 }
 
 int CNPC_ChangeUserTalkTarget::ChangeUserTalkTarget(CNPC *npc, CSharedCreatureData *target)

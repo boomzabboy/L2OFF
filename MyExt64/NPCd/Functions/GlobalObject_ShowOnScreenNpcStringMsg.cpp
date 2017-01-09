@@ -15,23 +15,23 @@ void* GlobalObject_ShowOnScreenNpcStringMsg::Call(void *caller, void **params)
 
 void GlobalObject_ShowOnScreenNpcStringMsg::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_STRING);
-	AddParameter(TYPE_STRING);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_STRING);
+	AddParameter(Type::TYPE_STRING);
 }
 
 int GlobalObject_ShowOnScreenNpcStringMsg::ShowOnScreenNpcStringMsg(void*, int range, int msgPosType, int param1, int fontSize, int param2, int param3, int effect, int time, int fade, int npcStringId, wchar_t *str1, wchar_t *str2, wchar_t *str3, wchar_t *str4, wchar_t *str5)

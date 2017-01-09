@@ -15,8 +15,8 @@ void* CNPC_BlockTimer::Call(void *caller, void **params)
 
 void CNPC_BlockTimer::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_INT);
 }
 
 int CNPC_BlockTimer::BlockTimer(CNPC *npc, int timerId)

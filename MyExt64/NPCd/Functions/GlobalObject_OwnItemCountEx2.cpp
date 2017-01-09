@@ -15,11 +15,11 @@ void* GlobalObject_OwnItemCountEx2::Call(void *caller, void **params)
 
 void GlobalObject_OwnItemCountEx2::SetTypes()
 {
-	SetReturnType(TYPE_VOID);
-	AddParameter(TYPE_CREATURE);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
-	AddParameter(TYPE_INT);
+	SetReturnType(Type::TYPE_VOID);
+	AddParameter(Type::TYPE_CREATURE);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT);
 }
 
 int GlobalObject_OwnItemCountEx2::OwnItemCountEx2(void*, CSharedCreatureData *creature, int itemClassId, int enchantLevel, int findAugment)
