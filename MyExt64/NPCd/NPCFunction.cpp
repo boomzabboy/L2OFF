@@ -115,7 +115,7 @@ void* NPCFunction::CallFn(void *caller, void **params)
 void NPCFunction::SetReturnType(Type::TypeID type)
 {
 	void *ptr = reinterpret_cast<void*(*)()>(0x420A74)();
-	returnType = reinterpret_cast<void*(*)(void*, Type::TypeID)>(0x422E0C)(ptr, type);
+	returnType = *reinterpret_cast<void**(*)(void*, Type::TypeID)>(0x422E0C)(ptr, type);
 }
 
 void NPCFunction::AddParameter(Type::TypeID type)
