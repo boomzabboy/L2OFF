@@ -114,6 +114,16 @@ void Compiler::Init()
 	WriteMemoryBYTES(0x665D40, L"Global\\CONSOLE_LOG_NASC", 50);
 	WriteInstructionJmp(0x475826, 0x475846);
 	WriteAddress(0x5BE2EC + 3, 0x665030);
+	WriteMemoryBYTES(0x448108, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x44838C, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x482A60, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x55C82C, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x596998, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x596A28, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x596AB8, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x596B58, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x596BE8, "\x48\x31\xC0\xC3", 4);
+	WriteMemoryBYTES(0x596C88, "\x48\x31\xC0\xC3", 4);
 }
 
 int Compiler::LogError(void*, const wchar_t* format, ...)
