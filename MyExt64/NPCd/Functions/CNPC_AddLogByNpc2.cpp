@@ -20,12 +20,12 @@ void CNPC_AddLogByNpc2::SetTypes()
 	AddParameter(Type::TYPE_CREATURE);
 	AddParameter(Type::TYPE_STRING);
 	AddParameter(Type::TYPE_STRING);
-	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT64);
+	AddParameter(Type::TYPE_INT64);
+	AddParameter(Type::TYPE_INT64);
+	AddParameter(Type::TYPE_INT64);
+	AddParameter(Type::TYPE_INT64);
+	AddParameter(Type::TYPE_INT64);
 }
 
 int CNPC_AddLogByNpc2::AddLogByNpc2(CNPC *npc, int logId, CSharedCreatureData *creature, wchar_t *str1, wchar_t *str2, INT64 param1, INT64 param2, INT64 param3, INT64 param4, INT64 param5, INT64 param6)

@@ -15,7 +15,7 @@ void* GlobalObject_OwnItemCountEx2::Call(void *caller, void **params)
 
 void GlobalObject_OwnItemCountEx2::SetTypes()
 {
-	SetReturnType(Type::TYPE_VOID);
+	SetReturnType(Type::TYPE_INT64);
 	AddParameter(Type::TYPE_CREATURE);
 	AddParameter(Type::TYPE_INT);
 	AddParameter(Type::TYPE_INT);

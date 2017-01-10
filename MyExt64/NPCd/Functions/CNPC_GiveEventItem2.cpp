@@ -18,11 +18,11 @@ void CNPC_GiveEventItem2::SetTypes()
 	SetReturnType(Type::TYPE_VOID);
 	AddParameter(Type::TYPE_CREATURE);
 	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT64);
 	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT64);
 	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
-	AddParameter(Type::TYPE_INT);
+	AddParameter(Type::TYPE_INT64);
 	AddParameter(Type::TYPE_INT);
 	AddParameter(Type::TYPE_INT);
 }

@@ -15,7 +15,7 @@ void* GlobalObject_OwnItemCount2::Call(void *caller, void **params)
 
 void GlobalObject_OwnItemCount2::SetTypes()
 {
-	SetReturnType(Type::TYPE_INT);
+	SetReturnType(Type::TYPE_INT64);
 	AddParameter(Type::TYPE_CREATURE);
 	AddParameter(Type::TYPE_INT);
 	AddParameter(Type::TYPE_INT);
