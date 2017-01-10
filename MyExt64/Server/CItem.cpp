@@ -1,6 +1,7 @@
 
 #include <Server/CItem.h>
 #include <Server/CContributeData.h>
+#include <Server/CUser.h>
 #include <Common/Utils.h>
 
 void CItem::Init()
@@ -12,6 +13,11 @@ void CItem::Init()
 CContributeData* CItem::GetContributeData()
 {
 	return reinterpret_cast<CContributeData*(*)(UINT32*)>(0x86E3D0)(&contributeDataObjectId);
+}
+
+bool CItem::IsTradeable(CUser *user)
+{
+	return reinterpret_cast<bool(*)(CItem*, CUser*)>(0x6940C0)(this, user);
 }
 
 UINT64 __cdecl CItem::WarehouseDepositHelper(CItem *item)

@@ -30,6 +30,7 @@ public:
 	static void Init();
 
 	class CContributeData* GetContributeData();
+	bool IsTradeable(class CUser *user);
 
 	static UINT64 __cdecl WarehouseDepositHelper(CItem *item);
 

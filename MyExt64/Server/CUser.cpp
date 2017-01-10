@@ -4,6 +4,7 @@
 #include <Server/CParty.h>
 #include <Server/CSummon.h>
 #include <Server/Server.h>
+#include <Server/CItem.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CLog.h>
 #include <Common/Utils.h>
@@ -110,6 +111,9 @@ void CUser::Init()
 
 	WriteInstructionCall(0x445054 + 0x177, reinterpret_cast<UINT32>(ShowQuestHTMLWrapper));
 	WriteInstructionCall(0x44A18C + 0x116, reinterpret_cast<UINT32>(ShowQuestHTMLWrapper));
+
+	WriteInstructionCall(0x8B15F4 + 0x24C, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
+	WriteInstructionCall(0x8B15F4 + 0x563, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -1010,6 +1014,22 @@ void CUser::ShowQuestHTML(wchar_t *filename, wchar_t *data, int i)
 {
 	FindAllowedMultisellIds(data);
 	reinterpret_cast<void(*)(CUser*, wchar_t*, wchar_t*, int)>(0x8D61C8)(this, filename, data, i);
+}
+
+bool __cdecl CUser::IsValidPrivateStoreItemWrapper(CUser *self, INT64 count, INT64 price, CItem *item)
+{
+	return self->IsValidPrivateStoreItem(count, price, item);
+}
+
+bool CUser::IsValidPrivateStoreItem(INT64 count, INT64 price, CItem *item)
+{
+	if (!reinterpret_cast<bool(*)(CUser*, INT64, INT64, CItem*)>(0x88D740)(this, count, price, item)) {
+		return false;
+	}
+	if (!item->IsTradeable(this)) {
+		return false;
+	}
+	return true;
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

@@ -145,6 +145,7 @@ public:
 	void FindAllowedMultisellIds(wchar_t *data);
 	void ShowHTML(wchar_t *filename, wchar_t *data, unsigned int i);
 	void ShowQuestHTML(wchar_t *filename, wchar_t *data, int i);
+	bool IsValidPrivateStoreItem(INT64 count, INT64 price, class CItem *item);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -166,6 +167,7 @@ public:
 	static bool __cdecl CanOpenPrivateShopWrapper(CUser *self, int type);
 	static void __cdecl ShowHTMLWrapper(CUser *self, wchar_t *filename, wchar_t *data, unsigned int i);
 	static void __cdecl ShowQuestHTMLWrapper(CUser *self, wchar_t *filename, wchar_t *data, int i);
+	static bool __cdecl IsValidPrivateStoreItemWrapper(CUser *self, INT64 count, INT64 price, class CItem *item);
 
 	static CriticalSection onlineOfflineTradeUsersCS;
 	static std::set<CUser*> onlineUsers;
