@@ -19,7 +19,7 @@ void CNPC_ChangeUserTalkTarget::SetTypes()
 	AddParameter(Type::TYPE_CREATURE);
 }
 
-int CNPC_ChangeUserTalkTarget::ChangeUserTalkTarget(CNPC *npc, CSharedCreatureData *target)
+int CNPC_ChangeUserTalkTarget::ChangeUserTalkTarget(CNPC *npc, CSharedCreatureData *creature)
 {
     CLog::Add(CLog::Blue, L"CNPC::ChangeUserTalkTarget stub");
 	return 0;

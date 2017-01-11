@@ -22,7 +22,7 @@ void CNPC_ShowBuySell::SetTypes()
 	AddParameter(Type::TYPE_FLOAT);
 }
 
-int CNPC_ShowBuySell::ShowBuySell(CNPC *npc, CSharedCreatureData *talker, CBuySellList* buyList, CBuySellList* sellList, float rate)
+int CNPC_ShowBuySell::ShowBuySell(CNPC *npc, CSharedCreatureData *talker, CBuySellList *buyList, CBuySellList *sellList, float rate)
 {
     CLog::Add(CLog::Blue, L"CNPC::ShowBuySell stub");
 	return 0;

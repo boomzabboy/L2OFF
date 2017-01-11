@@ -27,7 +27,7 @@ void CNPC_GiveEventItem2::SetTypes()
 	AddParameter(Type::TYPE_INT);
 }
 
-int CNPC_GiveEventItem2::GiveEventItem2(CNPC *npc, CSharedCreatureData *target, int requiredItemId, INT64 requiredAmount, int giveItemId1, INT64 giveAmount1, int giveItemId2, INT64 giveAmount2, int id, int timeLimit)
+int CNPC_GiveEventItem2::GiveEventItem2(CNPC *npc, CSharedCreatureData *target, int reqItemId, __int64 reqAmount, int giveItemId1, __int64 giveAmount1, int giveItemId2, __int64 giveAmount2, int id, int timeLimit)
 {
     CLog::Add(CLog::Blue, L"CNPC::GiveEventItem2 stub");
 	return 0;

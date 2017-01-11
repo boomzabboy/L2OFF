@@ -20,11 +20,9 @@ void CNPC_Whisper::SetTypes()
 	AddParameter(Type::TYPE_STRING);
 }
 
-int CNPC_Whisper::Whisper(CNPC *npc, void *talker, const wchar_t *text)
+int CNPC_Whisper::Whisper(CNPC *npc, CSharedCreatureData *talker, wchar_t *str)
 {
-	//CLog::Add(CLog::Blue, L"[npc @ %p] -> Whisper( [creature @ %p] , \"%s\" )", npc, talker, text);
-	//return reinterpret_cast<int(*)(void*, const wchar_t*)>(0x49D8E8)(npc, text); // shouts the text instead
-	CLog::Add(CLog::Blue, L"CNPC::Whisper stub");
+    CLog::Add(CLog::Blue, L"CNPC::Whisper stub");
 	return 0;
 }
 

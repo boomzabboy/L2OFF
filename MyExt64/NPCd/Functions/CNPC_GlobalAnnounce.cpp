@@ -20,7 +20,7 @@ void CNPC_GlobalAnnounce::SetTypes()
 	AddParameter(Type::TYPE_STRING);
 }
 
-int CNPC_GlobalAnnounce::GlobalAnnounce(CNPC *npc, wchar_t *message)
+int CNPC_GlobalAnnounce::GlobalAnnounce(CNPC *npc, int announceType, wchar_t *announceMessage)
 {
     CLog::Add(CLog::Blue, L"CNPC::GlobalAnnounce stub");
 	return 0;

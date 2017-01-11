@@ -4,7 +4,6 @@
 #include <NPCd/NPCFunction.h>
 #include <NPCd/CIntList.h>
 
-
 class CIntList_SetMaxSize : public NPCFunction {
 public:
 	CIntList_SetMaxSize();

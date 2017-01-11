@@ -28,7 +28,7 @@ void CNPC_AddLogByNpc2::SetTypes()
 	AddParameter(Type::TYPE_INT64);
 }
 
-int CNPC_AddLogByNpc2::AddLogByNpc2(CNPC *npc, int logId, CSharedCreatureData *creature, wchar_t *str1, wchar_t *str2, INT64 param1, INT64 param2, INT64 param3, INT64 param4, INT64 param5, INT64 param6)
+int CNPC_AddLogByNpc2::AddLogByNpc2(CNPC *npc, int logId, CSharedCreatureData *creature, wchar_t *str1, wchar_t *str2, __int64 param1, __int64 param2, __int64 param3, __int64 param4, __int64 param5, __int64 param6)
 {
     CLog::Add(CLog::Blue, L"CNPC::AddLogByNpc2 stub");
 	return 0;

@@ -10,6 +10,6 @@ public:
 	CNPC_IsToggleSkillOnOff();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int IsToggleSkillOnOff(CNPC *npc, CSharedCreatureData *target, int skillId);
+	static int IsToggleSkillOnOff(CNPC *npc, CSharedCreatureData *target, int skillUid);
 };
 

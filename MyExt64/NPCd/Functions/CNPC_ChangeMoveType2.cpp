@@ -20,7 +20,7 @@ void CNPC_ChangeMoveType2::SetTypes()
 	AddParameter(Type::TYPE_INT);
 }
 
-int CNPC_ChangeMoveType2::ChangeMoveType2(CNPC *npc, int moveType, int force)
+int CNPC_ChangeMoveType2::ChangeMoveType2(CNPC *npc, int moveType, bool force)
 {
     CLog::Add(CLog::Blue, L"CNPC::ChangeMoveType2 stub");
 	return 0;

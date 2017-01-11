@@ -23,7 +23,7 @@ void CNPC_IncreaseNPCLogByID::SetTypes()
 	AddParameter(Type::TYPE_INT);
 }
 
-int CNPC_IncreaseNPCLogByID::IncreaseNPCLogByID(CNPC *npc, CSharedCreatureData *talker, int questId, int questState, int npcId, int maxValue)
+int CNPC_IncreaseNPCLogByID::IncreaseNPCLogByID(CNPC *npc, CSharedCreatureData *target, int questId, int questState, int npcId, int maxValue)
 {
     CLog::Add(CLog::Blue, L"CNPC::IncreaseNPCLogByID stub");
 	return 0;

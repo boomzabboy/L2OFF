@@ -10,6 +10,6 @@ public:
 	CNPC_ChangeMasterName();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int ChangeMasterName(CNPC *npc, CSharedCreatureData *talker, wchar_t *name);
+	static int ChangeMasterName(CNPC *npc, CSharedCreatureData *creature, wchar_t *name);
 };
 

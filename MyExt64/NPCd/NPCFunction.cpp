@@ -1,7 +1,9 @@
 
 #include <NPCd/NPCFunction.h>
+#include <NPCd/Compiler.h>
 #include <NPCd/Functions/CNPC_ShowBuySell.h>
 #include <NPCd/Functions/CNPC_Marry.h>
+#include <NPCd/Functions/CNPC_Engage.h>
 #include <NPCd/Functions/CNPC_Divorce.h>
 #include <NPCd/Functions/CNPC_GlobalAnnounce.h>
 #include <NPCd/Functions/CNPC_FastBuff.h>
@@ -15,7 +17,7 @@
 #include <NPCd/Functions/CNPC_ChangeNickName.h>
 #include <NPCd/Functions/CNPC_Whisper.h>
 #include <NPCd/Functions/CNPC_BlockTimer.h>
-#include <NPCd/Functions/CNPC_UnBlockTimer.h>
+#include <NPCd/Functions/CNPC_UnblockTimer.h>
 #include <NPCd/Functions/CNPC_AddLogByNpc2.h>
 #include <NPCd/Functions/CNPC_ChangeUserTalkTarget.h>
 #include <NPCd/Functions/CNPC_ChangeNPCState.h>
@@ -28,12 +30,72 @@
 #include <NPCd/Functions/CNPC_GiveEventItem2.h>
 #include <NPCd/Functions/CNPC_IsVipUser.h>
 #include <NPCd/Functions/CNPC_SetVipUser.h>
+#include <NPCd/Functions/CNPC_ShowSystemMessage2.h>
+#include <NPCd/Functions/CNPC_SharedInstantZone_Enter.h>
+#include <NPCd/Functions/CNPC_SharedInstantZone_Close.h>
+#include <NPCd/Functions/CNPC_SetDbCookieInt.h>
+#include <NPCd/Functions/CNPC_SetDbCookieStr.h>
+#include <NPCd/Functions/CNPC_GetDbCookieInt.h>
+#include <NPCd/Functions/CNPC_GetDbCookieStr.h>
+#include <NPCd/Functions/CNPC_DeleteDbCookie.h>
+#include <NPCd/Functions/CNPC_DeleteDbCookieGroup.h>
+#include <NPCd/Functions/CNPC_GetDbCookieGroupSize.h>
+#include <NPCd/Functions/CNPC_LoadDbCookieGroup.h>
+#include <NPCd/Functions/CNPC_LoadDbCookieAllGroups.h>
+#include <NPCd/Functions/CNPC_GetDbCookieKeyInt.h>
+#include <NPCd/Functions/CNPC_GetDbCookieKeyStr.h>
+#include <NPCd/Functions/CNPC_GetDbCookieKeyFirst.h>
+#include <NPCd/Functions/CNPC_GetDbCookieKeyNext.h>
+#include <NPCd/Functions/CNPC_TeamEventSetStatus.h>
+#include <NPCd/Functions/CNPC_TeamEventGetStatus.h>
+#include <NPCd/Functions/CNPC_TeamEventGetTeamsCount.h>
+#include <NPCd/Functions/CNPC_TeamSetColor.h>
+#include <NPCd/Functions/CNPC_TeamAddMember.h>
+#include <NPCd/Functions/CNPC_TeamRemoveMember.h>
+#include <NPCd/Functions/CNPC_TeamRemoveAllMembers.h>
+#include <NPCd/Functions/CNPC_TeamGetMembersCount.h>
+#include <NPCd/Functions/CNPC_TeamGetMemberByIndex.h>
+#include <NPCd/Functions/CNPC_TeamInstantTeleport.h>
+#include <NPCd/Functions/CNPC_TeamSetRestartPoint.h>
+#include <NPCd/Functions/CNPC_TeamShowSystemMessage2.h>
+#include <NPCd/Functions/CNPC_ShowSystemMessage2.h>
+#include <NPCd/Functions/CNPC_TeamEventSetParticipantConditions.h>
+#include <NPCd/Functions/CNPC_TeamSetParticipantConditions.h>
+#include <NPCd/Functions/CNPC_TeamSetMemberColor.h>
+#include <NPCd/Functions/CNPC_TeamMoveMember.h>
+#include <NPCd/Functions/CNPC_TeamEventAddMembersWithBalance.h>
+#include <NPCd/Functions/CNPC_TeamInstantTeleportWithConditions.h>
+#include <NPCd/Functions/CNPC_TeamGetInactiveCharacters.h>
+#include <NPCd/Functions/CNPC_RegisterNpcConfirmDlg.h>
+#include <NPCd/Functions/CNPC_SendNpcConfirmDlg.h>
+#include <NPCd/Functions/CNPC_SendNpcConfirmDlgParty.h>
+#include <NPCd/Functions/CNPC_SendNpcConfirmDlgAround.h>
+#include <NPCd/Functions/CNPC_SetDbData.h>
+#include <NPCd/Functions/CNPC_GetDbData.h>
+#include <NPCd/Functions/CNPC_GetCountDbData.h>
+#include <NPCd/Functions/CNPC_DelDbData.h>
+#include <NPCd/Functions/CNPC_DelDbDataById.h>
 #include <NPCd/Functions/GlobalObject_BroadcastOnScreenNpcString.h>
 #include <NPCd/Functions/GlobalObject_ShowOnScreenNpcStringMsg.h>
 #include <NPCd/Functions/GlobalObject_OwnItemCount2.h>
 #include <NPCd/Functions/GlobalObject_OwnItemCountEx2.h>
+#include <NPCd/Functions/GlobalObject_Dummy1.h>
+#include <NPCd/Functions/GlobalObject_Dummy2.h>
+#include <NPCd/Functions/GlobalObject_SendUIEventNpcStr.h>
+#include <NPCd/Functions/GlobalObject_BroadCastUIEvent.h>
+#include <NPCd/Functions/GlobalObject_BroadCastUIEventNpcStr.h>
 #include <NPCd/Functions/CIntList_SetMaxSize.h>
 #include <NPCd/Functions/CIntList_GetItemIndexNext.h>
+#include <NPCd/Functions/CIntList_RemoveAt.h>
+#include <NPCd/Functions/CStrList_Add.h>
+#include <NPCd/Functions/CStrList_Remove.h>
+#include <NPCd/Functions/CStrList_Clear.h>
+#include <NPCd/Functions/CStrList_Get.h>
+#include <NPCd/Functions/CStrList_GetSize.h>
+#include <NPCd/Functions/CStrList_GetItemIndex.h>
+#include <NPCd/Functions/CStrList_GetItemIndexNext.h>
+#include <NPCd/Functions/CStrList_SetMaxSize.h>
+#include <NPCd/Functions/CStrList_RemoveAt.h>
 #include <Common/Utils.h>
 
 void NPCFunction::AddFunctions()
@@ -53,7 +115,7 @@ void NPCFunction::AddFunctions()
 	AddFunction<Type::TYPE_NPC, CNPC_ChangeNickName>();
 	AddFunction<Type::TYPE_NPC, CNPC_Whisper>();
 	AddFunction<Type::TYPE_NPC, CNPC_BlockTimer>();
-	AddFunction<Type::TYPE_NPC, CNPC_UnBlockTimer>();
+	AddFunction<Type::TYPE_NPC, CNPC_UnblockTimer>();
 	AddFunction<Type::TYPE_NPC, CNPC_AddLogByNpc2>();
 	AddFunction<Type::TYPE_NPC, CNPC_ChangeUserTalkTarget>();
 	AddFunction<Type::TYPE_NPC, CNPC_ChangeNPCState>();
@@ -66,12 +128,72 @@ void NPCFunction::AddFunctions()
 	AddFunction<Type::TYPE_NPC, CNPC_GiveEventItem2>();
 	AddFunction<Type::TYPE_NPC, CNPC_IsVipUser>();
 	AddFunction<Type::TYPE_NPC, CNPC_SetVipUser>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamEventSetStatus>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamEventGetStatus>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamEventGetTeamsCount>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamSetColor>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamAddMember>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamRemoveMember>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamRemoveAllMembers>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamGetMembersCount>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamGetMemberByIndex>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamInstantTeleport>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamSetRestartPoint>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamShowSystemMessage2>();
+	AddFunction<Type::TYPE_NPC, CNPC_ShowSystemMessage2>();
+	AddFunction<Type::TYPE_NPC, CNPC_RegisterNpcConfirmDlg>();
+	AddFunction<Type::TYPE_NPC, CNPC_SendNpcConfirmDlg>();
+	AddFunction<Type::TYPE_NPC, CNPC_SendNpcConfirmDlgParty>();
+	AddFunction<Type::TYPE_NPC, CNPC_SendNpcConfirmDlgAround>();
+	AddFunction<Type::TYPE_NPC, CNPC_SetDbCookieInt>();
+	AddFunction<Type::TYPE_NPC, CNPC_SetDbCookieStr>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbCookieInt>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbCookieStr>();
+	AddFunction<Type::TYPE_NPC, CNPC_DeleteDbCookie>();
+	AddFunction<Type::TYPE_NPC, CNPC_DeleteDbCookieGroup>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbCookieGroupSize>();
+	AddFunction<Type::TYPE_NPC, CNPC_LoadDbCookieGroup>();
+	AddFunction<Type::TYPE_NPC, CNPC_LoadDbCookieAllGroups>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbCookieKeyInt>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbCookieKeyStr>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbCookieKeyFirst>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbCookieKeyNext>();
+	AddFunction<Type::TYPE_NPC, CNPC_SetDbData>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetDbData>();
+	AddFunction<Type::TYPE_NPC, CNPC_GetCountDbData>();
+	AddFunction<Type::TYPE_NPC, CNPC_DelDbData>();
+	AddFunction<Type::TYPE_NPC, CNPC_DelDbDataById>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamEventSetParticipantConditions>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamSetParticipantConditions>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamSetMemberColor>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamMoveMember>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamEventAddMembersWithBalance>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamInstantTeleportWithConditions>();
+	AddFunction<Type::TYPE_NPC, CNPC_Engage>();
+	AddFunction<Type::TYPE_NPC, CNPC_SharedInstantZone_Enter>();
+	AddFunction<Type::TYPE_NPC, CNPC_TeamGetInactiveCharacters>();
+	AddFunction<Type::TYPE_NPC, CNPC_SharedInstantZone_Close>();
 	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_BroadcastOnScreenNpcString>();
 	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_ShowOnScreenNpcStringMsg>();
 	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_OwnItemCount2>();
 	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_OwnItemCountEx2>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_Dummy1>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_Dummy2>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_SendUIEventNpcStr>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_BroadCastUIEvent>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_BroadCastUIEventNpcStr>();
 	AddFunction<Type::TYPE_INTLIST, CIntList_SetMaxSize>();
 	AddFunction<Type::TYPE_INTLIST, CIntList_GetItemIndexNext>();
+	AddFunction<Type::TYPE_INTLIST, CIntList_RemoveAt>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_Add>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_Remove>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_Clear>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_Get>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_GetSize>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_GetItemIndex>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_GetItemIndexNext>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_SetMaxSize>();
+	AddFunction<Type::TYPE_STRLIST, CStrList_RemoveAt>();
 }
 
 void NPCFunction::Init()

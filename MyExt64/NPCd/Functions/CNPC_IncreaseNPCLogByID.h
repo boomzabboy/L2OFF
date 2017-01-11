@@ -10,6 +10,6 @@ public:
 	CNPC_IncreaseNPCLogByID();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int IncreaseNPCLogByID(CNPC *npc, CSharedCreatureData *talker, int questId, int questState, int npcId, int maxValue);
+	static int IncreaseNPCLogByID(CNPC *npc, CSharedCreatureData *target, int questId, int questState, int npcId, int maxValue);
 };
 

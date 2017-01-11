@@ -6,6 +6,7 @@
 #include <NPCd/CNPCMaker.h>
 #include <NPCd/NPCFunction.h>
 #include <NPCd/NPCHandler.h>
+#include <Common/CSharedCreatureData.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 #include <Common/Config.h>
@@ -18,6 +19,7 @@ void NPCd::Init()
 	if (Config::Instance()->npcd->useSplitAI) {
 		SplitAI::Init();
 	}
+	CSharedCreatureData::InitNpc();
 	Compiler::Init();
 	CNPC::Init();
 	CNPCMaker::Init();

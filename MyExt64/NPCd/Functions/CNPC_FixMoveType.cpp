@@ -19,7 +19,7 @@ void CNPC_FixMoveType::SetTypes()
 	AddParameter(Type::TYPE_INT);
 }
 
-int CNPC_FixMoveType::FixMoveType(CNPC *npc, int block)
+int CNPC_FixMoveType::FixMoveType(CNPC *npc, bool block)
 {
     CLog::Add(CLog::Blue, L"CNPC::FixMoveType stub");
 	return 0;

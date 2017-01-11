@@ -40,7 +40,7 @@ void CNPC_SendPost::SetTypes()
 	AddParameter(Type::TYPE_INT);
 }
 
-int CNPC_SendPost::SendPost(CNPC *npc, int userDbId, wchar_t *title, wchar_t *message, int tradeMoney, int itemId1, int itemAmount1, int itemId2, int itemAmount2, int itemId3, int itemAmount3, int itemId4, int itemAmount4, int itemId5, int itemAmount5, int itemId6, int itemAmount6, int itemId7, int itemAmount7, int itemId8, int itemAmount8, int itemId9, int itemAmount9)
+int CNPC_SendPost::SendPost(CNPC *npc, int userDbId, wchar_t *title, wchar_t *msg, int tradeMoney, int itemId1, int itemAmount1, int itemId2, int itemAmount2, int itemId3, int itemAmount3, int itemId4, int itemAmount4, int itemId5, int itemAmount5, int itemId6, int itemAmount6, int itemId7, int itemAmount7, int itemId8, int itemAmount8, int itemId9, int itemAmount9)
 {
     CLog::Add(CLog::Blue, L"CNPC::SendPost stub");
 	return 0;

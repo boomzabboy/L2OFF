@@ -4,7 +4,6 @@
 #include <NPCd/NPCFunction.h>
 #include <NPCd/CNPC.h>
 
-
 class CNPC_Divorce : public NPCFunction {
 public:
 	CNPC_Divorce();

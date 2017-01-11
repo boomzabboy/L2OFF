@@ -20,7 +20,7 @@ void CNPC_Marry::SetTypes()
 	AddParameter(Type::TYPE_INT);
 }
 
-int CNPC_Marry::Marry(CNPC *npc, int charIndex1, int charIndex2)
+int CNPC_Marry::Marry(CNPC *npc, int char1Index, int char2Index)
 {
     CLog::Add(CLog::Blue, L"CNPC::Marry stub");
 	return 0;

@@ -4,7 +4,6 @@
 #include <NPCd/NPCFunction.h>
 #include <NPCd/CIntList.h>
 
-
 class CIntList_GetItemIndexNext : public NPCFunction {
 public:
 	CIntList_GetItemIndexNext();

@@ -4,7 +4,6 @@
 #include <NPCd/NPCFunction.h>
 #include <NPCd/CNPC.h>
 
-
 class CNPC_FastBuff : public NPCFunction {
 public:
 	CNPC_FastBuff();

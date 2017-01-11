@@ -19,7 +19,7 @@ void CNPC_IsVipUser::SetTypes()
 	AddParameter(Type::TYPE_CREATURE);
 }
 
-int CNPC_IsVipUser::IsVipUser(CNPC *npc, CSharedCreatureData *talker)
+int CNPC_IsVipUser::IsVipUser(CNPC *npc, CSharedCreatureData *c)
 {
     CLog::Add(CLog::Blue, L"CNPC::IsVipUser stub");
 	return 0;

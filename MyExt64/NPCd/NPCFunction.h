@@ -23,7 +23,9 @@ public:
 	template<UINT32 address, Type::TypeID type>
 	static void RegisterFunctions(void *unknown, void *registry)
 	{
-		reinterpret_cast<void(*)(void*, void*)>(address)(unknown, registry);
+		if (address != 0) {
+			reinterpret_cast<void(*)(void*, void*)>(address)(unknown, registry);
+		}
 		for (std::list<NPCFunction*>::iterator i = functionsToRegister[type].begin() ; i != functionsToRegister[type].end() ; ++i) {
 			(*i)->Register(registry);
 		}

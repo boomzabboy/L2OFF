@@ -23,7 +23,7 @@ void CNPC_SetVipUser::SetTypes()
 	AddParameter(Type::TYPE_STRING);
 }
 
-int CNPC_SetVipUser::SetVipUser(CNPC *npc, CSharedCreatureData *talker, int duration, int param1, int param2, wchar_t *param3)
+int CNPC_SetVipUser::SetVipUser(CNPC *npc, CSharedCreatureData *c, int duration, int param1, int param2, wchar_t *param3)
 {
     CLog::Add(CLog::Blue, L"CNPC::SetVipUser stub");
 	return 0;

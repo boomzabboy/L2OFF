@@ -5,6 +5,9 @@
 
 class CSharedCreatureData {
 public:
+	static void InitNpc();
+	static void InitServer();
+
 	/* 0x0000 */ unsigned char padding0x0000[0x8];
 	/* 0x0008 */ double x;
 	/* 0x0010 */ double y;
@@ -42,6 +45,20 @@ public:
 	/* 0x0A80 */ unsigned char padding0x0A80[0x0B30-0x0A80];
 	/* 0x0B30 */ UINT32 inZoneId;
 	/* 0x0B34 */ unsigned char padding0x0B34[0x0DF8-0x0B34];
-	/* 0x0DF8 */
+	/* 0x0DF8 */ unsigned char padding0x0DF8[0x1378-0x0DF8];
+	/* 0x1378 */ UINT32 absolute_defence;
+	/* 0x137C */ UINT32 no_attack_damage;
+	/* 0x1380 */ unsigned char padding0x1380[0x15C0-0x1380];
+	/* 0x15C0 */ UINT32 quest_inv_items;
+	/* 0x15C4 */ unsigned char padding0x15C4[0x16E4-0x15C4];
+	/* 0x16E4 */ UINT32 m_nPvP_Event_Kills;
+	/* 0x16E8 */ UINT32 m_nPvP_Event_Deaths;
+	/* 0x16EC */ UINT32 m_nPvP_Event_EventId;
+	/* 0x16F0 */ UINT32 m_nPvP_Event_TeamId;
+	/* 0x16F4 */ UINT32 m_nPvP_Event_KillsSequenced;
+	/* 0x16F8 */ UINT32 m_nPvP_Event_MemberId;
+	/* 0x16FC */ UINT32 m_nMultiBoxSessionCount;
+	/* 0x1700 */ wchar_t wedding_partner_name[26];
+	/* 0x1734 */ UINT32 wedding_relation;
 };
 

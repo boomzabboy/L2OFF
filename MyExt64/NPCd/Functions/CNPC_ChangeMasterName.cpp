@@ -20,7 +20,7 @@ void CNPC_ChangeMasterName::SetTypes()
 	AddParameter(Type::TYPE_STRING);
 }
 
-int CNPC_ChangeMasterName::ChangeMasterName(CNPC *npc, CSharedCreatureData *talker, wchar_t *name)
+int CNPC_ChangeMasterName::ChangeMasterName(CNPC *npc, CSharedCreatureData *creature, wchar_t *name)
 {
     CLog::Add(CLog::Blue, L"CNPC::ChangeMasterName stub");
 	return 0;

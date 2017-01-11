@@ -2,17 +2,55 @@
 #pragma once
 
 #include <NPCd/CreatureData2.h>
+#include <NPCd/CStrList.h>
+#include <NPCd/CIntList.h>
 #include <Common/CSharedCreatureData.h>
 
 namespace NPC {
 
 class CNPC {
 public:
+	class Ext {
+	public:
+		Ext();
+		~Ext();
+
+		/* 0x1570 */ INT64 i_ai5;
+		/* 0x1578 */ INT64 i_ai6;
+		/* 0x1580 */ INT64 i_ai7;
+		/* 0x1588 */ INT64 i_ai8;
+		/* 0x1590 */ INT64 i_ai9;
+		/* 0x1598 */ INT64 i_quest5;
+		/* 0x15A0 */ INT64 i_quest6;
+		/* 0x15A8 */ INT64 i_quest7;
+		/* 0x15B0 */ INT64 i_quest8;
+		/* 0x15B8 */ INT64 i_quest9;
+		/* 0x15C0 */ CreatureData2 *sm2;
+		/* 0x15C8 */ unsigned char padding0x15C8[0x1610-0x15C8];
+		/* 0x1610 */ CStrList str_list;
+		/* 0x1658 */ unsigned char padding0x1658[0x1660-0x1658];
+		/* 0x1660 */ CIntList db_int_list;
+		/* 0x16A8 */ CStrList db_str_list1;
+		/* 0x16F0 */ CStrList db_str_list2;
+		/* 0x1738 */ CStrList db_str_list3;
+		/* 0x1780 */ CStrList db_str_list4;
+		/* 0x17C8 */ CStrList db_str_list5;
+		/* 0x1810 */ CStrList db_str_list6;
+		/* 0x1858 */ CStrList db_str_list7;
+		/* 0x18A0 */ CStrList db_str_list8;
+		/* 0x18E8 */ CStrList db_str_list9;
+		/* 0x1930 */ CStrList db_str_list10;
+		/* 0x1978 */
+	};
+
 	static void Init();
 	static void RegisterVariables(void *obj, void *registry);
 	static void RegisterVariable(void *obj, void *registry, const wchar_t *name, size_t offset, UINT32 fn);
 	static void RegisterTypes();
 	static void** GetTypeWrapper(void *registry, int type);
+	static void RegisterSharedCreatureVariables(void *obj, void *registry);
+	static void RegisterSharedCreatureVariable(void *obj, void *registry, const wchar_t *name, size_t offset, UINT32 fn);
+	static void* __cdecl UnBlockTimerFix(void *a, wchar_t *fn);
 
 	static CNPC* __cdecl Constructor(CNPC *self);
 	static CNPC* __cdecl Destructor(CNPC *self, bool isMemoryFreeUsed);
@@ -59,17 +97,7 @@ public:
 	/* 0x01C8 */ INT32 start_y;
 	/* 0x01CC */ INT32 start_z;
 	/* 0x01D0 */ unsigned char padding0x01D0[0x1570-0x01D0];
-	/* 0x1570 */ INT64 i_ai5;
-	/* 0x1578 */ INT64 i_ai6;
-	/* 0x1580 */ INT64 i_ai7;
-	/* 0x1588 */ INT64 i_ai8;
-	/* 0x1590 */ INT64 i_ai9;
-	/* 0x1598 */ INT64 i_quest5;
-	/* 0x15A0 */ INT64 i_quest6;
-	/* 0x15A8 */ INT64 i_quest7;
-	/* 0x15B0 */ INT64 i_quest8;
-	/* 0x15B8 */ INT64 i_quest9;
-	/* 0x15C0 */ CreatureData2 *sm2;
+	/* 0x1570 */ Ext ext;
 };
 
 } // namespace NPC

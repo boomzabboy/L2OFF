@@ -4,12 +4,11 @@
 #include <NPCd/NPCFunction.h>
 #include <NPCd/CNPC.h>
 
-
-class CNPC_UnBlockTimer : public NPCFunction {
+class CNPC_TeamGetMembersCount : public NPCFunction {
 public:
-	CNPC_UnBlockTimer();
+	CNPC_TeamGetMembersCount();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int UnBlockTimer(CNPC *npc, int timerId);
+	static int TeamGetMembersCount(CNPC *npc, int eventId, int teamId);
 };
 

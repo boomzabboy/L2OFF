@@ -10,6 +10,6 @@ public:
 	CNPC_GiveEventItem2();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int GiveEventItem2(CNPC *npc, CSharedCreatureData *target, int requiredItemId, INT64 requiredAmount, int giveItemId1, INT64 giveAmount1, int giveItemId2, INT64 giveAmount2, int id, int timeLimit);
+	static int GiveEventItem2(CNPC *npc, CSharedCreatureData *target, int reqItemId, __int64 reqAmount, int giveItemId1, __int64 giveAmount1, int giveItemId2, __int64 giveAmount2, int id, int timeLimit);
 };
 

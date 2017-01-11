@@ -10,6 +10,6 @@ public:
 	CNPC_ChangeUserTalkTarget();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int ChangeUserTalkTarget(CNPC *npc, CSharedCreatureData *target);
+	static int ChangeUserTalkTarget(CNPC *npc, CSharedCreatureData *creature);
 };
 

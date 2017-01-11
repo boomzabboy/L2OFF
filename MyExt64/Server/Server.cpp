@@ -28,6 +28,7 @@
 #include <Server/SkillEnchantFix.h>
 #include <Server/NpcServer.h>
 #include <Server/CItem.h>
+#include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -74,6 +75,7 @@ void Server::Init()
 	if (Config::Instance()->custom->removeKamaelRace) {
 		RemoveKamaelRace();
 	}
+	CSharedCreatureData::InitServer();
 	CWorld::Init();
 	CUser::Init();
 	CUserSocket::Init();

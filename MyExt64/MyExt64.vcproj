@@ -252,7 +252,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NPCd\CIntList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NPCd\CIntList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CIntListType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CIntListType.h"
 				>
 			</File>
 			<File
@@ -314,6 +326,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NPCd\CStrList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CStrList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CStrListType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CStrListType.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NPCd\NPCd.cpp"
 				>
 			</File>
@@ -370,6 +398,14 @@
 				</File>
 				<File
 					RelativePath=".\NPCd\Functions\CIntList_GetItemIndexNext.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CIntList_RemoveAt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CIntList_RemoveAt.h"
 					>
 				</File>
 				<File
@@ -445,11 +481,51 @@
 					>
 				</File>
 				<File
+					RelativePath=".\NPCd\Functions\CNPC_DelDbData.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_DelDbData.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_DelDbDataById.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_DelDbDataById.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_DeleteDbCookie.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_DeleteDbCookie.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_DeleteDbCookieGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_DeleteDbCookieGroup.h"
+					>
+				</File>
+				<File
 					RelativePath=".\NPCd\Functions\CNPC_Divorce.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\NPCd\Functions\CNPC_Divorce.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_Engage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_Engage.h"
 					>
 				</File>
 				<File
@@ -466,6 +542,78 @@
 				</File>
 				<File
 					RelativePath=".\NPCd\Functions\CNPC_FixMoveType.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetCountDbData.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetCountDbData.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieGroupSize.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieGroupSize.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieInt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieInt.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyFirst.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyFirst.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyInt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyInt.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyNext.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyNext.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyStr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieKeyStr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieStr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbCookieStr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbData.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_GetDbData.h"
 					>
 				</File>
 				<File
@@ -517,6 +665,22 @@
 					>
 				</File>
 				<File
+					RelativePath=".\NPCd\Functions\CNPC_LoadDbCookieAllGroups.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_LoadDbCookieAllGroups.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_LoadDbCookieGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_LoadDbCookieGroup.h"
+					>
+				</File>
+				<File
 					RelativePath=".\NPCd\Functions\CNPC_Marry.cpp"
 					>
 				</File>
@@ -530,6 +694,38 @@
 				</File>
 				<File
 					RelativePath=".\NPCd\Functions\CNPC_RegisterAsBirthdayManager.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_RegisterNpcConfirmDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_RegisterNpcConfirmDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SendNpcConfirmDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SendNpcConfirmDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SendNpcConfirmDlgAround.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SendNpcConfirmDlgAround.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SendNpcConfirmDlgParty.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SendNpcConfirmDlgParty.h"
 					>
 				</File>
 				<File
@@ -557,11 +753,51 @@
 					>
 				</File>
 				<File
+					RelativePath=".\NPCd\Functions\CNPC_SetDbCookieInt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SetDbCookieInt.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SetDbCookieStr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SetDbCookieStr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SetDbData.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SetDbData.h"
+					>
+				</File>
+				<File
 					RelativePath=".\NPCd\Functions\CNPC_SetVipUser.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\NPCd\Functions\CNPC_SetVipUser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SharedInstantZone_Close.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SharedInstantZone_Close.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SharedInstantZone_Enter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_SharedInstantZone_Enter.h"
 					>
 				</File>
 				<File
@@ -581,6 +817,166 @@
 					>
 				</File>
 				<File
+					RelativePath=".\NPCd\Functions\CNPC_ShowSystemMessage2.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_ShowSystemMessage2.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamAddMember.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamAddMember.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventAddMembersWithBalance.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventAddMembersWithBalance.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventGetStatus.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventGetStatus.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventGetTeamsCount.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventGetTeamsCount.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventSetParticipantConditions.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventSetParticipantConditions.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventSetStatus.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamEventSetStatus.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamGetInactiveCharacters.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamGetInactiveCharacters.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamGetMemberByIndex.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamGetMemberByIndex.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamGetMembersCount.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamGetMembersCount.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamInstantTeleport.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamInstantTeleport.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamInstantTeleportWithConditions.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamInstantTeleportWithConditions.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamMoveMember.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamMoveMember.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamRemoveAllMembers.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamRemoveAllMembers.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamRemoveMember.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamRemoveMember.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetColor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetColor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetMemberColor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetMemberColor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetParticipantConditions.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetParticipantConditions.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetRestartPoint.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamSetRestartPoint.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamShowSystemMessage2.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CNPC_TeamShowSystemMessage2.h"
+					>
+				</File>
+				<File
 					RelativePath=".\NPCd\Functions\CNPC_TeleportTo.cpp"
 					>
 				</File>
@@ -589,11 +985,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\NPCd\Functions\CNPC_UnBlockTimer.cpp"
+					RelativePath=".\NPCd\Functions\CNPC_UnblockTimer.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\NPCd\Functions\CNPC_UnBlockTimer.h"
+					RelativePath=".\NPCd\Functions\CNPC_UnblockTimer.h"
 					>
 				</File>
 				<File
@@ -605,11 +1001,115 @@
 					>
 				</File>
 				<File
+					RelativePath=".\NPCd\Functions\CStrList_Add.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_Add.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_Clear.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_Clear.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_Get.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_Get.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_GetItemIndex.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_GetItemIndex.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_GetItemIndexNext.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_GetItemIndexNext.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_GetSize.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_GetSize.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_Remove.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_Remove.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_RemoveAt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_RemoveAt.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_SetMaxSize.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\CStrList_SetMaxSize.h"
+					>
+				</File>
+				<File
 					RelativePath=".\NPCd\Functions\GlobalObject_BroadcastOnScreenNpcString.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\NPCd\Functions\GlobalObject_BroadcastOnScreenNpcString.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_BroadCastUIEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_BroadCastUIEvent.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_BroadCastUIEventNpcStr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_BroadCastUIEventNpcStr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_Dummy1.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_Dummy1.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_Dummy2.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_Dummy2.h"
 					>
 				</File>
 				<File
@@ -626,6 +1126,14 @@
 				</File>
 				<File
 					RelativePath=".\NPCd\Functions\GlobalObject_OwnItemCountEx2.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_SendUIEventNpcStr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_SendUIEventNpcStr.h"
 					>
 				</File>
 				<File

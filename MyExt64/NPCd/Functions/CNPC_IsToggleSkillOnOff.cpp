@@ -20,7 +20,7 @@ void CNPC_IsToggleSkillOnOff::SetTypes()
 	AddParameter(Type::TYPE_INT);
 }
 
-int CNPC_IsToggleSkillOnOff::IsToggleSkillOnOff(CNPC *npc, CSharedCreatureData *target, int skillId)
+int CNPC_IsToggleSkillOnOff::IsToggleSkillOnOff(CNPC *npc, CSharedCreatureData *target, int skillUid)
 {
     CLog::Add(CLog::Blue, L"CNPC::IsToggleSkillOnOff stub");
 	return 0;

@@ -10,6 +10,6 @@ public:
 	CNPC_SetVipUser();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int SetVipUser(CNPC *npc, CSharedCreatureData *talker, int duration, int param1, int param2, wchar_t *param3);
+	static int SetVipUser(CNPC *npc, CSharedCreatureData *c, int duration, int param1, int param2, wchar_t *param3);
 };
 

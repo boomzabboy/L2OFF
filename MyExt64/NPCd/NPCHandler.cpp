@@ -14,5 +14,9 @@ void NPCHandler::RegisterHandlers(void *registry)
 	reinterpret_cast<void(*)(void*, wchar_t*)>(0x5771DC)(registry, L"BIRTHDAY_EVENT");
 	reinterpret_cast<void(*)(void*, wchar_t*)>(0x5771DC)(registry, L"IS_TOGGLE_SKILL_ONOFF");
 	reinterpret_cast<void(*)(void*, wchar_t*)>(0x5771DC)(registry, L"REPLY_SET_VIP_USER");
+	reinterpret_cast<void(*)(void*, wchar_t*)>(0x5771DC)(registry, L"CONFIRM_DIALOG_RETURNED");
+	reinterpret_cast<void(*)(void*, wchar_t*)>(0x5771DC)(registry, L"ON_DBCOOKIE_LOADED");
+	reinterpret_cast<void(*)(void*, wchar_t*)>(0x5771DC)(registry, L"GETDBDATA_RETURNED");
+	reinterpret_cast<void(*)(void*, wchar_t*)>(0x5771DC)(registry, L"GETCOUNTDBDATA_RETURNED");
 }
 
