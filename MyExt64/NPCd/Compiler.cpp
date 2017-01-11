@@ -12,32 +12,31 @@ bool Compiler::closeOnError = false;
 
 void Compiler::Init()
 {
-	std::wstring args = GetCommandLineW();
-	args.push_back(L' ');
-	std::vector<std::wstring> parts;
-	std::wstring part;
-	for (size_t i = 0 ; i < args.size() ; ++i) {
-		if (args[i] == L' ' || args[i] == L'\t') {
-			if (!part.empty()) {
-				parts.push_back(part);
-				part.clear();
-			}
-		} else {
-			part.push_back(args[i]);
-		}
+	int argc;
+	wchar_t **argv;
+	argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	if (!argv) {
+		MessageBox(0, L"Couldn't parse command line arguments (CommandLineToArgvW failed)", L"Error", 0);
+		exit(0);
 	}
-	exeFilename = parts[0];
-	if (parts.size() > 1) {
-		for (size_t i = 1 ; i < parts.size() ; ++i) {
-			if (parts[i] == L"-c" || parts[i] == L"--close") {
+	std::vector<std::wstring> args;
+	for (size_t i = 0 ; i < argc ; ++i) {
+		args.push_back(std::wstring(argv[i]));
+	}
+	LocalFree(argv);
+
+	exeFilename = args[0];
+	if (args.size() > 1) {
+		for (size_t i = 1 ; i < args.size() ; ++i) {
+			if (args[i] == L"-c" || args[i] == L"--close") {
 				close = true;
-			} else if (parts[i] == L"-e" || parts[i] == L"--close-on-error") {
+			} else if (args[i] == L"-e" || args[i] == L"--close-on-error") {
 				closeOnError = true;
 			} else if (filename.empty()) {
-				filename = Narrow(parts[i]);
+				filename = Narrow(args[i]);
 			} else {
 				wchar_t buffer[4096];
-				if (parts[0].size() < 2048) {
+				if (args[0].size() < 2048) {
 					wsprintf(buffer, L"Usage:\r\n%s [-c|--close] [-e|--close-on-error] [FILENAME]", exeFilename.c_str());
 				} else {
 					wsprintf(buffer, L"Usage:\r\n%s... [-c|--close] [-e|--close-on-error] [FILENAME]", exeFilename.substr(0, 2048).c_str());
