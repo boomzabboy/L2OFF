@@ -123,6 +123,13 @@ void Compiler::Init()
 	WriteMemoryBYTES(0x596B58, "\x48\x31\xC0\xC3", 4);
 	WriteMemoryBYTES(0x596BE8, "\x48\x31\xC0\xC3", 4);
 	WriteMemoryBYTES(0x596C88, "\x48\x31\xC0\xC3", 4);
+	NOPMemory(0x5BE2F3, 5);
+	NOPMemory(0x5B9EF7, 5);
+	NOPMemory(0x5B9F39, 5);
+	NOPMemory(0x474D73, 5);
+	NOPMemory(0x474D8B, 5);
+	NOPMemory(0x4759DF, 5);
+	NOPMemory(0x41C7AA, 5);
 }
 
 int Compiler::LogError(void*, const wchar_t* format, ...)

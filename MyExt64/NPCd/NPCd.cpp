@@ -6,6 +6,7 @@
 #include <NPCd/CNPCMaker.h>
 #include <NPCd/NPCFunction.h>
 #include <NPCd/NPCHandler.h>
+#include <NPCd/CFString.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -25,6 +26,7 @@ void NPCd::Init()
 	CNPCMaker::Init();
 	NPCFunction::Init();
 	NPCHandler::Init();
+	CFString::Init();
 }
 
 void NPCd::DisableSendMail()
@@ -59,7 +61,9 @@ HWND NPCd::CreateWindowEx(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR lpWindow
 void NPCd::StartHook(void *logger, int level, const char *fmt)
 { GUARDED
 
-	reinterpret_cast<void(*)(void*, int, const char*)>(0x478038)(logger, level, fmt);
+	if (Compiler::filename.empty()) {
+		reinterpret_cast<void(*)(void*, int, const char*)>(0x478038)(logger, level, fmt);
+	}
 	CLog::Add(CLog::Blue, L"Patched by MyExt64 (https://bitbucket.org/l2shrine/extender-public)");
 	CLog::Add(CLog::Blue, L" ");
 	CLog::Add(CLog::Blue, L"To use l2npc.exe as a NASC compiler, run it with parameters:");

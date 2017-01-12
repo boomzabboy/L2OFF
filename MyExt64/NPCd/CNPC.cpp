@@ -56,13 +56,6 @@ void CNPC::Init()
 	WriteInstructionCall(0x5C7FBF, reinterpret_cast<UINT32>(UnBlockTimerFix));
 	WriteInstructionCall(0x5C89B4, reinterpret_cast<UINT32>(UnBlockTimerFix));
 
-	static unsigned char fstringbuffer[16000000*8];
-	memset(fstringbuffer, 0, 16000000*8);
-	WriteMemoryDWORD(0x475687 + 2, 15999999);
-	WriteMemoryDWORD(0x4755DA + 2, 16000000*8);
-	WriteMemoryDWORD(0x449481 + 4, reinterpret_cast<UINT32>(fstringbuffer) - 0x400000);
-	WriteAddress(0x4755E0 + 3, reinterpret_cast<UINT32>(fstringbuffer));
-
 	CompileTimeOffsetCheck(Ext, sm2, 0x15C0 - offsetof(CNPC, ext));
 	CompileTimeOffsetCheck(Ext, db_str_list10, 0x1930 - offsetof(CNPC, ext));
 }

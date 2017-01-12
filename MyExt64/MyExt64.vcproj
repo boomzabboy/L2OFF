@@ -252,6 +252,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NPCd\CFString.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NPCd\CFString.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NPCd\CIntList.cpp"
 				>
 			</File>
