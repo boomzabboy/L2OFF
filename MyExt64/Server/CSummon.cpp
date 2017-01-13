@@ -79,8 +79,13 @@ void CSummon::OutOfSight(CObject *object, bool b)
 {
 	GUARDED;
 
-	if (object && GetTarget() == object) {
-		NpcServer::Instance()->Send("cdddddd", 0x37, objectId, 2, 0, 0, 0, 0x11);
+	CCreature *creature = reinterpret_cast<CCreature*>(object);
+	if (creature->IsValidCreature()) {
+		if (targetId == creature->objectId) {
+			DoNothing();
+			ChangeTarget(0, 2);
+			NpcServer::Instance()->Send("cdddddd", 0x37, objectId, 2, 0, 0, 0, 0x11);
+		}
 	}
 }
 

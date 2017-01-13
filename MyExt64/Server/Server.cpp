@@ -28,6 +28,7 @@
 #include <Server/SkillEnchantFix.h>
 #include <Server/NpcServer.h>
 #include <Server/CItem.h>
+#include <Server/CSkillAction2.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -120,6 +121,7 @@ void Server::Init()
 	CInstantZone::Init();
 	NpcServer::Init();
 	CItem::Init();
+	CSkillAction2::Init();
 	HideWarnings(); // call this at last!
 }
 

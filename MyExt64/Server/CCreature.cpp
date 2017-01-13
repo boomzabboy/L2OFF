@@ -193,21 +193,38 @@ CCreature* CCreature::GetValidCreatureByObjectId(UINT32 id)
 	GUARDED;
 
 	CCreature *creature = GetCreatureByObjectId(id);
-	if (!creature) {
+	if (!creature || !creature->IsValidCreature()) {
 		return 0;
 	}
-	switch (*reinterpret_cast<UINT32**>(creature)[0]) {
+	return creature;
+}
+
+bool CCreature::IsValidCreature() const
+{
+	switch (reinterpret_cast<UINT32 const *>(this)[0]) {
 	case 0xA72FB8: case 0xAB8EC8: case 0xAC87E8: case 0xB1F278: case 0xB7CB18: case 0xB93748:
 	case 0xBCB0F8: case 0xBCC828: case 0xC317D8: case 0xC396C8: case 0xC3B568: case 0xC53BB8:
 	case 0xC8C148:
 		break;
 	default:
-		return 0;
+		return false;
 	}
-	if (!creature->sd) {
-		return 0;
+	if (!sd) {
+		return false;
 	}
-	return creature;
+	return true;
+}
+
+void CCreature::DoNothing()
+{
+	reinterpret_cast<void(*)(CCreature*)>(0x538FDC)(this);
+}
+
+void CCreature::ChangeTarget(CObject *target, int reason)
+{
+	reinterpret_cast<void(*)(CCreature*, CObject*, int)>(
+		(*reinterpret_cast<UINT64**>(this))[0x124])(
+			this, target, reason);
 }
 
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);

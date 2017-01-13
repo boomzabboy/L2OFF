@@ -26,6 +26,9 @@ public:
 	unsigned long GetSkillUsedTime(const int skillId);
 	int GetRemainReuseDelaySec(const int skillId);
 	bool UseItem(class CItem *item, int i);
+	bool IsValidCreature() const;
+	void DoNothing();
+	void ChangeTarget(CObject *target, int reason);
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);

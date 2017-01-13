@@ -114,6 +114,8 @@ void CUser::Init()
 
 	WriteInstructionCall(0x8B15F4 + 0x24C, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
 	WriteInstructionCall(0x8B15F4 + 0x563, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
+
+	WriteMemoryQWORD(0xC53FC8, reinterpret_cast<UINT64>(OutOfSightWrapper));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -1030,6 +1032,25 @@ bool CUser::IsValidPrivateStoreItem(INT64 count, INT64 price, CItem *item)
 		return false;
 	}
 	return true;
+}
+
+void __cdecl CUser::OutOfSightWrapper(CUser *self, CObject *object, bool b)
+{
+	self->OutOfSight(object, b);
+}
+
+void CUser::OutOfSight(CObject *object, bool b)
+{
+	GUARDED;
+
+	CCreature *creature = reinterpret_cast<CCreature*>(object);
+	if (creature->IsValidCreature()) {
+		if (targetId == creature->objectId) {
+			DoNothing();
+			ChangeTarget(0, 2);
+		}
+	}
+	reinterpret_cast<void(*)(CUser*, CObject*, bool)>(0x8BFC7C)(this, object, b);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

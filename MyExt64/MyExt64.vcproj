@@ -1322,6 +1322,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CSkillAction2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillAction2.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CSkillEnchantDB.cpp"
 				>
 			</File>
