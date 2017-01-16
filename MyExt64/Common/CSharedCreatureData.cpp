@@ -4,6 +4,7 @@
 
 void CSharedCreatureData::InitNpc()
 {
+	WriteMemoryDWORD(0x44CB64 + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x44F21C + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x44FD25 + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x44FDE7 + 3, sizeof(CSharedCreatureData));
@@ -13,6 +14,8 @@ void CSharedCreatureData::InitNpc()
 	WriteMemoryDWORD(0x4A6475 + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x4A7893 + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x4A7979 + 3, sizeof(CSharedCreatureData));
+	WriteMemoryDWORD(0x4A8236 + 3, sizeof(CSharedCreatureData));
+	WriteMemoryDWORD(0x4A82D6 + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x4AF490 + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x4AF535 + 3, sizeof(CSharedCreatureData));
 	WriteMemoryDWORD(0x4BF73B + 3, sizeof(CSharedCreatureData));
