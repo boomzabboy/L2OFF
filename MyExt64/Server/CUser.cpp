@@ -1051,7 +1051,7 @@ void CUser::OutOfSight(CObject *object, bool b)
 		}
 	}
 	reinterpret_cast<void(*)(CCreature*, CObject*, bool)>(
-		reinterpret_cast<UINT64*>(this)[0x82])(this, object, b);
+		(*reinterpret_cast<UINT64**>(this))[0x82])(this, object, b);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
