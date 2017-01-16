@@ -115,7 +115,7 @@ void CUser::Init()
 	WriteInstructionCall(0x8B15F4 + 0x24C, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
 	WriteInstructionCall(0x8B15F4 + 0x563, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
 
-	WriteMemoryQWORD(0xC53FC8, reinterpret_cast<UINT64>(OutOfSightWrapper));
+	WriteInstructionCall(0x54033B, reinterpret_cast<UINT32>(OutOfSightWrapper), 0x540341);
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)

@@ -26,8 +26,6 @@ void CNPC::Init()
 	WriteInstructionCall(0x5903FC + 0x327, reinterpret_cast<UINT32>(Constructor));
 	WriteInstructionCall(0x4E532C + 0xC, reinterpret_cast<UINT32>(Destructor));
 
-	WriteMemoryDWORD(0x4F920D + 3, Type::TYPE_MAKEREVENT);
-	WriteMemoryDWORD(0x4F97F8 + 3, Type::TYPE_NPCEVENT);
 	WriteMemoryDWORD(0x579267 + 3, Type::TYPE_NPCEVENT * 8);
 	WriteMemoryDWORD(0x57996F + 3, Type::TYPE_NPCEVENT * 8);
 	WriteMemoryDWORD(0x57AED6 + 3, Type::TYPE_NPCEVENT * 8);
