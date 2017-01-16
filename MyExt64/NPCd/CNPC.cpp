@@ -32,6 +32,7 @@ void CNPC::Init()
 	WriteMemoryDWORD(0x57AEEB + 3, Type::TYPE_NPCEVENT * 8);
 	WriteMemoryDWORD(0x5BE261 + 3, Type::TYPE_NPCEVENT * 8);
 	WriteMemoryDWORD(0x5C9BB9 + 3, Type::TYPE_NPCEVENT * 8);
+	WriteMemoryDWORD(0x575314 + 3, Type::TYPE_NPCEVENT * 8);
 
 	WriteMemoryDWORD(0x420AAD + 1, 8 * (Type::TYPES_END + 2));
 	WriteMemoryDWORD(0x420AC1 + 2, 8 * Type::TYPES_END);
