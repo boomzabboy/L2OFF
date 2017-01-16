@@ -1044,13 +1044,14 @@ void CUser::OutOfSight(CObject *object, bool b)
 	GUARDED;
 
 	CCreature *creature = reinterpret_cast<CCreature*>(object);
-	if (creature->IsValidCreature()) {
+	if (creature->IsUser() && creature->IsValidCreature()) {
 		if (targetId == creature->objectId) {
 			DoNothing();
 			ChangeTarget(0, 2);
 		}
 	}
-	reinterpret_cast<void(*)(CUser*, CObject*, bool)>(0x8BFC7C)(this, object, b);
+	reinterpret_cast<void(*)(CCreature*, CObject*, bool)>(
+		reinterpret_cast<UINT64*>(this)[0x82])(this, object, b);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
