@@ -1043,11 +1043,13 @@ void CUser::OutOfSight(CObject *object, bool b)
 {
 	GUARDED;
 
-	CCreature *creature = reinterpret_cast<CCreature*>(object);
-	if (creature->IsUser() && creature->IsValidCreature()) {
-		if (targetId == creature->objectId) {
-			DoNothing();
-			ChangeTarget(0, 2);
+	if (IsUser()) {
+		CCreature *creature = reinterpret_cast<CCreature*>(object);
+		if (creature->IsValidCreature()) {
+			if (targetId == creature->objectId) {
+				DoNothing();
+				ChangeTarget(0, 2);
+			}
 		}
 	}
 	reinterpret_cast<void(*)(CCreature*, CObject*, bool)>(
