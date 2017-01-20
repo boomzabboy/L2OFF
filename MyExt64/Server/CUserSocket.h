@@ -72,6 +72,7 @@ public:
 	static void __cdecl OfflineTradeDummySendV(CUserSocket*, const char*, va_list);
 	static void __cdecl OfflineTradeDummyOnClose(CUserSocket*);
 	static void __cdecl OfflineTradeDummyOnRead(CUserSocket*);
+	static void __cdecl CloseWrapperKick(CUserSocket *self);
 	static void __cdecl BindUserWrapper(CUserSocket *self, class CUser* user);
 	static void __cdecl KickOfflineWrapper(CUserSocket *self);
 	static bool __cdecl CheckCharacterNameWrapper(CUserSocket *self, const wchar_t *name);

@@ -164,6 +164,7 @@ void CUserSocket::Init()
 	offlineTradeVtable[0x0E] = reinterpret_cast<void*>(OfflineTradeDummySendV);
 	offlineTradeVtable[0x10] = reinterpret_cast<void*>(OfflineTradeDummyOnClose);
 	offlineTradeVtable[0x11] = reinterpret_cast<void*>(OfflineTradeDummyOnRead);
+	WriteInstructionCall(0x4D5E01, reinterpret_cast<UINT32>(CloseWrapperKick));
 	WriteInstructionCall(0x5E1B30, reinterpret_cast<UINT32>(BindUserWrapper));
 	WriteMemoryDWORD(0x975586 + 0x3, offsetof(CUserSocket, ext) + offsetof(Ext, offlineSocketHandleCopy)); // user report socket handle
 	WriteInstructionCall(0x459F50+0x1E7, reinterpret_cast<UINT32>(KickOfflineWrapper));
@@ -397,6 +398,19 @@ void __cdecl CUserSocket::OfflineTradeDummyOnClose(CUserSocket*)
 
 void __cdecl CUserSocket::OfflineTradeDummyOnRead(CUserSocket*)
 {
+}
+
+void __cdecl CUserSocket::CloseWrapperKick(CUserSocket *self)
+{
+	CUser *user = self->ext.offlineUser;
+	self->ext.offlineUser = 0;
+	if (user) {
+		self->user = user;
+		self->OnClose();
+		self->DecRef(__FILEW__, __LINE__);
+	} else {
+		self->Close();
+	}
 }
 
 void __cdecl CUserSocket::BindUserWrapper(CUserSocket *self, CUser *user)
