@@ -34,6 +34,9 @@ public:
 	static CUserSocket* __cdecl Constructor(CUserSocket *self, SOCKET s);
 	static CUserSocket* __cdecl Destructor(CUserSocket *self, bool isMemoryFreeUsed);
 
+	void IncRef(const wchar_t *file, const int line);
+	void DecRef(const wchar_t *file, const int line);
+
 	static UINT64 __cdecl OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode);
 	static UINT64 __cdecl InGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode);
 	static bool __cdecl InGamePacketExHandlerWrapper(CUserSocket *self, const BYTE* packet, WORD opcodeEx);

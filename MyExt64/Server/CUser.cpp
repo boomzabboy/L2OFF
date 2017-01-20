@@ -446,9 +446,8 @@ void CUser::StartOfflineTrade()
 
 	*reinterpret_cast<void**>(socket) = CUserSocket::offlineTradeVtable;
 
-	Sleep(500);
-
 	socket->ext.offlineUser = this;
+	socket->IncRef(__FILEW__, __LINE__);
 	socket->Close();
 	socket->user = this;
 	socket->ext.offlineSocketHandleCopy = 0;
@@ -508,6 +507,7 @@ void CUser::SendCharInfo(CUserSocket *socket, const bool b)
 		socket2->ext.offlineUser = 0;
 		socket2->user = this;
 		socket2->OnClose();
+		socket2->DecRef(__FILEW__, __LINE__);
 	}
 }
 

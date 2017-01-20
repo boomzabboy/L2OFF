@@ -233,6 +233,18 @@ CUserSocket::Ext::~Ext()
 {
 }
 
+void CUserSocket::IncRef(const wchar_t *file, const int line)
+{
+	reinterpret_cast<void(*)(CUserSocket*, const wchar_t*, int, int, bool)>(
+		(*reinterpret_cast<UINT64**>(this))[1])(this, file, line, 1, false);
+}
+
+void CUserSocket::DecRef(const wchar_t *file, const int line)
+{
+	reinterpret_cast<void(*)(CUserSocket*, const wchar_t*, int, int, bool)>(
+		(*reinterpret_cast<UINT64**>(this))[2])(this, file, line, 1, false);
+}
+
 CUser* CUserSocket::GetUser()
 {
 	return user;
@@ -416,6 +428,7 @@ void __cdecl CUserSocket::KickOfflineWrapper(CUserSocket *self)
 	if (user) {
 		self->user = user;
 		self->OnClose();
+		self->DecRef(__FILEW__, __LINE__);
 	} else {
 		reinterpret_cast<void(*)(CUserSocket*)>(0x456738)(self);
     }
