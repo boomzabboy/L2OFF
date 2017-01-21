@@ -98,6 +98,7 @@ public:
 
 		BuySell buySell;
 		bool isExpOff;
+		bool isPetExpOff;
 		bool isOffline;
 		LastSkill lastSkill;
 		Guard guard;

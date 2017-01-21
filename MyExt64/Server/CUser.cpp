@@ -208,6 +208,7 @@ CUser* __cdecl CUser::Destructor(CUser *self, bool isMemoryFreeUsed)
 
 CUser::Ext::Ext() :
 	isExpOff(false),
+	isPetExpOff(false),
 	isOffline(false),
 	autoloot(true)
 {
@@ -302,6 +303,20 @@ void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 		} else {
 			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Experience gain already turned on");
 		}
+	} else if (command == L"petexpoff" && Config::Instance()->voiceCommands->petExpOnOff) {
+		if (!self->ext.isPetExpOff) {
+			self->ext.isPetExpOff = true;
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Pet experience gain turned off");
+		} else {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Pet experience gain already turned off");
+		}
+	} else if (command == L"petexpon" && Config::Instance()->voiceCommands->petExpOnOff) {
+		if (self->ext.isPetExpOff) {
+			self->ext.isPetExpOff = false;
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Pet experience gain turned on");
+		} else {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L"Pet experience gain already turned on");
+		}
 	} else if (command == L"online" && Config::Instance()->voiceCommands->online) {
 		wchar_t buffer[1024];
 		size_t online = 0;
@@ -346,6 +361,10 @@ void __cdecl CUser::SayWrapper(CUser *self, const wchar_t *message)
 		if (Config::Instance()->voiceCommands->expOnOff) {
 			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".expon - turns experience gain on");
 			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".expoff - turns experience gain off");
+		}
+		if (Config::Instance()->voiceCommands->petExpOnOff) {
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".petexpon - turns pet experience gain on");
+			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".petexpoff - turns pet experience gain off");
 		}
 		if (Config::Instance()->voiceCommands->online) {
 			self->socket->SendSystemMessage(Config::Instance()->server->name.c_str(), L".online - shows online player count");

@@ -75,6 +75,7 @@ void Config::VoiceCommands::Load(Config *config)
 {
 	enabled = config->GetBool(L"voicecommands", L"Enabled", true);
 	expOnOff = config->GetBool(L"voicecommands", L"ExpOnOff", true);
+	petExpOnOff = config->GetBool(L"voicecommands", L"PetExpOnOff", true);
 	online = config->GetBool(L"voicecommands", L"Online", true);
 	offline = config->GetBool(L"voicecommands", L"Offline", true);
 	time = config->GetBool(L"voicecommands", L"Time", true);

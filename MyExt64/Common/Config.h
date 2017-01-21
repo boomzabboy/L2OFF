@@ -48,6 +48,7 @@ public:
 
 		bool enabled;
 		bool expOnOff;
+		bool petExpOnOff;
 		bool online;
 		bool offline;
 		bool time;
