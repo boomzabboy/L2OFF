@@ -59,6 +59,12 @@ bool __cdecl BuilderCmd2Handler::Handler(CUserSocket *socket, const BYTE *packet
 		return Take(socket, user, target, packet, buffer);
 	} else if (buffer.substr(0, 5) == L"diag ") {
 		return Diag(socket, user, target, packet, buffer);
+	} else if (buffer == L"debug 0") {
+		Server::SetDebug(false);
+		return false;
+	} else if (buffer == L"debug 1") {
+		Server::SetDebug(true);
+		return false;
 	} else {
 		return reinterpret_cast<bool(*)(CUserSocket*, const BYTE*)>(0x4E2BA0)(socket, packet);
 	}

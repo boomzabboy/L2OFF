@@ -149,6 +149,8 @@ public:
 	bool IsValidPrivateStoreItem(INT64 count, INT64 price, class CItem *item);
 	void OutOfSight(CObject *object, bool b);
 
+	static void __cdecl IncRefWrapper(CUser *user, const char *file, int line, int type);
+	static void __cdecl DecRefWrapper(CUser *user, const char *file, int line, int type);
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
 	static void __cdecl AddVitalityPointWrapper(CUser *self, const int points, const int type, const bool b);

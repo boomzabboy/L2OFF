@@ -27,6 +27,7 @@ public:
 	public:
 		class CUser *offlineUser;
 		UINT64 offlineSocketHandleCopy;
+		CriticalSection offlineCS;
 		unsigned char pluginData[512];
 		CriticalSection pluginCS;
 	};
@@ -34,8 +35,11 @@ public:
 	static CUserSocket* __cdecl Constructor(CUserSocket *self, SOCKET s);
 	static CUserSocket* __cdecl Destructor(CUserSocket *self, bool isMemoryFreeUsed);
 
-	void IncRef(const wchar_t *file, const int line);
-	void DecRef(const wchar_t *file, const int line);
+	static void __cdecl IncRefWrapper(CUserSocket *socket, const char *file, int line, int type);
+	static void __cdecl DecRefWrapper(CUserSocket *socket, const char *file, int line, int type);
+
+	void IncRef(const char *file, const int line);
+	void DecRef(const char *file, const int line);
 
 	static UINT64 __cdecl OutGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode);
 	static UINT64 __cdecl InGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode);

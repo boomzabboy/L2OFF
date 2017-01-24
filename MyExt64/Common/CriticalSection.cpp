@@ -26,7 +26,8 @@ void CriticalSection::UnLock()
 }
 
 ScopedLock::ScopedLock(const ScopedLock &other) :
-	cs(other.cs)
+	cs(other.cs),
+	released(other.released)
 {
 }
 
@@ -36,13 +37,21 @@ ScopedLock& ScopedLock::operator=(const ScopedLock &other)
 }
 
 ScopedLock::ScopedLock(CriticalSection &cs) :
-	cs(cs)
+	cs(cs),
+	released(false)
 {
 	cs.Lock();
 }
 
 ScopedLock::~ScopedLock()
 {
-	cs.UnLock();
+	Release();
 }
 
+void ScopedLock::Release()
+{
+	if (!released) {
+		cs.UnLock();
+		released = true;
+	}
+}

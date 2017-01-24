@@ -62,7 +62,8 @@ void CUserSocket::Init()
 	WriteMemoryDWORD(0x93CEC1, sizeof(CUserSocket));
 	WriteInstruction(0x93CEDC, reinterpret_cast<UINT32>(Constructor), 0xE8);
 	WriteInstruction(0x92E068, reinterpret_cast<UINT32>(Destructor), 0xE8);
-
+	WriteMemoryQWORD(0xC746C0, reinterpret_cast<UINT64>(IncRefWrapper));
+	WriteMemoryQWORD(0xC746C8, reinterpret_cast<UINT64>(DecRefWrapper));
 	WriteMemoryQWORD(0x92EAE0, 0x8B48D38B49C28B44);
 	WriteMemoryQWORD(0x92EAE8, 0x98248489482024CB);
 	WriteInstructionCallJmpEax(0x92EF0B, reinterpret_cast<UINT32>(OutGamePacketHandlerWrapper), 0x92EF17);
@@ -234,16 +235,40 @@ CUserSocket::Ext::~Ext()
 {
 }
 
-void CUserSocket::IncRef(const wchar_t *file, const int line)
+void __cdecl CUserSocket::IncRefWrapper(CUserSocket *socket, const char *file, int line, int type)
 {
-	reinterpret_cast<void(*)(CUserSocket*, const wchar_t*, int, int, bool)>(
-		(*reinterpret_cast<UINT64**>(this))[1])(this, file, line, 1, false);
+	if (Server::IsDebug()) {
+		CLog::Add(CLog::Blue, L"CUserSocket::IncRef(%p, \"%s\", %d, %d): %d -> %d",
+			socket, Widen(file).c_str(), line, type,
+			reinterpret_cast<UINT32*>(socket)[2],
+			reinterpret_cast<UINT32*>(socket)[2] + 1);
+	}
+	reinterpret_cast<void(*)(CUserSocket*, const char*, int, int)>(0x923F50)(
+		socket, file, line, type);
 }
 
-void CUserSocket::DecRef(const wchar_t *file, const int line)
+void __cdecl CUserSocket::DecRefWrapper(CUserSocket *socket, const char *file, int line, int type)
 {
-	reinterpret_cast<void(*)(CUserSocket*, const wchar_t*, int, int, bool)>(
-		(*reinterpret_cast<UINT64**>(this))[2])(this, file, line, 1, false);
+	if (Server::IsDebug()) {
+		CLog::Add(CLog::Blue, L"CUserSocket::DecRef(%p, \"%s\", %d, %d): %d -> %d",
+			socket, Widen(file).c_str(), line, type,
+			reinterpret_cast<UINT32*>(socket)[2],
+			reinterpret_cast<UINT32*>(socket)[2] - 1);
+	}
+	reinterpret_cast<void(*)(CUserSocket*, const char*, int, int)>(0x923F84)(
+		socket, file, line, type);
+}
+
+void CUserSocket::IncRef(const char *file, const int line)
+{
+	reinterpret_cast<void(*)(CUserSocket*, const char*, int, int)>(
+		(*reinterpret_cast<UINT64**>(this))[1])(this, file, line, 1);
+}
+
+void CUserSocket::DecRef(const char *file, const int line)
+{
+	reinterpret_cast<void(*)(CUserSocket*, const char*, int, int)>(
+		(*reinterpret_cast<UINT64**>(this))[2])(this, file, line, 1);
 }
 
 CUser* CUserSocket::GetUser()
@@ -295,9 +320,11 @@ void CUserSocket::SendSystemMessageFmt(const wchar_t *sender, const wchar_t *for
 }
 
 void CUserSocket::Close()
-{ GUARDED
+{
+	GUARDED;
 
-	status = 2;
+	//status = 2;
+	*reinterpret_cast<UINT32*>(&reinterpret_cast<char*>(this)[0x570]) = 6;
 	reinterpret_cast<void(*)(CUserSocket*)>(0x4564D8)(this);
 }
 
@@ -407,7 +434,7 @@ void __cdecl CUserSocket::CloseWrapperKick(CUserSocket *self)
 	if (user) {
 		self->user = user;
 		self->OnClose();
-		self->DecRef(__FILEW__, __LINE__);
+		self->DecRef(__FILE__, __LINE__);
 	} else {
 		self->Close();
 	}
@@ -432,18 +459,22 @@ void CUserSocket::BindUser(CUser *user)
 }
 
 void __cdecl CUserSocket::KickOfflineWrapper(CUserSocket *self)
-{ GUARDED
+{
+	GUARDED;
 
 	if (!self) {
 		return;
 	}
+	ScopedLock lock(self->ext.offlineCS);
 	CUser *user = self->ext.offlineUser;
-	self->ext.offlineUser = 0;
 	if (user) {
+		self->ext.offlineUser = 0;
 		self->user = user;
+		lock.Release();
 		self->OnClose();
-		self->DecRef(__FILEW__, __LINE__);
+		self->DecRef(__FILE__, __LINE__);
 	} else {
+		lock.Release();
 		reinterpret_cast<void(*)(CUserSocket*)>(0x456738)(self);
     }
 }

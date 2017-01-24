@@ -34,6 +34,8 @@ void CUser::Init()
 	WriteMemoryDWORD(0x5E1869, sizeof(CUser));
 	WriteInstruction(0x5E1ACA, reinterpret_cast<UINT32>(Constructor), 0xE8);
 	WriteInstruction(0x8D4340, reinterpret_cast<UINT32>(Destructor), 0xE8);
+	WriteMemoryQWORD(0xC53BC0, reinterpret_cast<UINT64>(IncRefWrapper));
+	WriteMemoryQWORD(0xC53BC8, reinterpret_cast<UINT64>(DecRefWrapper));
 	WriteMemoryQWORD(0xC54088, reinterpret_cast<UINT64>(SayWrapper));
 	WriteMemoryQWORD(0xC54128, reinterpret_cast<UINT64>(ExpIncWrapper));
 	WriteMemoryQWORD(0xC53BD8, reinterpret_cast<UINT64>(TimerExpiredWrapper));
@@ -116,6 +118,30 @@ void CUser::Init()
 	WriteInstructionCall(0x8B15F4 + 0x563, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
 
 	WriteInstructionCall(0x54033B, reinterpret_cast<UINT32>(OutOfSightWrapper), 0x540341);
+}
+
+void __cdecl CUser::IncRefWrapper(CUser *user, const char *file, int line, int type)
+{
+	if (Server::IsDebug()) {
+		CLog::Add(CLog::Blue, L"CUser::IncRef(%p, \"%s\", %d, %d): %d -> %d",
+			user, Widen(file).c_str(), line, type,
+			reinterpret_cast<UINT32*>(user)[2],
+			reinterpret_cast<UINT32*>(user)[2] + 1);
+	}
+	reinterpret_cast<void(*)(CUser*, const char*, int, int)>(0x97EB80)(
+		user, file, line, type);
+}
+
+void __cdecl CUser::DecRefWrapper(CUser *user, const char *file, int line, int type)
+{
+	if (Server::IsDebug()) {
+		CLog::Add(CLog::Blue, L"CUser::DecRef(%p, \"%s\", %d, %d): %d -> %d",
+			user, Widen(file).c_str(), line, type,
+			reinterpret_cast<UINT32*>(user)[2],
+			reinterpret_cast<UINT32*>(user)[2] - 1);
+		reinterpret_cast<void(*)(CUser*, const char*, int, int)>(0x88A340)(
+			user, file, line, type);
+	}
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -449,7 +475,13 @@ void CUser::SetVitalityPoint(const int points, const bool b)
 }
 
 void CUser::StartOfflineTrade()
-{ GUARDED
+{
+	GUARDED;
+
+	ScopedLock lock(socket->ext.offlineCS);
+	if (socket->ext.offlineUser) {
+		return;
+	}
 
 	switch (sd->storeMode) {
 	case 1:	case 3:	case 5:	case 8: break;
@@ -466,7 +498,7 @@ void CUser::StartOfflineTrade()
 	*reinterpret_cast<void**>(socket) = CUserSocket::offlineTradeVtable;
 
 	socket->ext.offlineUser = this;
-	socket->IncRef(__FILEW__, __LINE__);
+	socket->IncRef(__FILE__, __LINE__);
 	socket->Close();
 	socket->user = this;
 	socket->ext.offlineSocketHandleCopy = 0;
@@ -475,6 +507,8 @@ void CUser::StartOfflineTrade()
 	nickColor = 0x7f7f7f;
 	ResetNicknameAndColor();
 	ext.isOffline = true;
+
+	lock.Release();
 
 	{
 		ScopedLock lock(onlineOfflineTradeUsersCS);
@@ -523,10 +557,15 @@ void CUser::SendCharInfo(CUserSocket *socket, const bool b)
 			return;
 		}
 
+		ScopedLock lock(socket2->ext.offlineCS);
+		if (!socket2->ext.offlineUser) {
+			return;
+		}
 		socket2->ext.offlineUser = 0;
 		socket2->user = this;
+		lock.Release();
 		socket2->OnClose();
-		socket2->DecRef(__FILEW__, __LINE__);
+		socket2->DecRef(__FILE__, __LINE__);
 	}
 }
 

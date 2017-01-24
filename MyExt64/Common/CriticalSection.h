@@ -25,8 +25,10 @@ protected:
 public:
 	ScopedLock(CriticalSection &cs);
 	~ScopedLock();
+	void Release();
 
 protected:
 	CriticalSection &cs;
+	bool released;
 };
 
