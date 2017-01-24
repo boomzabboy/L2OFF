@@ -29,6 +29,7 @@
 #include <Server/NpcServer.h>
 #include <Server/CItem.h>
 #include <Server/CSkillAction2.h>
+#include <Server/CDB.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -122,6 +123,7 @@ void Server::Init()
 	NpcServer::Init();
 	CItem::Init();
 	CSkillAction2::Init();
+	CDB::Init();
 	HideWarnings(); // call this at last!
 }
 

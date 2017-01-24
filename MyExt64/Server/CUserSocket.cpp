@@ -62,8 +62,6 @@ void CUserSocket::Init()
 	WriteMemoryDWORD(0x93CEC1, sizeof(CUserSocket));
 	WriteInstruction(0x93CEDC, reinterpret_cast<UINT32>(Constructor), 0xE8);
 	WriteInstruction(0x92E068, reinterpret_cast<UINT32>(Destructor), 0xE8);
-	WriteMemoryQWORD(0xC746C0, reinterpret_cast<UINT64>(IncRefWrapper));
-	WriteMemoryQWORD(0xC746C8, reinterpret_cast<UINT64>(DecRefWrapper));
 	WriteMemoryQWORD(0x92EAE0, 0x8B48D38B49C28B44);
 	WriteMemoryQWORD(0x92EAE8, 0x98248489482024CB);
 	WriteInstructionCallJmpEax(0x92EF0B, reinterpret_cast<UINT32>(OutGamePacketHandlerWrapper), 0x92EF17);
@@ -233,30 +231,6 @@ CUserSocket::Ext::Ext() :
 
 CUserSocket::Ext::~Ext()
 {
-}
-
-void __cdecl CUserSocket::IncRefWrapper(CUserSocket *socket, const char *file, int line, int type)
-{
-	if (Server::IsDebug()) {
-		CLog::Add(CLog::Blue, L"CUserSocket::IncRef(%p, \"%s\", %d, %d): %d -> %d",
-			socket, Widen(file).c_str(), line, type,
-			reinterpret_cast<UINT32*>(socket)[2],
-			reinterpret_cast<UINT32*>(socket)[2] + 1);
-	}
-	reinterpret_cast<void(*)(CUserSocket*, const char*, int, int)>(0x923F50)(
-		socket, file, line, type);
-}
-
-void __cdecl CUserSocket::DecRefWrapper(CUserSocket *socket, const char *file, int line, int type)
-{
-	if (Server::IsDebug()) {
-		CLog::Add(CLog::Blue, L"CUserSocket::DecRef(%p, \"%s\", %d, %d): %d -> %d",
-			socket, Widen(file).c_str(), line, type,
-			reinterpret_cast<UINT32*>(socket)[2],
-			reinterpret_cast<UINT32*>(socket)[2] - 1);
-	}
-	reinterpret_cast<void(*)(CUserSocket*, const char*, int, int)>(0x923F84)(
-		socket, file, line, type);
 }
 
 void CUserSocket::IncRef(const char *file, const int line)

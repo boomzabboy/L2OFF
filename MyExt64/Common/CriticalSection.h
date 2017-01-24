@@ -32,3 +32,18 @@ protected:
 	bool released;
 };
 
+class Sync {
+private:
+	Sync(const Sync &other);
+	Sync& operator=(const Sync &other);
+
+public:
+	Sync();
+	~Sync();
+	bool Wait(int timeout);
+	void Signal();
+
+protected:
+	HANDLE sem;
+};
+

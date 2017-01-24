@@ -5,6 +5,7 @@
 #include <Server/CSummon.h>
 #include <Server/Server.h>
 #include <Server/CItem.h>
+#include <Server/CDB.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CLog.h>
 #include <Common/Utils.h>
@@ -34,8 +35,6 @@ void CUser::Init()
 	WriteMemoryDWORD(0x5E1869, sizeof(CUser));
 	WriteInstruction(0x5E1ACA, reinterpret_cast<UINT32>(Constructor), 0xE8);
 	WriteInstruction(0x8D4340, reinterpret_cast<UINT32>(Destructor), 0xE8);
-	WriteMemoryQWORD(0xC53BC0, reinterpret_cast<UINT64>(IncRefWrapper));
-	WriteMemoryQWORD(0xC53BC8, reinterpret_cast<UINT64>(DecRefWrapper));
 	WriteMemoryQWORD(0xC54088, reinterpret_cast<UINT64>(SayWrapper));
 	WriteMemoryQWORD(0xC54128, reinterpret_cast<UINT64>(ExpIncWrapper));
 	WriteMemoryQWORD(0xC53BD8, reinterpret_cast<UINT64>(TimerExpiredWrapper));
@@ -118,30 +117,16 @@ void CUser::Init()
 	WriteInstructionCall(0x8B15F4 + 0x563, reinterpret_cast<UINT32>(IsValidPrivateStoreItemWrapper));
 
 	WriteInstructionCall(0x54033B, reinterpret_cast<UINT32>(OutOfSightWrapper), 0x540341);
-}
 
-void __cdecl CUser::IncRefWrapper(CUser *user, const char *file, int line, int type)
-{
-	if (Server::IsDebug()) {
-		CLog::Add(CLog::Blue, L"CUser::IncRef(%p, \"%s\", %d, %d): %d -> %d",
-			user, Widen(file).c_str(), line, type,
-			reinterpret_cast<UINT32*>(user)[2],
-			reinterpret_cast<UINT32*>(user)[2] + 1);
-	}
-	reinterpret_cast<void(*)(CUser*, const char*, int, int)>(0x97EB80)(
-		user, file, line, type);
-}
-
-void __cdecl CUser::DecRefWrapper(CUser *user, const char *file, int line, int type)
-{
-	if (Server::IsDebug()) {
-		CLog::Add(CLog::Blue, L"CUser::DecRef(%p, \"%s\", %d, %d): %d -> %d",
-			user, Widen(file).c_str(), line, type,
-			reinterpret_cast<UINT32*>(user)[2],
-			reinterpret_cast<UINT32*>(user)[2] - 1);
-		reinterpret_cast<void(*)(CUser*, const char*, int, int)>(0x88A340)(
-			user, file, line, type);
-	}
+	WriteInstructionCall(0x5A71E4, reinterpret_cast<UINT32>(SetPointWrapperOnLoad));
+	WriteInstructionCall(0x5A7264 + 0x303, reinterpret_cast<UINT32>(SetPointWrapper));
+	WriteInstructionCall(0x891F90 + 0x73, reinterpret_cast<UINT32>(SetPointWrapper));
+	WriteInstructionCall(0x89C3A4 + 0xFF, reinterpret_cast<UINT32>(SetPointWrapper));
+	WriteInstructionCall(0x89C66C + 0xAC, reinterpret_cast<UINT32>(SetPointWrapper));
+	WriteInstructionCall(0x89CBC4 + 0x8D, reinterpret_cast<UINT32>(SetPointWrapper));
+	WriteInstructionCall(0x5A7264 + 0x202, reinterpret_cast<UINT32>(AddPointWrapper));
+	WriteInstructionCall(0x5A7264 + 0x2AE, reinterpret_cast<UINT32>(AddPointWrapper));
+	WriteInstructionCall(0x8A1984 + 0x122, reinterpret_cast<UINT32>(AddPointWrapper));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -236,7 +221,8 @@ CUser::Ext::Ext() :
 	isExpOff(false),
 	isPetExpOff(false),
 	isOffline(false),
-	autoloot(true)
+	autoloot(true),
+	famePointLoaded(false)
 {
 }
 
@@ -1112,6 +1098,45 @@ void CUser::OutOfSight(CObject *object, bool b)
 	}
 	reinterpret_cast<void(*)(CCreature*, CObject*, bool)>(
 		(*reinterpret_cast<UINT64**>(this))[0x82])(this, object, b);
+}
+
+void __cdecl CUser::SetPointWrapper(CUser *self, int type, int value)
+{
+	if (type == 5) {
+		ScopedLock lock(self->ext.cs);
+		if (!self->ext.famePointLoaded) {
+			CLog::Add(CLog::Red,
+				L"User [%s]: can't set fame points: not loaded yet (requesting load again)",
+				self->sd->name);
+			CDB::Instance()->RequestLoadUserPoint(self, 5);
+			return;
+		}
+	}
+	reinterpret_cast<void(*)(CUser*, int, int)>(0x891CF0)(self, type, value);
+}
+
+void __cdecl CUser::AddPointWrapper(CUser *self, int type, int value, bool b)
+{
+	if (type == 5) {
+		ScopedLock lock(self->ext.cs);
+		if (!self->ext.famePointLoaded) {
+			CLog::Add(CLog::Red,
+				L"User [%s]: can't add fame points: not loaded yet (requesting load again)",
+				self->sd->name);
+			CDB::Instance()->RequestLoadUserPoint(self, 5);
+			return;
+		}
+	}
+	reinterpret_cast<void(*)(CUser*, int, int, bool)>(0x89CBC4)(self, type, value, b);
+}
+
+void __cdecl CUser::SetPointWrapperOnLoad(CUser *self, int type, int value)
+{
+	reinterpret_cast<void(*)(CUser*, int, int)>(0x891CF0)(self, type, value);
+	if (self && type == 5) {
+		ScopedLock lock(self->ext.cs);
+		self->ext.famePointLoaded = true;
+	}
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
