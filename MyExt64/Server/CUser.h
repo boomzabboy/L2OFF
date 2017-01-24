@@ -176,6 +176,8 @@ public:
 	static void __cdecl SetPointWrapper(CUser *self, int type, int value);
 	static void __cdecl SetPointWrapperOnLoad(CUser *self, int type, int value);
 	static void __cdecl AddPointWrapper(CUser *self, int type, int value, bool b);
+	static void __cdecl SetMessage_dWrapper(void *self, int line, const wchar_t *format, int value);
+	static void __cdecl SetMessageVWrapper(void *self, int line, const wchar_t *format, ...);
 
 	static CriticalSection onlineOfflineTradeUsersCS;
 	static std::set<CUser*> onlineUsers;

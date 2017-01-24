@@ -127,6 +127,27 @@ void CUser::Init()
 	WriteInstructionCall(0x5A7264 + 0x202, reinterpret_cast<UINT32>(AddPointWrapper));
 	WriteInstructionCall(0x5A7264 + 0x2AE, reinterpret_cast<UINT32>(AddPointWrapper));
 	WriteInstructionCall(0x8A1984 + 0x122, reinterpret_cast<UINT32>(AddPointWrapper));
+
+	WriteInstructionCall(0x6B38B0 + 0x117, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B38B0 + 0x132, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B38B0 + 0x14D, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B38B0 + 0x168, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B38B0 + 0x183, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x92, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B3C28 + 0xC2, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B3C28 + 0xF2, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x122, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x152, reinterpret_cast<UINT32>(SetMessage_dWrapper));
+	WriteInstructionCall(0x6B38B0 + 0xFC, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B38B0 + 0x248, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B38B0 + 0x2A5, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x226, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x296, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x2B1, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x2E2, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x313, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x384, reinterpret_cast<UINT32>(SetMessageVWrapper));
+	WriteInstructionCall(0x6B3C28 + 0x39F, reinterpret_cast<UINT32>(SetMessageVWrapper));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -1137,6 +1158,33 @@ void __cdecl CUser::SetPointWrapperOnLoad(CUser *self, int type, int value)
 		ScopedLock lock(self->ext.cs);
 		self->ext.famePointLoaded = true;
 	}
+}
+
+void __cdecl CUser::SetMessage_dWrapper(void *self, int line, const wchar_t *format, int value)
+{
+	if (line > 4) {
+		++line;
+	}
+
+	reinterpret_cast<void(*)(void*, int, const wchar_t*, int)>(0x8624D4)(
+		self, line, format, value);
+
+	if (line == 4) {
+		{
+			ScopedLock lock(onlineOfflineTradeUsersCS);
+			value = offlineTradeUsers.size();
+		}
+		reinterpret_cast<void(*)(void*, int, const wchar_t*, int)>(0x8624D4)(
+			self, line + 1, L"User(n) Offline trade: %d", value);
+	}
+}
+
+void __cdecl CUser::SetMessageVWrapper(void *self, int line, const wchar_t *format, ...)
+{
+	if (line > 4) {
+		++line;
+	}
+	reinterpret_cast<void(*)(void*, int, const wchar_t*, ...)>(0x86258C)(self, line, format);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
