@@ -6,6 +6,8 @@
 #include <Server/Server.h>
 #include <Server/CItem.h>
 #include <Server/CDB.h>
+#include <Server/CAttackAction.h>
+#include <Server/CSkillAction2.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CLog.h>
 #include <Common/Utils.h>
@@ -1112,13 +1114,25 @@ void CUser::OutOfSight(CObject *object, bool b)
 		CCreature *creature = reinterpret_cast<CCreature*>(object);
 		if (creature->IsValidCreature()) {
 			if (targetId == creature->objectId) {
-				DoNothing();
 				ChangeTarget(0, 2);
+			}
+			void *action = GetVfn<void*(*)(void*)>(creatureController, 0xA)(creatureController);
+			if (action) {
+				if (GetVt(action) == 0xADFCC8) {
+					CAttackAction *attackAction = reinterpret_cast<CAttackAction*>(action);
+					if (attackAction->targetId == creature->objectId) {
+						DoNothing();
+					}
+				} else if (GetVt(action) == 0xB91F48) {
+					CSkillAction2 *skillAction = reinterpret_cast<CSkillAction2*>(action);
+					if (skillAction->targetId == creature->objectId) {
+						DoNothing();
+					}
+				}
 			}
 		}
 	}
-	reinterpret_cast<void(*)(CCreature*, CObject*, bool)>(
-		(*reinterpret_cast<UINT64**>(this))[0x82])(this, object, b);
+	GetVfn<void(*)(CCreature*, CObject*, bool)>(this, 0x82)(this, object, b);
 }
 
 void __cdecl CUser::SetPointWrapper(CUser *self, int type, int value)

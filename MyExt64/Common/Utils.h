@@ -97,3 +97,15 @@ std::pair<unsigned char*, size_t> ReadWholeFile(const wchar_t *filename);
 
 std::vector<std::string> Tokenize(const std::string &text);
 
+template<class T, class U>
+T GetVfn(U *object, int no)
+{
+	return reinterpret_cast<T>((*reinterpret_cast<void***>(object))[no]);
+}
+
+template<class T>
+UINT64 GetVt(T *object)
+{
+	return *reinterpret_cast<UINT64*>(object);
+}
+
