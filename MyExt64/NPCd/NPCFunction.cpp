@@ -84,6 +84,7 @@
 #include <NPCd/Functions/GlobalObject_SendUIEventNpcStr.h>
 #include <NPCd/Functions/GlobalObject_BroadCastUIEvent.h>
 #include <NPCd/Functions/GlobalObject_BroadCastUIEventNpcStr.h>
+#include <NPCd/Functions/GlobalObject_DebugLog.h>
 #include <NPCd/Functions/CIntList_SetMaxSize.h>
 #include <NPCd/Functions/CIntList_GetItemIndexNext.h>
 #include <NPCd/Functions/CIntList_RemoveAt.h>
@@ -182,6 +183,7 @@ void NPCFunction::AddFunctions()
 	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_SendUIEventNpcStr>();
 	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_BroadCastUIEvent>();
 	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_BroadCastUIEventNpcStr>();
+	AddFunction<Type::TYPE_GLOBALOBJECT, GlobalObject_DebugLog>();
 	AddFunction<Type::TYPE_INTLIST, CIntList_SetMaxSize>();
 	AddFunction<Type::TYPE_INTLIST, CIntList_GetItemIndexNext>();
 	AddFunction<Type::TYPE_INTLIST, CIntList_RemoveAt>();

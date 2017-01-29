@@ -1105,6 +1105,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_DebugLog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NPCd\Functions\GlobalObject_DebugLog.h"
+					>
+				</File>
+				<File
 					RelativePath=".\NPCd\Functions\GlobalObject_Dummy1.cpp"
 					>
 				</File>
