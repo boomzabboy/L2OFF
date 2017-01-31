@@ -21,7 +21,8 @@ Config::Config(const wchar_t *filename) :
 	autoLoot(new AutoLoot),
 	beta(new Beta),
 	custom(new Custom),
-	npcd(new Npcd)
+	npcd(new Npcd),
+	misc(new Misc)
 {
 	Reload();
 }
@@ -39,6 +40,7 @@ void Config::Reload()
 	beta->Load(this);
 	custom->Load(this);
 	npcd->Load(this);
+	misc->Load(this);
 }
 
 void Config::Server::Load(Config *config)
@@ -176,6 +178,11 @@ void Config::Npcd::Load(Config *config)
 	useSplitAI = config->GetBool(L"npcd", L"UseSplitAI", false);
 	aiBufferSizeMB = config->GetInt(L"npcd", L"AIBufferSizeMB", 512);
 	dumpSplitAI = config->GetBool(L"npcd", L"DumpSplitAI", false);
+}
+
+void Config::Misc::Load(Config *config)
+{
+	offlineTradeChangeNameColor = config->GetBool(L"misc", L"OfflineTradeChangeNameColor", true);
 }
 
 Config* Config::Instance()

@@ -162,6 +162,12 @@ public:
 		bool dumpSplitAI;
 	} *npcd;
 
+	struct Misc {
+		void Load(Config *config);
+
+		bool offlineTradeChangeNameColor;
+	} *misc;
+
 protected:
 	Config(const wchar_t *filename);
 	std::wstring GetString(const wchar_t *section, const wchar_t *name, const wchar_t *defaultValue);

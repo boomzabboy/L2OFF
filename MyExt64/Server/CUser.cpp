@@ -513,8 +513,12 @@ void CUser::StartOfflineTrade()
 	socket->ext.offlineSocketHandleCopy = 0;
 
 	acceptPM = false;
-	nickColor = 0x7f7f7f;
-	ResetNicknameAndColor();
+
+	if (Config::Instance()->misc->offlineTradeChangeNameColor) {
+		nickColor = 0x7f7f7f;
+		ResetNicknameAndColor();
+	}
+
 	ext.isOffline = true;
 
 	lock.Release();
