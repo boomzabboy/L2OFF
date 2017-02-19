@@ -55,6 +55,8 @@ public:
 	static CNPC* __cdecl Constructor(CNPC *self);
 	static CNPC* __cdecl Destructor(CNPC *self, bool isMemoryFreeUsed);
 
+	static void __cdecl SeeCreatureWrapper(CNPC *self, class CSharedCreatureData *sd);
+
 	/* 0x0000 */ void** vtable0x0000;
 	/* 0x0008 */ unsigned char padding0x0008[0x0028-0x0008];
 	/* 0x0028 */ void** vtable0x0028;

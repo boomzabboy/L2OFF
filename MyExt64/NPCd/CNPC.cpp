@@ -57,6 +57,9 @@ void CNPC::Init()
 
 	CompileTimeOffsetCheck(Ext, sm2, 0x15C0 - offsetof(CNPC, ext));
 	CompileTimeOffsetCheck(Ext, db_str_list10, 0x1930 - offsetof(CNPC, ext));
+
+	WriteInstructionCall(0x49AF48, reinterpret_cast<UINT32>(SeeCreatureWrapper));
+	WriteInstructionCall(0x49AF6C, reinterpret_cast<UINT32>(SeeCreatureWrapper));
 }
 
 void CNPC::RegisterVariable(void *obj, void *registry, const wchar_t *name, size_t offset, UINT32 fn)
@@ -188,6 +191,17 @@ void* __cdecl CNPC::UnBlockTimerFix(void *a, wchar_t *fn)
 		fn[2] = L'b';
 	}
 	return reinterpret_cast<void*(*)(void*, wchar_t*)>(0x5716EC)(a, fn);
+}
+
+void __cdecl CNPC::SeeCreatureWrapper(CNPC *self, CSharedCreatureData *sd)
+{
+	if (sd && sd->isInsidePeaceZone) {
+		switch (sd->storeMode) {
+			case 0: case 1: case 3: case 5: case 8: return;
+			default: break;
+		}
+	}
+	reinterpret_cast<void(*)(CNPC*, CSharedCreatureData*)>(0x4863A4)(self, sd);
 }
 
 CompileTimeOffsetCheck(CNPC, ext, 0x1570);

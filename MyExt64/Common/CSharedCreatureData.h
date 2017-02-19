@@ -33,7 +33,9 @@ public:
 	/* 0x07A4 */ UINT32 level;
 	/* 0x07A8 */ unsigned char padding0x07A8[0x08C8-0x07A8];
 	/* 0x08C8 */ UINT32 builder;
-	/* 0x08CC */ unsigned char padding0x08CC[0x0938-0x08CC];
+	/* 0x08CC */ unsigned char padding0x08CC[0x0930-0x08CC];
+	/* 0x0930 */ UINT32 isInsidePeaceZone;
+	/* 0x0934 */ unsigned char padding0x0934[0x0938-0x0934];
 	/* 0x0938 */ UINT32 pcPoints;
 	/* 0x093C */ unsigned char padding0x093C;
 	/* 0x093D */ unsigned char isPremiumUser;
