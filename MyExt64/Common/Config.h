@@ -152,6 +152,8 @@ public:
 		int ipBasedPremiumSystemShowTimeSkillId;
 
 		int minShopDistance;
+
+		bool dontDropPetItems;
 	} *custom;
 
 	struct Npcd {

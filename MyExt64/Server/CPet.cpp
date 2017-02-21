@@ -3,11 +3,15 @@
 #include <Server/CUser.h>
 #include <Server/NpcServer.h>
 #include <Common/Utils.h>
+#include <Common/Config.h>
 
 void CPet::Init()
 {
 	WriteMemoryQWORD(0xBCCC38, reinterpret_cast<UINT64>(OutOfSightWrapper));
 	WriteMemoryQWORD(0xBCCD98, reinterpret_cast<UINT64>(ExpIncWrapper));
+	if (Config::Instance()->custom->dontDropPetItems) {
+		NOPMemory(0x7B6079, 2);
+	}
 }
 
 INT64 __cdecl CPet::ExpIncWrapper(CPet *self, const INT64 exp, const bool b)
