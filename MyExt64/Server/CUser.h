@@ -195,7 +195,9 @@ public:
 	/* 0x3264 */ CYieldLock htmlLock;
 	/* 0x3270 */ unsigned char padding0x3270[0x3298 - 0x3270];
 	/* 0x3298 */ unsigned int olympiadStatus;
-	/* 0x329C */ unsigned char padding0x329C[0x3358 - 0x329C];
+	/* 0x329C */ unsigned char padding0x329C[0x3350 - 0x329C];
+	/* 0x3350 */ bool isCursedUser;
+	/* 0x3351 */ unsigned char padding0x3351[0x3358 - 0x3351];
 	/* 0x3358 */ class CUserSocket *socket;
 	/* 0x3360 */ UINT32 tradeId;
 	/* 0x3364 */ unsigned char padding0x3360[0x35D8 - 0x3364];

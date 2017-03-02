@@ -29,6 +29,7 @@ public:
 	bool IsValidCreature() const;
 	void DoNothing();
 	void ChangeTarget(CObject *target, int reason);
+	void UnequipWeapon();
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);
@@ -36,6 +37,7 @@ public:
 	static int __cdecl GetRemainReuseDelaySecWrapper(CCreature *self, const int skillId);
 	static bool __cdecl UseItemWrapper(CCreature *self, class CItem *item, int i);
 	static CCreature* __cdecl GetUserOrMaster(CCreature *self);
+	static void __cdecl UnequipWeaponWrapper(CCreature *self);
 
 	/* 0x0000 */ unsigned char padding0x0000[0x0018 - 0x0000];
 	/* 0x0018 */ UINT32 objectId;

@@ -33,6 +33,8 @@ void CCreature::Init()
 			"\x90\x84\x0B\x00\x00\x89\x54\x24"
 			"\x28", 33);
 	}
+
+	WriteInstructionCall(0x83B381, reinterpret_cast<UINT32>(UnequipWeaponWrapper), 0x83B387);
 }
 
 CCreature::CCreature()
@@ -225,6 +227,22 @@ void CCreature::ChangeTarget(CObject *target, int reason)
 	reinterpret_cast<void(*)(CCreature*, CObject*, int)>(
 		(*reinterpret_cast<UINT64**>(this))[0x124])(
 			this, target, reason);
+}
+
+void __cdecl CCreature::UnequipWeaponWrapper(CCreature *self)
+{
+	self->UnequipWeapon();
+}
+
+void CCreature::UnequipWeapon()
+{
+	if (IsUser()) {
+		if (reinterpret_cast<CUser*>(this)->isCursedUser) {
+			return;
+		}
+	}
+	reinterpret_cast<void(*)(CCreature*)>(
+		(*reinterpret_cast<void***>(this))[0xF0])(this);
 }
 
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);
