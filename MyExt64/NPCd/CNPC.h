@@ -56,6 +56,7 @@ public:
 	static CNPC* __cdecl Destructor(CNPC *self, bool isMemoryFreeUsed);
 
 	static void __cdecl SeeCreatureWrapper(CNPC *self, class CSharedCreatureData *sd);
+	static UINT64 __cdecl EnterWorldFixDespawnedNPCHelper(void*, const int type, const wchar_t *format, const wchar_t *file, const int line);
 
 	/* 0x0000 */ void** vtable0x0000;
 	/* 0x0008 */ unsigned char padding0x0008[0x0028-0x0008];

@@ -60,6 +60,8 @@ void CNPC::Init()
 
 	WriteInstructionCall(0x49AF48, reinterpret_cast<UINT32>(SeeCreatureWrapper));
 	WriteInstructionCall(0x49AF6C, reinterpret_cast<UINT32>(SeeCreatureWrapper));
+
+	WriteInstructionCallJmpEax(0x4AA4AB, reinterpret_cast<UINT32>(EnterWorldFixDespawnedNPCHelper));
 }
 
 void CNPC::RegisterVariable(void *obj, void *registry, const wchar_t *name, size_t offset, UINT32 fn)
@@ -202,6 +204,12 @@ void __cdecl CNPC::SeeCreatureWrapper(CNPC *self, CSharedCreatureData *sd)
 		}
 	}
 	reinterpret_cast<void(*)(CNPC*, CSharedCreatureData*)>(0x4863A4)(self, sd);
+}
+
+UINT64 __cdecl CNPC::EnterWorldFixDespawnedNPCHelper(void*, const int type, const wchar_t *format, const wchar_t *file, const int line)
+{
+	CLog::Add(type, format, file, line);
+	return 0x4AA517;
 }
 
 CompileTimeOffsetCheck(CNPC, ext, 0x1570);
