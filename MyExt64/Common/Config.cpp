@@ -172,6 +172,7 @@ void Config::Custom::Load(Config *config)
 	ipBasedPremiumSystemShowTimeSkillId = config->GetInt(L"custom", L"IPBasedPremiumSystemShowTimeSkillId", -1);
 	minShopDistance = config->GetInt(L"custom", L"MinShopDistance", -1);
 	dontDropPetItems = config->GetBool(L"custom", L"DontDropPetItems", false);
+	keepFoodInPetInventory = config->GetBool(L"custom", L"KeepFoodInPetInventory", false);
 }
 
 void Config::Npcd::Load(Config *config)

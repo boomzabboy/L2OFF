@@ -154,6 +154,7 @@ public:
 		int minShopDistance;
 
 		bool dontDropPetItems;
+		bool keepFoodInPetInventory;
 	} *custom;
 
 	struct Npcd {
