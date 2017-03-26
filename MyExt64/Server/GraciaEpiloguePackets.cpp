@@ -49,6 +49,14 @@ void GraciaEpilogue::InitPackets()
 	WriteInstructionCall(0x93AB74, reinterpret_cast<UINT32>(SendLogoutWrapper));
 	WriteMemoryBYTES(0x7AF4AC, "\x4D\x89\xE8\x49\x8B\xCC", 6);
 	WriteInstructionCall(0x7AF4B9, reinterpret_cast<UINT32>(SendPetStatusUpdateWrapper), 0x7AF4BF);
+
+	WriteMemoryBYTE(0x7B5154, 0x52); // push rdx - we don't care about rcx, r8 or r9, but rdx must be preserved
+	WriteInstructionCall(0x7B5155, reinterpret_cast<UINT32>(SendSummonInfoHelper1));
+	WriteMemoryBYTE(0x7B515A, 0x5A); // pop rdx
+
+	WriteMemoryBYTE(0x7B5146, 0x52); // push rdx - we don't care about rcx, r8 or r9, but rdx must be preserved
+	WriteInstructionCall(0x7B5147, reinterpret_cast<UINT32>(SendSummonInfoHelper2));
+	WriteMemoryBYTE(0x7B514C, 0x5A); // pop rdx
 }
 
 int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem1(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
@@ -238,4 +246,31 @@ void __cdecl GraciaEpilogue::SendPetStatusUpdateWrapper(CUserSocket *socket, con
 		}
 	}
 	socket->Send(format, 0xB6, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
+}
+
+INT32 __cdecl GraciaEpilogue::SendSummonInfoHelper1(UINT64&, UINT64&, CSharedCreatureData *sd)
+{
+	if (sd->foodMax) {
+		return sd->food;
+	}
+	UINT32 expireTime = sd->summonTime + sd->maxTime;
+	UINT32 now = GetTickCount();
+	UINT32 ret = 0;
+	if (now <= expireTime) {
+		ret = expireTime - now;
+	}
+	if (ret > sd->maxTime) {
+		return sd->maxTime;
+	} else {
+		return ret;
+	}
+}
+
+INT32 __cdecl GraciaEpilogue::SendSummonInfoHelper2(UINT64&, UINT64&, CSharedCreatureData *sd)
+{
+	if (sd->foodMax) {
+		return sd->foodMax;
+	} else {
+		return sd->maxTime;
+	}
 }

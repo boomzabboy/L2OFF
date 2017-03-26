@@ -34,6 +34,8 @@ public:
 	static void __cdecl SendSystemMessageLogoutWrapper(CUserSocket *socket, unsigned int id);
 	static void __cdecl SendLogoutWrapper(class CUser *user);
 	static void __cdecl SendPetStatusUpdateWrapper(CUserSocket *socket, const char *format, class CCreature *pet, UINT32 a, UINT32 b, UINT32 c, UINT32 d, UINT32 e, const wchar_t *f, UINT32 g, UINT32 h, UINT32 i, UINT32 j, UINT32 k, UINT32 l, UINT32 m, UINT64 n, UINT64 o, UINT64 p);
+	static INT32 __cdecl SendSummonInfoHelper1(UINT64&, UINT64&, class CSharedCreatureData *sd);
+	static INT32 __cdecl SendSummonInfoHelper2(UINT64&, UINT64&, class CSharedCreatureData *sd);
 
 	// buy/sell
 	static void InitBuySell();
