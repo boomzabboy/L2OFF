@@ -225,6 +225,8 @@ void Server::HideWarnings()
 	NOPMemory(0x5EA1E2, 5);
 	NOPMemory(0x6D323A, 5);
 	NOPMemory(0x92DFEA, 5);
+	NOPMemory(0x6BAC72, 5);
+	NOPMemory(0x7B9195, 5);
 }
 
 void Server::OnLoadEnd(UINT64 classBase)
