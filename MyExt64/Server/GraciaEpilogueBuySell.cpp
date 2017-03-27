@@ -5,6 +5,7 @@
 #include <Common/CLog.h>
 #include <Common/CYieldLock.h>
 #include <Common/CSharedCreatureData.h>
+#include <Common/SmartPtr.h>
 
 void GraciaEpilogue::InitBuySell()
 {
@@ -96,28 +97,6 @@ int __cdecl GraciaEpilogue::AssembleBuySellListItem(char *buffer, int maxSize, c
 	return Assemble(buffer, maxSize, "hddQhhdhhhQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, 0, 0, 0);
 }
 
-namespace {
-CUserSocket *UserSocketFromBuySell(UINT32 a)
-{ GUARDED
-
-	void *ret;
-	reinterpret_cast<void*(*)(void*,void**,UINT32)>(0x448F14)(
-		reinterpret_cast<void*>(0x10DE4580),
-		&ret,
-		a);
-	if (!ret) {
-		return 0;
-	}
-	ret = reinterpret_cast<void*(*)(void*)>(
-		*reinterpret_cast<void**>(reinterpret_cast<char*>(*reinterpret_cast<void**>(ret)) + 0x1E0))(ret);
-	if (!ret) {
-		return 0;
-	}
-	ret = reinterpret_cast<void*(*)(void*)>(
-		*reinterpret_cast<void**>(reinterpret_cast<char*>(*reinterpret_cast<void**>(ret)) + 0xAD0))(ret);
-	return reinterpret_cast<CUserSocket*>(ret);
-}
-
 bool IsEconomySell(void *economy)
 {
 	bool ret = __RTtypeid(economy) == reinterpret_cast<std::type_info*>(0xE588D8);
@@ -130,27 +109,26 @@ bool IsEconomyBuy(void *economy)
 	return ret;
 }
 
-}
-
 bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYTE *packet)
-{ GUARDED
+{
+	GUARDED;
 
 	typedef bool (__cdecl *t)(void*, const BYTE*);
 
-	CUserSocket *userSocket = UserSocketFromBuySell(*reinterpret_cast<const UINT32*>(packet));
-	if (!userSocket) {
+	SmartPtr<CUser> user(*reinterpret_cast<const UINT32*>(packet));
+	if (!user || !user->IsUser()) {
 		return false;
 	}
 
-	CUser *user = userSocket->user;
-	if (!user) {
+	CUserSocket *userSocket = user->socket;
+	if (!userSocket) {
 		return false;
 	}
 
 	if (packet[-1] == 0x9) { // buy
 		user->sdLock->Enter(__FILEW__, __LINE__);
 		if (user->economy && !IsEconomySell(user->economy)) {
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return false;
 		}
@@ -163,7 +141,7 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 
 		if (reinterpret_cast<t>(0x746318)(npcSocket, packet)) {
 			user->sdLock->Enter(__FILEW__, __LINE__);
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return true;
 		}
@@ -171,13 +149,13 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 		user->sdLock->Enter(__FILEW__, __LINE__);
 
 		if (user->ext.buySell.economy2 && !IsEconomySell(user->ext.buySell.economy2)) {
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return false;
 		}
 
 		if (!user->economy || !IsEconomyBuy(user->economy)) {
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return false;
 		}
@@ -223,7 +201,7 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 	} else {
 		user->sdLock->Enter(__FILEW__, __LINE__);
 		if (user->ext.buySell.economy2 && !IsEconomyBuy(user->ext.buySell.economy2)) {
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return false;
 		}
@@ -232,7 +210,7 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 
 		if (reinterpret_cast<t>(0x747184)(npcSocket, packet)) {
 			user->sdLock->Enter(__FILEW__, __LINE__);
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return true;
 		}
@@ -255,13 +233,13 @@ bool __cdecl GraciaEpilogue::NpcShowBuySellPagePacket(void *npcSocket, const BYT
 		}
 
 		if (user->ext.buySell.economy2 && !IsEconomyBuy(user->ext.buySell.economy2)) {
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return false;
 		}
 
 		if (!user->economy || !IsEconomySell(user->economy)) {
-			CUserReleaseEconomy(user);
+			CUserReleaseEconomy(&*user);
 			user->sdLock->Leave(__FILEW__, __LINE__);
 			return false;
 		}

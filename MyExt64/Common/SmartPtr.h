@@ -13,13 +13,21 @@ public:
 	{
 	}
 
-	__forceinline SmartPtr(T *obj, int type = 0) :
+	__forceinline SmartPtr(T *obj, int type) :
 		obj(obj),
 		type(type)
 	{
 		if (obj) {
 			IncRef(__FILE__, __LINE__);
 		}
+	}
+
+	SmartPtr(UINT32 objectId)
+	{
+		reinterpret_cast<void*(*)(void*,SmartPtr*,UINT32)>(0x448F14)(
+			reinterpret_cast<void*>(0x10DE4580),
+			this,
+			objectId);
 	}
 
 	__forceinline SmartPtr(const SmartPtr &other) :
@@ -63,9 +71,9 @@ public:
 		}
 	}
 
-	T* operator*()
+	T& operator*()
 	{
-		return obj;
+		return *obj;
 	}
 
 	T* operator->()
