@@ -50,13 +50,31 @@ void GraciaEpilogue::InitPackets()
 	WriteMemoryBYTES(0x7AF4AC, "\x4D\x89\xE8\x49\x8B\xCC", 6);
 	WriteInstructionCall(0x7AF4B9, reinterpret_cast<UINT32>(SendPetStatusUpdateWrapper), 0x7AF4BF);
 
-	WriteMemoryBYTE(0x7B5154, 0x52); // push rdx - we don't care about rcx, r8 or r9, but rdx must be preserved
-	WriteInstructionCall(0x7B5155, reinterpret_cast<UINT32>(SendSummonInfoHelper1));
-	WriteMemoryBYTE(0x7B515A, 0x5A); // pop rdx
+	static const char *SendSummonInfoHelper1Call =
+		"\x51"				// push rcx
+		"\x52"				// push rdx
+		"\x4C\x89\xC1"		// mov rcx, r8
+		"....."				// call function
+		"\x5A"				// pop rdx
+		"\x59"				// pop rcx
+		"\xC3"				// ret
+		":SendSummonInfoHelper1Call";	// distinguish from the other function (otherwise compiler would join them to one string)
+	WriteInstructionCall(reinterpret_cast<UINT32>(SendSummonInfoHelper1Call + 5), reinterpret_cast<UINT32>(SendSummonInfoHelper1));
+	MakeExecutable(reinterpret_cast<UINT32>(SendSummonInfoHelper1Call), 13);
+	WriteInstructionCall(0x7B5154, reinterpret_cast<UINT32>(SendSummonInfoHelper1Call), 0x7B515B);
 
-	WriteMemoryBYTE(0x7B5146, 0x52); // push rdx - we don't care about rcx, r8 or r9, but rdx must be preserved
-	WriteInstructionCall(0x7B5147, reinterpret_cast<UINT32>(SendSummonInfoHelper2));
-	WriteMemoryBYTE(0x7B514C, 0x5A); // pop rdx
+	static const char *SendSummonInfoHelper2Call =
+		"\x51"				// push rcx
+		"\x52"				// push rdx
+		"\x4C\x89\xC1"		// mov rcx, r8
+		"....."				// call function
+		"\x5A"				// pop rdx
+		"\x59"				// pop rcx
+		"\xC3"				// ret
+		":SendSummonInfoHelper2Call";	// distinguish from the other function (otherwise compiler would join them to one string)
+	WriteInstructionCall(reinterpret_cast<UINT32>(SendSummonInfoHelper2Call + 5), reinterpret_cast<UINT32>(SendSummonInfoHelper2));
+	MakeExecutable(reinterpret_cast<UINT32>(SendSummonInfoHelper2Call), 13);
+	WriteInstructionCall(0x7B5146, reinterpret_cast<UINT32>(SendSummonInfoHelper2Call), 0x7B514D);
 }
 
 int __cdecl GraciaEpilogue::AssembleInventoryUpdateItem1(char *buffer, int maxSize, const char *format, UINT32 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT16 g, UINT32 h, UINT64 i, UINT16 j, UINT16 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q)
@@ -248,7 +266,7 @@ void __cdecl GraciaEpilogue::SendPetStatusUpdateWrapper(CUserSocket *socket, con
 	socket->Send(format, 0xB6, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
 }
 
-INT32 __cdecl GraciaEpilogue::SendSummonInfoHelper1(UINT64&, UINT64&, CSharedCreatureData *sd)
+INT32 __cdecl GraciaEpilogue::SendSummonInfoHelper1(CSharedCreatureData *sd)
 {
 	if (sd->foodMax) {
 		return sd->food;
@@ -266,7 +284,7 @@ INT32 __cdecl GraciaEpilogue::SendSummonInfoHelper1(UINT64&, UINT64&, CSharedCre
 	}
 }
 
-INT32 __cdecl GraciaEpilogue::SendSummonInfoHelper2(UINT64&, UINT64&, CSharedCreatureData *sd)
+INT32 __cdecl GraciaEpilogue::SendSummonInfoHelper2(CSharedCreatureData *sd)
 {
 	if (sd->foodMax) {
 		return sd->foodMax;
