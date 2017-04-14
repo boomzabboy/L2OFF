@@ -108,6 +108,13 @@ public:
 		bool famePointLoaded;
 	};
 
+	class CKillPVPPointChecker {
+	public:
+		bool canGivePoints;
+		int pointsGiven;
+		int time;
+	};
+
 	UINT64 GetItemCount(UINT32 itemId);
 	bool TakeItem(UINT32 itemId, UINT64 count);
 	void Say(const wchar_t *message);
@@ -209,7 +216,9 @@ public:
 	/* 0x3830 */ std::map<UINT32, InZoneRestriction> inZoneRestrictionMap2;
 	/* 0x3848 */ unsigned char padding0x3848[0x38B0 - 0x3848];
 	/* 0x38B0 */ unsigned int isVitalityReplenishing;
-	/* 0x38B4 */ unsigned char padding0x38B4[0x3A10 - 0x38B4];
+	/* 0x38B4 */ unsigned char padding0x38B4[0x3914 - 0x38B4];
+	/* 0x3914 */ CKillPVPPointChecker killPVPPointChecker;
+	/* 0x3920 */ unsigned char padding0x3920[0x3A10 - 0x3920];
 
 	/* EXT DATA BEGIN AT 0x3A10 */
 	/* 0x3A10 */ Ext ext;
