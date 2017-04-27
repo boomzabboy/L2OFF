@@ -1102,6 +1102,14 @@ bool CUser::IsValidPrivateStoreItem(INT64 count, INT64 price, CItem *item)
 	if (!item->IsTradeable(this)) {
 		return false;
 	}
+	if (!item->worldInfo || item->worldInfo->consumeType != 2) {
+		return true;
+	}
+	if (GetItemCount(item->itemId) != item->worldInfo->count) {
+		CLog::Add(CLog::Red, L"User [%s] trying to put multiple item [%d] stacks into private store",
+			GetName(), item->itemId);
+		return false;
+	}
 	return true;
 }
 

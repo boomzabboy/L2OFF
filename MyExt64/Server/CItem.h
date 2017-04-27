@@ -19,6 +19,10 @@ public:
 		/* 0x0050 */ bool pickable;
 		/* 0x0051 */ unsigned char padding0x0051[0x0068 - 0x0051];
 		/* 0x0068 */ UINT64 count;
+		/* 0x0070 */ unsigned char padding0x0070[0x007C - 0x0070];
+		/* 0x007C */ UINT32 itemType;
+		/* 0x0080 */ unsigned char padding0x0080[0x0088 - 0x0080];
+		/* 0x0088 */ UINT32 consumeType;
 	};
 
 	class ItemInfo {

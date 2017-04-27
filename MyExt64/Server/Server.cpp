@@ -30,6 +30,7 @@
 #include <Server/CItem.h>
 #include <Server/CSkillAction2.h>
 #include <Server/CDB.h>
+#include <Server/CInventory.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -124,6 +125,7 @@ void Server::Init()
 	CItem::Init();
 	CSkillAction2::Init();
 	CDB::Init();
+	CInventory::Init();
 	HideWarnings(); // call this at last!
 }
 

@@ -1238,6 +1238,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CInventory.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CInventory.h"
 				>
 			</File>
