@@ -9,6 +9,7 @@ public:
 
 	static class CItem* GetByServerIDIgnoreMoreStacks(CInventory *self, int id);
 	static INT64 GetAdenaAmountWrapper(CInventory *self);
+	static class CItem* GetFirstItemByClassIDIgnoreMoreStacks(CInventory *self, int classId, bool b);
 
 	INT64 GetAdenaAmount();
 
