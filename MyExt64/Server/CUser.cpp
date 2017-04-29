@@ -839,7 +839,7 @@ bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchan
 	if (!this) {
 		return false;
 	}
-	if (quantity >= 2 * 1024 * 1024 * 1024) {
+	if (quantity >= 0xFFFFFFFFll) {
 		return false;
 	}
 	CCreature *target = GetTarget();
