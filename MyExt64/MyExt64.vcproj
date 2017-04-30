@@ -1222,6 +1222,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CFieldCycle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CFieldCycle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CHTMLCacheManager.cpp"
 				>
 			</File>

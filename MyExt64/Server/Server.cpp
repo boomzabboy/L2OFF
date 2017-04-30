@@ -31,6 +31,7 @@
 #include <Server/CSkillAction2.h>
 #include <Server/CDB.h>
 #include <Server/CInventory.h>
+#include <Server/CFieldCycle.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -126,6 +127,7 @@ void Server::Init()
 	CSkillAction2::Init();
 	CDB::Init();
 	CInventory::Init();
+	CFieldCycle::Init();
 	HideWarnings(); // call this at last!
 }
 
