@@ -639,7 +639,7 @@ UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const
 			CLog::Debug(CLog::Blue, L"OutGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: 1", opcode, opcodeRemapped);
 			return 0x92F0BD;
 		}
-		CLog::Debug(CLog::Blue, L"InGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: 0", opcode, opcodeRemapped);
+		CLog::Debug(CLog::Blue, L"OutGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: 0", opcode, opcodeRemapped);
 	} catch (const CUserSocket::IgnorePacket &e) {
 		CLog::Debug(CLog::Blue, L"OutGamePacketHandlerWrapper: opcode=%d opcodeRemapped=%d: ignore", opcode, opcodeRemapped);
 	}
@@ -649,6 +649,30 @@ UINT64 __cdecl CUserSocket::OutGamePacketHandlerWrapper(CUserSocket *self, const
 UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const BYTE *packet, BYTE opcode)
 {
 	GUARDED;
+
+	if (opcode != 0xD0) {
+		if (!self->user) {
+			CLog::Debug(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called without user", opcode);
+			return 0x92F08A;
+		}
+		if (!self->user->sd) {
+			CLog::Debug(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called with user without SD", opcode);
+			return 0x92F08A;
+		}
+		switch (opcode) {
+		case 0x12: // RequestGameStart again - ignore
+			return 0x92EE48;
+		case 0x11: // RequestEnterWorld
+		case 0xB1: // NetPing
+			break;
+		default:
+			if (!self->user->ext.guard.hasEnteredWorld) {
+				CLog::Debug(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called with user outside the world", opcode);
+				return 0x92F08A;
+			}
+			break;
+		}
+	}
 
 	BYTE opcodeRemapped = opcode;
 
@@ -666,7 +690,27 @@ UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const 
 
 bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const BYTE* packet, WORD opcodeEx)
 {
-	GUARDED
+	GUARDED;
+
+	if (!self->user) {
+		CLog::Debug(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called without user", opcodeEx);
+		return true;
+	}
+	if (!self->user->sd) {
+		CLog::Debug(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user without SD", opcodeEx);
+		return true;
+	}
+	switch (opcodeEx) {
+	case 0x01: // RequestManorList
+	case 0x21: // RequestKeyMapping
+		break;
+	default:
+		if (!self->user->ext.guard.hasEnteredWorld) {
+			CLog::Debug(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user outside the world", opcodeEx);
+			return true;
+		}
+		break;
+	}
 
 	if (opcodeEx > maxOpcodeEx) {
 		CLog::Debug(CLog::Blue, L"InGamePacketExHandlerWrapper: opcodeEx=%d > maxOpcodeEx=%d", opcodeEx, maxOpcodeEx);

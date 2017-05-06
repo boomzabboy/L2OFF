@@ -611,6 +611,7 @@ void CUser::EnterWorld()
 void __cdecl CUser::LeaveWorldWrapper(CUser *self)
 {
 	self->LeaveWorld();
+	self->ext.guard.hasEnteredWorld = false;
 }
 
 void CUser::LeaveWorld()
