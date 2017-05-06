@@ -236,6 +236,18 @@ size_t Guard::off1 = 0;
 size_t Guard::off2 = 0;
 size_t Guard::off3 = 0;
 
+bool Guard::WasCalled(const wchar_t *namePtr)
+{
+	if (!off1 || !off2 || !off3) return false;
+	UINT32 threadIndex = GetThreadIndex();
+	for (size_t i = 0 ; i < reinterpret_cast<UINT32*>(off3)[threadIndex] ; ++i) {
+		if (reinterpret_cast<const wchar_t**>(off2)[threadIndex * 1000 + i] == namePtr) {
+			return true;
+		}
+	}
+	return false;
+}
+
 std::pair<unsigned char*, size_t> ReadWholeFile(const wchar_t *filename)
 {
 	HANDLE h = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);

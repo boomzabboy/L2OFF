@@ -69,6 +69,8 @@ public:
 		--reinterpret_cast<UINT32*>(off3)[threadIndex];
 	}
 
+	static bool WasCalled(const wchar_t *namePtr);
+
 	static size_t off1;
 	static size_t off2;
 	static size_t off3;

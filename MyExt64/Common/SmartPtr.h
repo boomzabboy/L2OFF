@@ -24,10 +24,7 @@ public:
 
 	SmartPtr(UINT32 objectId)
 	{
-		reinterpret_cast<void*(*)(void*,SmartPtr*,UINT32)>(0x448F14)(
-			reinterpret_cast<void*>(0x10DE4580),
-			this,
-			objectId);
+		GetObject(objectId);
 	}
 
 	__forceinline SmartPtr(const SmartPtr &other) :
@@ -69,6 +66,15 @@ public:
 		if (obj) {
 			IncRef(__FILE__, __LINE__);
 		}
+	}
+
+	T* GetObject(UINT32 objectId)
+	{
+		reinterpret_cast<void*(*)(void*,SmartPtr*,UINT32)>(0x448F14)(
+			reinterpret_cast<void*>(0x10DE4580),
+			this,
+			objectId);
+		return obj;
 	}
 
 	T& operator*()

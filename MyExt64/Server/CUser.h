@@ -6,6 +6,7 @@
 #include <Server/CShortCut.h>
 #include <Common/CriticalSection.h>
 #include <Common/CYieldLock.h>
+#include <Common/SmartPtr.h>
 #include <string>
 #include <set>
 #include <map>
@@ -185,6 +186,7 @@ public:
 	static void __cdecl AddPointWrapper(CUser *self, int type, int value, bool b);
 	static void __cdecl SetMessage_dWrapper(void *self, int line, const wchar_t *format, int value);
 	static void __cdecl SetMessageVWrapper(void *self, int line, const wchar_t *format, ...);
+	static void __cdecl GetObjectTradeFix(void*, SmartPtr<CCreature> *ptr, UINT32 objectId);
 
 	static CriticalSection onlineOfflineTradeUsersCS;
 	static std::set<CUser*> onlineUsers;

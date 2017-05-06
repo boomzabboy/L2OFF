@@ -65,21 +65,25 @@ wchar_t* CCreature::GetName()
 
 bool CCreature::IsBoss() const
 {
+	if (!this) return false;
 	return reinterpret_cast<const UINT64*>(this)[0] == 0xA72FB8;
 }
 
 bool CCreature::IsUser() const
 {
+	if (!this) return false;
 	return reinterpret_cast<const UINT64*>(this)[0] == 0xC53BB8;
 }
 
 bool CCreature::IsPet() const
 {
+	if (!this) return false;
 	return reinterpret_cast<const UINT64*>(this)[0] == 0xBCC828;
 }
 
 bool CCreature::IsSummon() const
 {
+	if (!this) return false;
 	return reinterpret_cast<const UINT64*>(this)[0] == 0xBCB0F8 || IsPet();
 }
 

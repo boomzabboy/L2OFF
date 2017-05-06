@@ -13,6 +13,7 @@
 #include <Common/Utils.h>
 #include <Common/Config.h>
 #include <Common/Enum.h>
+#include <Common/SmartPtr.h>
 #include <new>
 #include <sstream>
 #include <fstream>
@@ -151,6 +152,8 @@ void CUser::Init()
 	WriteInstructionCall(0x6B3C28 + 0x313, reinterpret_cast<UINT32>(SetMessageVWrapper));
 	WriteInstructionCall(0x6B3C28 + 0x384, reinterpret_cast<UINT32>(SetMessageVWrapper));
 	WriteInstructionCall(0x6B3C28 + 0x39F, reinterpret_cast<UINT32>(SetMessageVWrapper));
+
+	WriteInstructionCall(0x68DF4A, reinterpret_cast<UINT32>(GetObjectTradeFix));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -1223,6 +1226,20 @@ void __cdecl CUser::SetMessageVWrapper(void *self, int line, const wchar_t *form
 		++line;
 	}
 	reinterpret_cast<void(*)(void*, int, const wchar_t*, ...)>(0x86258C)(self, line, format);
+}
+
+void __cdecl CUser::GetObjectTradeFix(void*, SmartPtr<CCreature> *ptr, UINT32 objectId)
+{
+	CCreature *creature = ptr->GetObject(objectId);
+	if (!creature->IsUser()) return;
+	CUser *user = reinterpret_cast<CUser*>(creature);
+	if (Guard::WasCalled(reinterpret_cast<wchar_t*>(0xC36040))) return; // "bool __cdecl CTrade::Canceled(class User *)"
+	if (!user->IsNowTrade()) return;
+	if (Guard::WasCalled(reinterpret_cast<wchar_t*>(0xB143A0))) return; // "bool __cdecl DBPacketHandler::ReplyTrade(class CDBSocket *,const unsigned char *)"
+	if (Guard::WasCalled(reinterpret_cast<wchar_t*>(0xB16E20))) return; // "bool __cdecl ManipulateItemPacket(class CDBSocket *,const unsigned char *)>"
+	if (Guard::WasCalled(reinterpret_cast<wchar_t*>(0xC36140))) return; // "int __cdecl CTrade::AddItems(const unsigned char *,unsigned int)"
+	if (Guard::WasCalled(reinterpret_cast<wchar_t*>(0xC5A500))) return; // "void __cdecl User::DecreaseEquippedItemDurationOnTimerExpired(void)"
+	user->TradeCancel();
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
