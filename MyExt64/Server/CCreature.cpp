@@ -245,6 +245,12 @@ void CCreature::UnequipWeapon()
 		(*reinterpret_cast<void***>(this))[0xF0])(this);
 }
 
+bool CCreature::UnequipItem(SlotType slotType)
+{
+	return reinterpret_cast<bool(*)(CCreature*, SlotType)>(
+		(*reinterpret_cast<void***>(this))[0xEF])(this, slotType);
+}
+
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);
 CompileTimeOffsetCheck(CCreature, padding0x1464, 0x1464);
 

@@ -12,6 +12,7 @@
 #include <Common/CLog.h>
 #include <Common/Utils.h>
 #include <Common/Config.h>
+#include <Common/Enum.h>
 #include <new>
 #include <sstream>
 #include <fstream>
@@ -873,6 +874,13 @@ void CUser::TimerExpired(int id)
 {
 	reinterpret_cast<void(*)(CUser*, int)>(0x8BE4C8)(this, id);
 	ProcessPremium();
+	if (!cloakSlotUnlocked) {
+		if (UnequipItem(SlotTypeBack)) {
+			if (socket) {
+				socket->SendSystemMessage(2451);
+			}
+		}
+	}
 }
 
 int __cdecl CUser::GetPremiumLevelWrapper(CUser *self)

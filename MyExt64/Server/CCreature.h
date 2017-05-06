@@ -30,6 +30,7 @@ public:
 	void DoNothing();
 	void ChangeTarget(CObject *target, int reason);
 	void UnequipWeapon();
+	bool UnequipItem(enum SlotType slotType);
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);
@@ -46,7 +47,9 @@ public:
 	/* 0x0A98 */ unsigned char padding0x0A98[0x0AA0 - 0x0A98];
 	/* 0x0AA0 */ class CYieldLock *sdLock;
 	/* 0x0AA8 */ CInventory inventory;
-	/* 0x0B78 */ unsigned char padding0x0B78[0x1210 - 0x0B78];
+	/* 0x0B78 */ unsigned char padding0x0B78[0x11E8 - 0x0B78];
+	/* 0x11E8 */ bool cloakSlotUnlocked;
+	/* 0x11E9 */ unsigned char padding0x11E9[0x1210 - 0x11E9];
 	/* 0x1210 */ bool hide;
 	/* 0x1211 */ unsigned char padding0x1211[0x1460 - 0x1211];
 	/* 0x1460 */ UINT32 targetId;

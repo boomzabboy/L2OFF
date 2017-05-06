@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\Enum.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\SmartPtr.h"
 				>
 			</File>
