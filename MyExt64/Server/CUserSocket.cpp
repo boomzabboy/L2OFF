@@ -703,6 +703,9 @@ bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const 
 	switch (opcodeEx) {
 	case 0x01: // RequestManorList
 	case 0x21: // RequestKeyMapping
+	case 0x3C: // RequestAllCastleInfo
+	case 0x3D: // RequestAllFortressInfo
+	case 0x3E: // RequestAllAgitInfo
 		break;
 	default:
 		if (!self->user->ext.guard.hasEnteredWorld) {
