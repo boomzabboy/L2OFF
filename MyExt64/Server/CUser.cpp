@@ -854,7 +854,7 @@ bool CUser::MultiSellChoose(int listId, int entryId, UINT64 quantity, int enchan
 			ext.guard.lastMultisellListId);
 		return false;
 	}
-	if (!ext.guard.allowedMultisellIds.count(listId)) {
+	if (Config::Instance()->fixes->multisellFiltering && !ext.guard.allowedMultisellIds.count(listId)) {
 		CLog::Add(CLog::Red, L"User [%s] tried to buy from multisell %d (not allowed)", GetName(), listId);
 		return false;
 	}

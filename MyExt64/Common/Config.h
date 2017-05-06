@@ -66,6 +66,7 @@ public:
 		bool fixSpiritshotLag;
 		bool forceMonthlyOlympiad;
 		bool territoryWarPetFix;
+		bool multisellFiltering;
 	} *fixes;
 
 	struct Rate {

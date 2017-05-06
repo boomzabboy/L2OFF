@@ -94,6 +94,7 @@ void Config::Fixes::Load(Config *config)
 	fixSpiritshotLag = config->GetBool(L"fixes", L"FixSpiritshotLag", false);
 	forceMonthlyOlympiad = config->GetBool(L"fixes", L"ForceMonthlyOlympiad", false);
 	territoryWarPetFix = config->GetBool(L"fixes", L"TerritoryWarPetFix", true);
+	multisellFiltering = config->GetBool(L"fixes", L"MultisellFiltering", true);
 }
 
 void Config::Rate::Load(Config *config)
