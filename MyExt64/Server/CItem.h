@@ -29,6 +29,8 @@ public:
 	public:
 		/* 0x0000 */ unsigned char padding0x0000[0x0008 - 0x0000];
 		/* 0x0008 */ UINT32 someType;
+		/* 0x000C */ unsigned char padding0x000C[0x0108 - 0x000C];
+		/* 0x0108 */ UINT32 dropPeriod;
 	};
 
 	static void Init();
