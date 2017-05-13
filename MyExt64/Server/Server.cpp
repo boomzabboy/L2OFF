@@ -32,6 +32,7 @@
 #include <Server/CDB.h>
 #include <Server/CInventory.h>
 #include <Server/CFieldCycle.h>
+#include <Server/CTrade.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -128,6 +129,7 @@ void Server::Init()
 	CDB::Init();
 	CInventory::Init();
 	CFieldCycle::Init();
+	CTrade::Init();
 	HideWarnings(); // call this at last!
 }
 
