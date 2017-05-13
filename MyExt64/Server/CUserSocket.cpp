@@ -652,11 +652,11 @@ UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const 
 
 	if (opcode != 0xD0) {
 		if (!self->user) {
-			CLog::Debug(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called without user", opcode);
+			CLog::Add(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called without user", opcode);
 			return 0x92F08A;
 		}
 		if (!self->user->sd) {
-			CLog::Debug(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called with user without SD", opcode);
+			CLog::Add(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called with user without SD", opcode);
 			return 0x92F08A;
 		}
 		switch (opcode) {
@@ -667,7 +667,7 @@ UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const 
 			break;
 		default:
 			if (!self->user->ext.guard.hasEnteredWorld) {
-				CLog::Debug(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called with user outside the world", opcode);
+				CLog::Add(CLog::Red, L"InGamePacketHandlerWrapper: opcode=%d called with user outside the world", opcode);
 				return 0x92F08A;
 			}
 			break;
@@ -693,11 +693,11 @@ bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const 
 	GUARDED;
 
 	if (!self->user) {
-		CLog::Debug(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called without user", opcodeEx);
+		CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called without user", opcodeEx);
 		return true;
 	}
 	if (!self->user->sd) {
-		CLog::Debug(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user without SD", opcodeEx);
+		CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user without SD", opcodeEx);
 		return true;
 	}
 	switch (opcodeEx) {
@@ -709,7 +709,7 @@ bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const 
 		break;
 	default:
 		if (!self->user->ext.guard.hasEnteredWorld) {
-			CLog::Debug(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user outside the world", opcodeEx);
+			CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user outside the world", opcodeEx);
 			return true;
 		}
 		break;
