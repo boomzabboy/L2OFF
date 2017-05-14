@@ -693,28 +693,39 @@ bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const 
 	GUARDED;
 
 	if (!self->user) {
-		CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called without user", opcodeEx);
-		return true;
-	}
-	if (!self->user->sd) {
-		CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user without SD", opcodeEx);
-		return true;
-	}
-	switch (opcodeEx) {
-	case 0x01: // RequestManorList
-	case 0x21: // RequestKeyMapping
-	case 0x3C: // RequestAllCastleInfo
-	case 0x3D: // RequestAllFortressInfo
-	case 0x3E: // RequestAllAgitInfo
-		break;
-	case 0x81:
-		return false;
-	default:
-		if (!self->user->ext.guard.hasEnteredWorld) {
-			CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user outside the world", opcodeEx);
+		switch (opcodeEx) {
+		case 0x01: // RequestManorList
+		case 0x3C: // RequestAllCastleInfo
+		case 0x3D: // RequestAllFortressInfo
+		case 0x3E: // RequestAllAgitInfo
+		case 0x36: // called when new character is created
+			break;
+		default:
+			CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called without user", opcodeEx);
 			return true;
 		}
-		break;
+	}
+	if (self->user) {
+		if (!self->user->sd) {
+			CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user without SD", opcodeEx);
+			return true;
+		}
+		switch (opcodeEx) {
+		case 0x01: // RequestManorList
+		case 0x21: // RequestKeyMapping
+		case 0x3C: // RequestAllCastleInfo
+		case 0x3D: // RequestAllFortressInfo
+		case 0x3E: // RequestAllAgitInfo
+			break;
+		case 0x81:
+			return false;
+		default:
+			if (!self->user->ext.guard.hasEnteredWorld) {
+				CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user outside the world", opcodeEx);
+				return true;
+			}
+			break;
+		}
 	}
 
 	if (opcodeEx > maxOpcodeEx) {
