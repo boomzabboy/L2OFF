@@ -716,9 +716,8 @@ bool __cdecl CUserSocket::InGamePacketExHandlerWrapper(CUserSocket *self, const 
 		case 0x3C: // RequestAllCastleInfo
 		case 0x3D: // RequestAllFortressInfo
 		case 0x3E: // RequestAllAgitInfo
-			break;
 		case 0x81:
-			return false;
+			break;
 		default:
 			if (!self->user->ext.guard.hasEnteredWorld) {
 				CLog::Add(CLog::Red, L"InGamePacketExHandlerWrapper: opcodeEx=%d called with user outside the world", opcodeEx);
