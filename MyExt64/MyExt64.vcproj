@@ -235,6 +235,34 @@
 				RelativePath=".\Common\xvector.h"
 				>
 			</File>
+			<Filter
+				Name="Yacc"
+				>
+				<File
+					RelativePath=".\Common\Yacc\yybdefs.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Common\Yacc\yyglobal.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Common\Yacc\yytdefs.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Common\Yacc\yywclex.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Common\Yacc\yywcpars.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Common\Yacc\yywlexer.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Cached"
@@ -1170,6 +1198,14 @@
 			Name="Server"
 			>
 			<File
+				RelativePath=".\Server\AbnormalType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\AbnormalType.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\AugmentationStatFix.cpp"
 				>
 			</File>
@@ -1274,6 +1310,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CLexerForSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CLexerForSkill.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CMultiPartyCommandChannel.cpp"
 				>
 			</File>
@@ -1319,6 +1363,14 @@
 			</File>
 			<File
 				RelativePath=".\Server\COlympiadDefaultSetting.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CParserForSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CParserForSkill.h"
 				>
 			</File>
 			<File

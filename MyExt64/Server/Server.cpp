@@ -33,6 +33,9 @@
 #include <Server/CInventory.h>
 #include <Server/CFieldCycle.h>
 #include <Server/CTrade.h>
+#include <Server/AbnormalType.h>
+#include <Server/CLexerForSkill.h>
+#include <Server/CParserForSkill.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -130,6 +133,9 @@ void Server::Init()
 	CInventory::Init();
 	CFieldCycle::Init();
 	CTrade::Init();
+	AbnormalType::Init();
+	CLexerForSkill::Init();
+	CParserForSkill::Init();
 	HideWarnings(); // call this at last!
 }
 
