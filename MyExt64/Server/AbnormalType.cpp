@@ -13,7 +13,7 @@ AbnormalType::AbnormalType(const int id, const wchar_t *name) : id(id), name(nam
 void AbnormalType::Init()
 {
 	Copy();
-	Add(L"attack_speed_up_bow");
+	//Add(L"attack_speed_up_bow");
 	Setup();
 }
 

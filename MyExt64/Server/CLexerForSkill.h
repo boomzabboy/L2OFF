@@ -10,12 +10,21 @@ public:
 	enum Token;
 
 	static void Init();
-	static void AddToken(const wchar_t *name, Token token);
+	static void AddToken(const wchar_t *name, Token action, const Token type, const bool own);
 
 	yl::yywint_t yyaction_(int action);
 
-	static std::map<std::wstring, Token> newTokens;
+	class Subst {
+	public:
+		Token token;
+		Token action;
+		bool own;
+	};
+
+	static std::map<std::wstring, Subst> newTokens;
 	static yl::yywint_t substAction;
+	static bool substOwn;
+	static int substActionState;
 
 	enum Token {
 		SEMICOLON = 59,

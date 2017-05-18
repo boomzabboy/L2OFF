@@ -6,6 +6,12 @@
 
 void CSkillInfo::Init()
 {
+	WriteMemoryDWORD(0x9A808F, sizeof(CSkillInfo));
+	WriteMemoryDWORD(0x9B3A11, sizeof(CSkillInfo));
+	WriteInstructionCall(0x9A80A5, FnPtr(&CSkillInfo::Constructor));
+	WriteInstructionCall(0x9B3A2C, FnPtr(&CSkillInfo::Constructor));
+	WriteMemoryQWORD(0xBFEDD8, FnPtr(&CSkillInfo::Destructor));
+
 	WriteInstructionCall(0x548254 + 0x26C, reinterpret_cast<UINT32>(IsValidTargetWrapper));
 	WriteInstructionCall(0x572CC4 + 0xA9, reinterpret_cast<UINT32>(IsValidTargetWrapper));
 	WriteInstructionCall(0x573734 + 0xD3, reinterpret_cast<UINT32>(IsValidTargetWrapper));
@@ -35,3 +41,26 @@ void CSkillInfo::ActivateSkill(CCreature *caster, CObject *target, double unknow
 		this, caster, target, unknown1, unknown2, unknown3, unknown4);
 }
 
+CSkillInfo* CSkillInfo::Constructor()
+{
+	CSkillInfo *ret = reinterpret_cast<CSkillInfo*(*)(CSkillInfo*)>(0x82093C)(this);
+	new (&ret->ext) Ext();
+	return ret;
+}
+
+void CSkillInfo::Destructor(bool isMemoryFreeUsed)
+{
+	ext.~Ext();
+	reinterpret_cast<void(*)(CSkillInfo*)>(0x81E994)(this);
+}
+
+CSkillInfo::Ext::Ext() : olympiadUse(false)
+{
+}
+
+CSkillInfo::Ext::~Ext()
+{
+}
+
+CompileTimeOffsetCheck(CSkillInfo, effects, 0x218);
+CompileTimeOffsetCheck(CSkillInfo, ext, 0x396);
