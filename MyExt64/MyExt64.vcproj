@@ -1406,6 +1406,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CSkillEffect_op_skill_acquire.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillEffect_op_skill_acquire.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CSkillEnchantDB.cpp"
 				>
 			</File>
@@ -1427,6 +1435,10 @@
 			</File>
 			<File
 				RelativePath=".\Server\CSkillInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CSkillOperateCondition.h"
 				>
 			</File>
 			<File

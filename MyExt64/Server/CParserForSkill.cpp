@@ -2,12 +2,15 @@
 #include <Server/CParserForSkill.h>
 #include <Server/CLexerForSkill.h>
 #include <Server/CSkillInfo.h>
+#include <Server/CSkillEffect_op_skill_acquire.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 
 void CParserForSkill::Init()
 {
 	WriteMemoryQWORD(0xD068E0, FnPtr(&CParserForSkill::yyaction_));
+	WriteMemoryBYTES(0x9B4E02, "\x48\x8B\x96\xF8\x00\x00\x00", 7);
+	WriteInstructionCallJmpEax(0x9B4E0D, FnPtr(CParserForSkill::AbnormalVisualEffectHelper));
 }
 
 void CParserForSkill::yyaction_(int action)
@@ -17,16 +20,20 @@ void CParserForSkill::yyaction_(int action)
 		&& CLexerForSkill::substAction != CLexerForSkill::i_p_soul_attack
 		&& CLexerForSkill::substAction != CLexerForSkill::i_energy_attack
 		&& CLexerForSkill::substAction != CLexerForSkill::t_hp
+		&& CLexerForSkill::substAction != CLexerForSkill::op_check_abnormal
 		&& CLexerForSkill::substAction != CLexerForSkill::i_call_pc
 		&& CLexerForSkill::substAction != CLexerForSkill::abnormal_visual_effect) {
 
 		if (CLexerForSkill::substOwn) {
 			action = CLexerForSkill::substAction;
-			//CLog::Add(CLog::Blue, L"CParserForSkill::yyaction (subst) %d -> %s", action, this->yylexerptr->yytext);
 			switch (action) {
 			case CLexerForSkill::olympiad_use:
 				skillInfo->ext.olympiadUse = bool(_wtoi(yylexerptr->yytext));
-				//CLog::Add(CLog::Blue, L"olympiad_use -> %s", this->yylexerptr->yytext);
+				break;
+			case CLexerForSkill::op_skill_acquire:
+				int skillId = GetYYAttr<int>(-1);
+				int learned = GetYYAttr<int>(0);
+				skillInfo->PushCondition(new CSkillEffect_op_skill_acquire(skillId, learned), operateConditionTarget);
 				break;
 			}
 		} else {
@@ -34,10 +41,22 @@ void CParserForSkill::yyaction_(int action)
 		}
 		CLexerForSkill::substAction = 0;
 	} else {
-		//CLog::Add(CLog::Blue, L"CParserForSkill::yyaction (orig) %d -> %s", action, this->yylexerptr->yytext);
 		reinterpret_cast<void(*)(CParserForSkill*, int)>(0x9B39D0)(this, action);
 	}
 }
 
+UINT32 CParserForSkill::AbnormalVisualEffectHelper(const wchar_t *effect, CSkillInfo *skillInfo)
+{
+	if (!wcscmp(effect, reinterpret_cast<wchar_t*>(0xD07620))) {
+		skillInfo->abnormalVisualEffect2 = 4;
+	} else if (!wcscmp(effect, L"ave_stigma_of_silen")) {
+		skillInfo->abnormalVisualEffect2 = 8;
+	} else {
+		return 0x9B4E2C;
+	}
+	return 0x9BF99A;
+}
+
 CompileTimeOffsetCheck(CParserForSkill, skillInfo, 0xF8);
+CompileTimeOffsetCheck(CParserForSkill, operateConditionTarget, 0x104);
 

@@ -585,7 +585,8 @@ public:
 		ia_holy = 66016,
 		ia_unholy = 66016,
 		// additional:
-		olympiad_use = 66017
+		olympiad_use = 66017,
+		op_skill_acquire = 66018
 	};
 };
 

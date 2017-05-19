@@ -1,6 +1,8 @@
 
 #include <Server/CSkillInfo.h>
 #include <Server/CCreature.h>
+#include <Server/CUser.h>
+#include <Server/CSummon.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Utils.h>
 
@@ -16,6 +18,12 @@ void CSkillInfo::Init()
 	WriteInstructionCall(0x572CC4 + 0xA9, reinterpret_cast<UINT32>(IsValidTargetWrapper));
 	WriteInstructionCall(0x573734 + 0xD3, reinterpret_cast<UINT32>(IsValidTargetWrapper));
 	WriteInstructionCall(0x7123F0 + 0x464, reinterpret_cast<UINT32>(IsValidTargetWrapper));
+
+	WriteInstructionCall(0x554168 + 0x154, FnPtr(&CSkillInfo::CanUsedBy));
+	WriteInstructionCall(0x554168 + 0x49E, FnPtr(&CSkillInfo::CanUsedBy));
+	WriteInstructionCall(0x716FE8 + 0x1A4, FnPtr(&CSkillInfo::CanUsedBy));
+	WriteInstructionCall(0x81EE98 + 0x82, FnPtr(&CSkillInfo::CanUsedBy));
+	WriteInstructionCall(0x8FD128 + 0xE2, FnPtr(&CSkillInfo::CanUsedBy));
 }
 
 bool __cdecl CSkillInfo::IsValidTargetWrapper(CSkillInfo *self, CCreature *attacker, CCreature *target, bool b)
@@ -41,6 +49,11 @@ void CSkillInfo::ActivateSkill(CCreature *caster, CObject *target, double unknow
 		this, caster, target, unknown1, unknown2, unknown3, unknown4);
 }
 
+bool CSkillInfo::PushCondition(class CSkillOperateCondition *condition, const int operateConditionTarget)
+{
+	return reinterpret_cast<bool(*)(CSkillInfo*, class CSkillOperateCondition*, const int)>(0x822248)(this, condition, operateConditionTarget);
+}
+
 CSkillInfo* CSkillInfo::Constructor()
 {
 	CSkillInfo *ret = reinterpret_cast<CSkillInfo*(*)(CSkillInfo*)>(0x82093C)(this);
@@ -54,7 +67,26 @@ void CSkillInfo::Destructor(bool isMemoryFreeUsed)
 	reinterpret_cast<void(*)(CSkillInfo*)>(0x81E994)(this);
 }
 
-CSkillInfo::Ext::Ext() : olympiadUse(false)
+bool CSkillInfo::CanUsedBy(CCreature *caster, bool b) const
+{
+	bool ret = reinterpret_cast<bool(*)(const CSkillInfo*, CCreature*, bool)>(0x81BFA0)(this, caster, b);
+	if (!ret || !caster || ext.olympiadUse) {
+		return ret;
+	}
+	if (caster->IsUser()) {
+		if (reinterpret_cast<CUser*>(caster)->IsInOlympiad()) {
+			return false;
+		}
+	} else if (caster->IsSummon()) {
+		CUser *master = reinterpret_cast<CSummon*>(caster)->GetUserOrMaster();
+		if (master && master->IsInOlympiad()) {
+			return false;
+		}
+	}
+	return true;
+}
+
+CSkillInfo::Ext::Ext() : olympiadUse(true)
 {
 }
 
@@ -63,4 +95,4 @@ CSkillInfo::Ext::~Ext()
 }
 
 CompileTimeOffsetCheck(CSkillInfo, effects, 0x218);
-CompileTimeOffsetCheck(CSkillInfo, ext, 0x396);
+CompileTimeOffsetCheck(CSkillInfo, ext, 0x398);
