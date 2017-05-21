@@ -2,7 +2,7 @@
 #include <Server/CParserForSkill.h>
 #include <Server/CLexerForSkill.h>
 #include <Server/CSkillInfo.h>
-#include <Server/CSkillEffect_op_skill_acquire.h>
+#include <Server/CSkillOperateCondition_op_skill_acquire.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 
@@ -33,7 +33,7 @@ void CParserForSkill::yyaction_(int action)
 			case CLexerForSkill::op_skill_acquire:
 				int skillId = GetYYAttr<int>(-1);
 				int learned = GetYYAttr<int>(0);
-				skillInfo->PushCondition(new CSkillEffect_op_skill_acquire(skillId, learned), operateConditionTarget);
+				skillInfo->PushCondition(new CSkillOperateCondition_op_skill_acquire(skillId, learned), operateConditionTarget);
 				break;
 			}
 		} else {
@@ -50,7 +50,7 @@ UINT32 CParserForSkill::AbnormalVisualEffectHelper(const wchar_t *effect, CSkill
 	if (!wcscmp(effect, reinterpret_cast<wchar_t*>(0xD07620))) {
 		skillInfo->abnormalVisualEffect2 = 4;
 	} else if (!wcscmp(effect, L"ave_stigma_of_silen")) {
-		skillInfo->abnormalVisualEffect2 = 8;
+		skillInfo->abnormalVisualEffect2 = 0x100;
 	} else {
 		return 0x9B4E2C;
 	}

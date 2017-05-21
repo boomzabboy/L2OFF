@@ -19,6 +19,8 @@ public:
 	CSkillInfo* Constructor();
 	void Destructor(bool isMemoryFreeUsed);
 
+	static class CSkillOperateCondition* lastAddedCondition;
+
 	static bool __cdecl IsValidTargetWrapper(CSkillInfo *self, class CCreature *attacker, class CCreature *target, bool b);
 
 	bool IsValidTarget(class CCreature *attacker, class CCreature *target, bool b);

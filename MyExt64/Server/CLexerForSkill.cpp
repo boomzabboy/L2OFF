@@ -2,6 +2,8 @@
 #include <Server/CLexerForSkill.h>
 #include <Server/CParserForSkill.h>
 #include <Server/CSkillInfo.h>
+#include <Server/CSkillOperateCondition_op_check_abnormal.h>
+#include <Server/CSkillEffect_t_hp.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 
@@ -66,7 +68,8 @@ yl::yywint_t CLexerForSkill::yyaction_(int action)
 			substAction = 0;
 		} else if (action == 623 && substActionState == 4) {
 			substActionState = 5;
-			//CLog::Add(CLog::Blue, L"i_p_attack ignore_armor = %d", _wtoi(yytext)); // TODO!
+			// i_p_attack fourth parameter is always zero in Freya (not in Glory Days)
+			// I think we may safely ignore it until we want to go beyond Freya
 			action = 629;
 		}
 	} else if (substAction == i_p_soul_attack) {
@@ -109,7 +112,8 @@ yl::yywint_t CLexerForSkill::yyaction_(int action)
 			substAction = 0;
 		} else if (action == 623 && substActionState == 5) {
 			substActionState = 6;
-			//CLog::Add(CLog::Blue, L"i_energy_attack takes %d energy charge", _wtoi(yytext)); // TODO!
+			// i_energy_attack fifth parameter is always zero in both Freya and Glory Days
+			// so I think we may safely ignore it...
 			action = 629;
 		}
 	} else if (substAction == t_hp) {
@@ -133,7 +137,7 @@ yl::yywint_t CLexerForSkill::yyaction_(int action)
 			if (tokenString == L"per") {
 				substActionState = 4;
 				action = 629;
-				//CLog::Add(CLog::Blue, L"t_hp per -> heal is in percent"); // TODO!
+				CSkillEffect_t_hp::last->per = true;
 			} else if (tokenString == L"diff") {
 				substActionState = 4;
 				action = 629;
@@ -154,11 +158,13 @@ yl::yywint_t CLexerForSkill::yyaction_(int action)
 			substActionState = 0;
 			substAction = 0;
 		} else if (action == 627 && substActionState == 1) {
-			//CLog::Add(CLog::Blue, L"i_call_pc should take item %s", yytext); // TODO!
+			// name of item that i_call_pc should take - in Freya it's always [crystal_of_summon]
+			// so we will ignore it until we want to go beyond Freya
 			++substActionState;
 			action = 629;
 		} else if (action == 623 && substActionState == 2) {
-			//CLog::Add(CLog::Blue, L"i_call_pc should take %d items", _wtoi(yytext)); // TODO!
+			// count of items that i_call_pc should take - in Freya it's always 1
+			// so we will ignore it until we want to go beyond Freya
 			++substActionState;
 			action = 629;
 		}
@@ -180,7 +186,7 @@ yl::yywint_t CLexerForSkill::yyaction_(int action)
 			substAction = 0;
 		} else if (action == 623 && substActionState == 3) {
 			if (!_wtoi(yytext)) {
-				//CLog::Add(CLog::Blue, L"op_check_abnormal invert", yytext); // TODO!
+				CSkillOperateCondition_op_check_abnormal::last->invert = true;
 			}
 			substActionState = 4;
 			action = 629;

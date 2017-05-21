@@ -36,6 +36,8 @@
 #include <Server/AbnormalType.h>
 #include <Server/CLexerForSkill.h>
 #include <Server/CParserForSkill.h>
+#include <Server/CSkillOperateCondition_op_check_abnormal.h>
+#include <Server/CSkillEffect_t_hp.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -136,6 +138,8 @@ void Server::Init()
 	AbnormalType::Init();
 	CLexerForSkill::Init();
 	CParserForSkill::Init();
+	CSkillOperateCondition_op_check_abnormal::Init();
+	CSkillEffect_t_hp::Init();
 	HideWarnings(); // call this at last!
 }
 
