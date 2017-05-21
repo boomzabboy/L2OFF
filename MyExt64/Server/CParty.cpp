@@ -42,3 +42,8 @@ void CParty::SendRelationChanged()
 	}
 }
 
+void CParty::Dismiss(const bool b)
+{
+	reinterpret_cast<void(*)(CParty*, const bool)>(0x783A14)(this, b);
+}
+

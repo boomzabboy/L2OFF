@@ -505,7 +505,11 @@ void CUser::StartOfflineTrade()
 
 	CParty *party = GetParty();
 	if (party) {
-		party->Withdraw(this, true);
+		if (party->GetMaster() == this) {
+			party->Dismiss(true);
+		} else {
+			party->Withdraw(this, true);
+		}
 	}
 
 	*reinterpret_cast<void**>(socket) = CUserSocket::offlineTradeVtable;
