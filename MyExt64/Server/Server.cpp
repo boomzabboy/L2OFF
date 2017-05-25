@@ -38,6 +38,10 @@
 #include <Server/CParserForSkill.h>
 #include <Server/CSkillOperateCondition_op_check_abnormal.h>
 #include <Server/CSkillEffect_t_hp.h>
+#include <Server/CLexerForItem.h>
+#include <Server/CParserForItem.h>
+#include <Server/CLexerForSkillAcquire.h>
+#include <Server/CParserForSkillAcquire.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -140,6 +144,10 @@ void Server::Init()
 	CParserForSkill::Init();
 	CSkillOperateCondition_op_check_abnormal::Init();
 	CSkillEffect_t_hp::Init();
+	CLexerForItem::Init();
+	CParserForItem::Init();
+	CLexerForSkillAcquire::Init();
+	CParserForSkillAcquire::Init();
 	HideWarnings(); // call this at last!
 }
 

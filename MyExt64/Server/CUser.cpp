@@ -1120,8 +1120,14 @@ bool CUser::IsValidPrivateStoreItem(INT64 count, INT64 price, CItem *item)
 	if (!reinterpret_cast<bool(*)(CUser*, INT64, INT64, CItem*)>(0x88D740)(this, count, price, item)) {
 		return false;
 	}
-	if (!item->IsTradeable(this)) {
-		return false;
+	if (item->itemInfo->ext.isPrivateStoreSet) {
+		if (!item->itemInfo->ext.isPrivateStore) {
+			return false;
+		}
+	} else {
+		if (!item->IsTradeable(this)) {
+			return false;
+		}
 	}
 	if (!item->worldInfo || item->worldInfo->consumeType != 2) {
 		return true;

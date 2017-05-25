@@ -1310,11 +1310,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CLexerForItem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CLexerForItem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CLexerForSkill.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Server\CLexerForSkill.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CLexerForSkillAcquire.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CLexerForSkillAcquire.h"
 				>
 			</File>
 			<File
@@ -1366,11 +1382,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\CParserForItem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CParserForItem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\CParserForSkill.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Server\CParserForSkill.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CParserForSkillAcquire.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\CParserForSkillAcquire.h"
 				>
 			</File>
 			<File

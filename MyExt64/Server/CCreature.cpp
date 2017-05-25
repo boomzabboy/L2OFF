@@ -22,6 +22,8 @@ void CCreature::Init()
 
 	WriteInstructionCall(0x8DD566, reinterpret_cast<UINT32>(UseItemWrapper));
 	WriteMemoryQWORD(0xC54348, reinterpret_cast<UINT64>(UseItemWrapper));
+	WriteMemoryQWORD(0xBCCFB8, reinterpret_cast<UINT64>(UseItemWrapper));
+	WriteMemoryQWORD(0xBCB888, reinterpret_cast<UINT64>(UseItemWrapper));
 
 	if (Config::Instance()->fixes->territoryWarPetFix) {
 		WriteInstructionCall(0x8D1470, reinterpret_cast<UINT32>(GetUserOrMaster), 0x8D1476);
@@ -150,6 +152,22 @@ int __cdecl CCreature::GetRemainReuseDelaySecWrapper(CCreature *self, const int 
 bool CCreature::UseItem(CItem *item, int i)
 {
 	GUARDED;
+
+	if (this && item) {
+		bool isOlympiad = false;
+		if (IsUser()) {
+			isOlympiad = reinterpret_cast<CUser*>(this)->IsInOlympiad();
+		} else if (IsSummon()) {
+			CUser *user = reinterpret_cast<CSummon*>(this)->GetUserOrMaster();
+			if (user && user->IsInOlympiad()) {
+				isOlympiad = true;
+			}
+		}
+
+		if (isOlympiad && !item->itemInfo->ext.isOlympiadCanUse) {
+			return false;
+		}
+	}
 
 	if (!reinterpret_cast<bool(*)(CCreature*, CItem*, int)>(0x54C4FC)(this, item, i)) {
 		return false;

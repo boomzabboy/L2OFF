@@ -27,10 +27,25 @@ public:
 
 	class ItemInfo {
 	public:
+		class Ext {
+		public:
+			Ext();
+			~Ext();
+
+			bool isPrivateStore;
+			bool isPrivateStoreSet;
+			bool isOlympiadCanUse;
+		};
+
+		ItemInfo* Constructor();
+		void Destructor(bool isMemoryFreeUsed);
+
 		/* 0x0000 */ unsigned char padding0x0000[0x0008 - 0x0000];
 		/* 0x0008 */ UINT32 someType;
 		/* 0x000C */ unsigned char padding0x000C[0x0108 - 0x000C];
 		/* 0x0108 */ UINT32 dropPeriod;
+		/* 0x010C */ unsigned char padding0x010C[0x0198 - 0x010C];
+		/* 0x0198 */ Ext ext;
 	};
 
 	static void Init();
