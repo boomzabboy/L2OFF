@@ -36,7 +36,9 @@ public:
 	/* 0x0198 */ UINT32 abnormalVisualEffect2;
 	/* 0x019C */ unsigned char padding0x019C[0x0218 - 0x019C];
 	/* 0x0218 */ std::vector<void*> effects[7];
-	/* 0x02F8 */ unsigned char padding0x02F8[0x0394 - 0x02F8];
+	/* 0x02F8 */ unsigned char padding0x02F8[0x0340 - 0x02F8];
+	/* 0x0340 */ UINT32 targetType;
+	/* 0x0344 */ unsigned char padding0x0344[0x0394 - 0x0344];
 	/* 0x0394 */ UINT32 abnormalVisualEffect3;
 	/* 0x0398 */ CSkillInfo::Ext ext;
 };

@@ -43,6 +43,10 @@ void CParserForSkill::yyaction_(int action)
 	} else {
 		reinterpret_cast<void(*)(CParserForSkill*, int)>(0x9B39D0)(this, action);
 	}
+
+	/*if (action == 53) {
+		CLog::Add(CLog::Blue, L"target_type = %s -> %d", yylexerptr->yytext, skillInfo->targetType);
+	}*/
 }
 
 UINT32 CParserForSkill::AbnormalVisualEffectHelper(const wchar_t *effect, CSkillInfo *skillInfo)

@@ -85,3 +85,16 @@ void NPCd::StartHook(void *logger, int level, const char *fmt)
 	}
 }
 
+void NPCd::Send(const char *format, ...)
+{
+	va_list va;
+	va_start(va, format);
+	SendV(format, va);
+	va_end(va);
+}
+
+void NPCd::SendV(const char *format, va_list va)
+{
+	reinterpret_cast<void(*)(UINT64, const char*, va_list)>(0x5473CC)(0x1C1F080, format, va);
+}
+
