@@ -1,5 +1,6 @@
 
 #include <NPCd/Functions/CNPC_SetAbilityItemDrop.h>
+#include <NPCd/NPCd.h>
 #include <Common/CLog.h>
 
 CNPC_SetAbilityItemDrop::CNPC_SetAbilityItemDrop() :
@@ -21,7 +22,7 @@ void CNPC_SetAbilityItemDrop::SetTypes()
 
 int CNPC_SetAbilityItemDrop::SetAbilityItemDrop(CNPC *npc, int canDrop)
 {
-    CLog::Add(CLog::Blue, L"CNPC::SetAbilityItemDrop stub");
+	NPCd::Send("chdc", 0x36, NPCd::SET_ABILITY_ITEM_DROP, npc->sm->index, canDrop ? 1 : 0);
 	return 0;
 }
 

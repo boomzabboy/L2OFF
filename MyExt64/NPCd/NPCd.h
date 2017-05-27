@@ -22,7 +22,8 @@ protected:
 
 public:
 	enum PacketEx {
-		WHISPER = 1
+		WHISPER = 1,
+		SET_ABILITY_ITEM_DROP = 2
 	};
 };
 

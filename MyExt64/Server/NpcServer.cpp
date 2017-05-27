@@ -69,6 +69,7 @@ bool NpcServer::NpcEx(void *socket, const unsigned char *bytes)
 	const unsigned char *data = &bytes[2];
 	switch (*reinterpret_cast<const UINT16*>(bytes)) {
 	case NPCd::WHISPER: return NpcWhisper(socket, data);
+	case NPCd::SET_ABILITY_ITEM_DROP: return NpcSetAbilityItemDrop(socket, data);
 	}
 	return true;
 }
@@ -91,6 +92,26 @@ bool NpcServer::NpcWhisper(void *socket, const unsigned char *bytes)
 	CUserSocket *userSocket = talker.socket;
 	if (userSocket) {
 		userSocket->Send("cdddS", 0x30, npc->objectId, 0, npc->objectType, text);
+	}
+
+	return false;
+}
+
+bool NpcServer::NpcSetAbilityItemDrop(void *socket, const unsigned char *bytes)
+{
+	UINT32 npcIndex;
+	unsigned char value;
+	wchar_t text[1024];
+
+	Disassemble(bytes, "dc", &npcIndex, &value);
+
+	SmartPtr<CCreature> npc(npcIndex);
+	if (npc) {
+		if (value) {
+			npc->inventory.noDropItems &= 1;
+		} else {
+			npc->inventory.noDropItems |= 2;
+		}
 	}
 
 	return false;

@@ -23,7 +23,6 @@ void CNPC_Whisper::SetTypes()
 
 int CNPC_Whisper::Whisper(CNPC *npc, CSharedCreatureData *talker, wchar_t *str)
 {
-    CLog::Add(CLog::Blue, L"CNPC::Whisper stub");
 	NPCd::Send("chddS", 0x36, NPCd::WHISPER, npc->sm->index, talker->index, str);
 	return 0;
 }
