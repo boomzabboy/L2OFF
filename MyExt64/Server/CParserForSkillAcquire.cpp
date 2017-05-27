@@ -77,10 +77,15 @@ void CParserForSkillAcquire::Init()
 	WriteAddress(0x9D0B6C+0x2C9+3, reinterpret_cast<UINT32>(&skillAcquireDB));
 	WriteAddress(0x9D0B6C+0x347+3, reinterpret_cast<UINT32>(&skillAcquireDB));
 	WriteAddress(0xA29FE0+0x4+3, reinterpret_cast<UINT32>(&skillAcquireDB));
-
+	WriteAddress(0x55C3AC+0x2C3+3, reinterpret_cast<UINT32>(&skillAcquireDB) + 0x30);
+	WriteAddress(0x55DEE8+0xA3+3, reinterpret_cast<UINT32>(&skillAcquireDB) + 0x30);
+	WriteAddress(0x560450+0x4EF+3, reinterpret_cast<UINT32>(&skillAcquireDB) + 0x30);
+	WriteAddress(0x5610C0+0xCB+3, reinterpret_cast<UINT32>(&skillAcquireDB) + 0x30);
+	WriteAddress(0x5610C0+0x25B+3, reinterpret_cast<UINT32>(&skillAcquireDB) + 0x30);
+	WriteAddress(0x9063F8+0x552+3, reinterpret_cast<UINT32>(&skillAcquireDB) + 0x30);
+	WriteAddress(0x909858+0xA5+3, reinterpret_cast<UINT32>(&skillAcquireDB) + 0x30);
 	WriteMemoryBYTES(0x8CE629, "\x45\x89\xF9", 3); // mov r9d, r15d (etc skill type)
 	WriteInstructionCall(0x8CE636, FnPtr(AcquireHelper), 0x8CE63D); // return true if type is 7, 8 or 9
-
 	WriteInstructionCall(0x9D0D02, FnPtr(&CSkillAcquireDB::AddSkillAcquireInfo<0x8241DC>));
 }
 
