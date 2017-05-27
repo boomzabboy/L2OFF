@@ -16,12 +16,34 @@ public:
 		bool olympiadUse;
 	};
 
+	enum TargetType {
+		self = 0,
+		target = 1,
+		others = 2,
+		enemy = 4,
+		enemy_only = 5,
+		item = 6,
+		summon = 7,
+		holything = 8,
+		door_treasure = 10,
+		pc_body = 11,
+		npc_body = 12,
+		wyvern_target = 13,
+		ground = 14,
+		artillery = 15,
+		fortress_flagpole = 16,
+		advance_base = 18,
+		enemy_not = 19,
+		end
+	};
+
 	CSkillInfo* Constructor();
 	void Destructor(bool isMemoryFreeUsed);
 
 	static class CSkillOperateCondition* lastAddedCondition;
 
 	static bool __cdecl IsValidTargetWrapper(CSkillInfo *self, class CCreature *attacker, class CCreature *target, bool b);
+	static UINT64 IsValidTargetHelper(UINT32 targetType);
 
 	bool IsValidTarget(class CCreature *attacker, class CCreature *target, bool b);
 	void ActivateSkill(class CCreature *caster, class CObject *target, double unknown1, void *unknown2, int unknown3, double unknown4);

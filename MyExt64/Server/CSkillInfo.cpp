@@ -24,6 +24,9 @@ void CSkillInfo::Init()
 	WriteInstructionCall(0x716FE8 + 0x1A4, FnPtr(&CSkillInfo::CanUsedBy));
 	WriteInstructionCall(0x81EE98 + 0x82, FnPtr(&CSkillInfo::CanUsedBy));
 	WriteInstructionCall(0x8FD128 + 0xE2, FnPtr(&CSkillInfo::CanUsedBy));
+
+	WriteInstructionCallJmpEax(0x81D243, FnPtr(IsValidTargetHelper));
+	WriteMemoryDWORD(0x820B65 + 6, end);
 }
 
 bool __cdecl CSkillInfo::IsValidTargetWrapper(CSkillInfo *self, CCreature *attacker, CCreature *target, bool b)
@@ -40,7 +43,21 @@ bool CSkillInfo::IsValidTarget(CCreature *attacker, CCreature *target, bool b)
 			return false;
 		}
 	}
+	if (targetType == enemy_not && attacker && target && target->IsEnemyTo(attacker)) {
+		return false;
+	}
 	return reinterpret_cast<bool(*)(void*, CCreature*, CCreature*, bool)>(0x81CF38)(this, attacker, target, b);
+}
+
+UINT64 CSkillInfo::IsValidTargetHelper(UINT32 targetType)
+{
+	if (targetType == enemy_not) {
+		return 0x81D578;
+	} else if (targetType > door_treasure) {
+		return 0x81D697;
+	} else {
+		return 0x81D24C;
+	}
 }
 
 void CSkillInfo::ActivateSkill(CCreature *caster, CObject *target, double unknown1, void *unknown2, int unknown3, double unknown4)

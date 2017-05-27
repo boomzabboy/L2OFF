@@ -38,15 +38,14 @@ void CParserForSkill::yyaction_(int action)
 			}
 		} else {
 			reinterpret_cast<void(*)(CParserForSkill*, int)>(0x9B39D0)(this, CLexerForSkill::substAction);
+			if (action == 53 && CLexerForSkill::substAction == CLexerForSkill::target) {
+				skillInfo->targetType = CSkillInfo::enemy_not;
+			}
 		}
 		CLexerForSkill::substAction = 0;
 	} else {
 		reinterpret_cast<void(*)(CParserForSkill*, int)>(0x9B39D0)(this, action);
 	}
-
-	/*if (action == 53) {
-		CLog::Add(CLog::Blue, L"target_type = %s -> %d", yylexerptr->yytext, skillInfo->targetType);
-	}*/
 }
 
 UINT32 CParserForSkill::AbnormalVisualEffectHelper(const wchar_t *effect, CSkillInfo *skillInfo)

@@ -279,6 +279,12 @@ UINT32 CCreature::GetServerId()
 		(*reinterpret_cast<void***>(this))[0x8C])(this);
 }
 
+bool CCreature::IsEnemyTo(CCreature *creature)
+{
+	return reinterpret_cast<bool(*)(CCreature*, CCreature*)>(
+		(*reinterpret_cast<void***>(this))[0x74])(this, creature);
+}
+
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);
 CompileTimeOffsetCheck(CCreature, padding0x1464, 0x1464);
 

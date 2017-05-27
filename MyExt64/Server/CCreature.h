@@ -32,6 +32,7 @@ public:
 	void UnequipWeapon();
 	bool UnequipItem(enum SlotType slotType);
 	UINT32 GetServerId();
+	bool IsEnemyTo(CCreature *creature);
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);

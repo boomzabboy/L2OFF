@@ -19,6 +19,7 @@ void CLexerForSkill::Init()
 	AddToken(L"olympiad_use", olympiad_use, is_magic, true);
 	AddToken(L"p_resist_abnormal_by_type", p_resist_abnormal_by_category, p_resist_abnormal_by_category, false);
 	AddToken(L"op_skill_acquire", op_skill_acquire, op_encumbered, true);
+	AddToken(L"enemy_not", target, target, false);
 }
 
 void CLexerForSkill::AddToken(const wchar_t *name, const Token action, const Token type, const bool own)
