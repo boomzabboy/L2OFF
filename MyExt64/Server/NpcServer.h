@@ -20,5 +20,6 @@ public:
 	static bool NpcEx(void *socket, const unsigned char *bytes);
 	static bool NpcWhisper(void *socket, const unsigned char *bytes);
 	static bool NpcSetAbilityItemDrop(void *socket, const unsigned char *bytes);
+	static bool NpcShowBuySell(void *socket, const unsigned char *bytes);
 };
 

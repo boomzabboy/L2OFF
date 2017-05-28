@@ -23,7 +23,8 @@ protected:
 public:
 	enum PacketEx {
 		WHISPER = 1,
-		SET_ABILITY_ITEM_DROP = 2
+		SET_ABILITY_ITEM_DROP = 2,
+		SHOW_BUY_SELL = 3
 	};
 };
 

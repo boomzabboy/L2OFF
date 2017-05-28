@@ -4,6 +4,7 @@
 #include <Server/CNPC.h>
 #include <Server/CUser.h>
 #include <Server/CUserSocket.h>
+#include <Server/GraciaEpilogue.h>
 #include <NPCd/NPCd.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -70,6 +71,7 @@ bool NpcServer::NpcEx(void *socket, const unsigned char *bytes)
 	switch (*reinterpret_cast<const UINT16*>(bytes)) {
 	case NPCd::WHISPER: return NpcWhisper(socket, data);
 	case NPCd::SET_ABILITY_ITEM_DROP: return NpcSetAbilityItemDrop(socket, data);
+	case NPCd::SHOW_BUY_SELL: return NpcShowBuySell(socket, data);
 	}
 	return true;
 }
@@ -113,6 +115,94 @@ bool NpcServer::NpcSetAbilityItemDrop(void *socket, const unsigned char *bytes)
 			npc->inventory.noDropItems |= 2;
 		}
 	}
+
+	return false;
+}
+
+bool NpcServer::NpcShowBuySell(void *socket, const unsigned char *bytes)
+{
+	GUARDED;
+
+	UINT32 npcIndex;
+	UINT32 talkerIndex;
+	UINT32 buyList;
+	UINT32 sellList;
+	float rate;
+
+	Disassemble(bytes, "ddddf", &npcIndex, &talkerIndex, &buyList, &sellList, &rate);
+	unsigned char buyBuffer[32];
+	unsigned char sellBuffer[24];
+	Assemble(reinterpret_cast<char*>(buyBuffer), sizeof(buyBuffer), "dddSSSf", talkerIndex, npcIndex, buyList, L"", L"", L"", rate);
+	Assemble(reinterpret_cast<char*>(sellBuffer), sizeof(sellBuffer), "dddSSS", talkerIndex, npcIndex, sellList, L"", L"", L"");
+
+	typedef bool (__cdecl *t)(void*, const BYTE*);
+
+	SmartPtr<CUser> user(talkerIndex);
+	if (!user || !user->IsUser()) {
+		return false;
+	}
+
+	CUserSocket *userSocket = user->socket;
+	if (!userSocket) {
+		return false;
+	}
+
+	user->sdLock->Enter(__FILEW__, __LINE__);
+	GraciaEpilogue::CUserReleaseEconomy(&*user);
+	user->sdLock->Leave(__FILEW__, __LINE__);
+
+	if (reinterpret_cast<t>(0x747184)(socket, sellBuffer)) {
+		return true;
+	}
+
+	user->sdLock->Enter(__FILEW__, __LINE__);
+
+	if (!user->economy) {
+		GraciaEpilogue::CUserReleaseEconomy(&*user);
+		user->sdLock->Leave(__FILEW__, __LINE__);
+		return false;
+	}
+
+	void *tmp = user->economy;
+	user->economy = user->ext.buySell.economy2;
+	user->ext.buySell.economy2 = tmp;
+
+	user->sdLock->Leave(__FILEW__, __LINE__);
+
+	if (reinterpret_cast<t>(0x746318)(socket, buyBuffer)) {
+		user->sdLock->Enter(__FILEW__, __LINE__);
+		GraciaEpilogue::CUserReleaseEconomy(&*user);
+		user->sdLock->Leave(__FILEW__, __LINE__);
+		return true;
+	}
+
+	user->sdLock->Enter(__FILEW__, __LINE__);
+
+	if (!user->economy) {
+		GraciaEpilogue::CUserReleaseEconomy(&*user);
+		user->sdLock->Leave(__FILEW__, __LINE__);
+		return false;
+	}
+
+	tmp = user->economy;
+	user->economy = user->ext.buySell.economy2;
+	user->ext.buySell.economy2 = tmp;
+
+	userSocket->Send("chQdhbhbhc", 0xFE, 0xB7,
+		user->ext.buySell.buyList.adena,
+		user->ext.buySell.buyList.id,
+		user->ext.buySell.sellList.itemCount,
+		user->ext.buySell.sellList.items.size(),
+		user->ext.buySell.sellList.items.data(),
+		user->ext.buySell.buyList.itemCount,
+		user->ext.buySell.buyList.items.size(),
+		user->ext.buySell.buyList.items.data(),
+		0,
+		!user->ext.buySell.firstBuySell);
+
+	user->ext.buySell.firstBuySell = false;
+
+	user->sdLock->Leave(__FILEW__, __LINE__);
 
 	return false;
 }

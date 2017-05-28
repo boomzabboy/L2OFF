@@ -50,6 +50,9 @@ public:
 	static void __cdecl NpcSocketSendHtmlCmdMenuSelectFirst(class CUser *user, const char *format, BYTE opcode, UINT32 userSdIndex, UINT32 userObjectId, UINT32 npcSdIndex, INT32 ask, INT64 reply, INT32 state, bool first);
 	static void __cdecl NpcSocketSendHtmlCmdManorMenuSelect(void *npcSocket, const char *format, BYTE opcode, CUser *user, UINT32 npcSdIndex, INT32 ask, INT32 state, INT32 time);
 
+	static bool IsEconomySell(void *economy);
+	static bool IsEconomyBuy(void *economy);
+
 	// skill enchant
 	static void InitSkillEnchant();
 	static void LoadSkillEnchant();

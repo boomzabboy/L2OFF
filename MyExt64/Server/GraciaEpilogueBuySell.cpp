@@ -89,6 +89,9 @@ void GraciaEpilogue::InitBuySell()
 	WriteInstructionCall(0x6CAF67, 0x448F14); // call 0x448F14 above
 	WriteMemoryBYTES(0x6CAFDB, "\x49\x89\xD9", 3); // mov r9, rbx (instead of mov r9d, ebx)
 	WriteInstructionCall(0x6CAFF2, reinterpret_cast<UINT32>(NpcSocketSendHtmlCmdManorMenuSelect));
+
+	NOPMemory(0x5B6377, 5);
+	NOPMemory(0x5B5B31, 5);
 }
 
 int __cdecl GraciaEpilogue::AssembleBuySellListItem(char *buffer, int maxSize, const char *format, UINT16 a, UINT32 b, UINT32 c, UINT64 d, UINT16 e, UINT16 f, UINT32 g, UINT16 h, UINT16 i, UINT16 j, UINT64 k, UINT16 l, UINT16 m, UINT16 n, UINT16 o, UINT16 p, UINT16 q, UINT16 r, UINT16 s)
@@ -97,13 +100,13 @@ int __cdecl GraciaEpilogue::AssembleBuySellListItem(char *buffer, int maxSize, c
 	return Assemble(buffer, maxSize, "hddQhhdhhhQhhhhhhhhhhh", a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, 0, 0, 0);
 }
 
-bool IsEconomySell(void *economy)
+bool GraciaEpilogue::IsEconomySell(void *economy)
 {
 	bool ret = __RTtypeid(economy) == reinterpret_cast<std::type_info*>(0xE588D8);
 	return ret;
 }
 
-bool IsEconomyBuy(void *economy)
+bool GraciaEpilogue::IsEconomyBuy(void *economy)
 {
 	bool ret = __RTtypeid(economy) == reinterpret_cast<std::type_info*>(0xE588F8);
 	return ret;
