@@ -18,6 +18,9 @@ void CPet::Init()
 	WriteInstructionCall(0x5D33CC + 0x373, reinterpret_cast<UINT32>(GiveAllItemToMasterWrapper));
 	WriteInstructionCall(0x8FCF50 + 0x184, reinterpret_cast<UINT32>(GiveAllItemToMasterWrapper));
 	WriteInstructionCall(0x8FDB18 + 0x1A8, reinterpret_cast<UINT32>(GiveAllItemToMasterWrapper));
+	if (Config::Instance()->server->epiloguePetInventoryBehaviour) {
+		NOPMemory(0x8FD0D4, 5);
+	}
 }
 
 INT64 __cdecl CPet::ExpIncWrapper(CPet *self, const INT64 exp, const bool b)
