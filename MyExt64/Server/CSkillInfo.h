@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <vector>
+#include <set>
 
 class CSkillInfo {
 public:
@@ -40,7 +41,8 @@ public:
 	CSkillInfo* Constructor();
 	void Destructor(bool isMemoryFreeUsed);
 
-	static class CSkillOperateCondition* lastAddedCondition;
+	static class CSkillOperateCondition *lastAddedCondition;
+	static std::set<int> escapeSkills;
 
 	static bool __cdecl IsValidTargetWrapper(CSkillInfo *self, class CCreature *attacker, class CCreature *target, bool b);
 	static UINT64 IsValidTargetHelper(UINT32 targetType);
@@ -50,7 +52,8 @@ public:
 	bool PushCondition(class CSkillOperateCondition *condition, const int operateConditionTarget);
 	bool CanUsedBy(class CCreature *caster, bool b) const;
 
-	/* 0x0000 */ unsigned char padding0x0000[0x0010 - 0x0000];
+	/* 0x0000 */ unsigned char padding0x0000[0x0008 - 0x0000];
+	/* 0x0008 */ wchar_t *skillName;
 	/* 0x0010 */ UINT32 skillId;
 	/* 0x0014 */ UINT32 level;
 	/* 0x0018 */ unsigned char padding0x0018[0x0194 - 0x0018];

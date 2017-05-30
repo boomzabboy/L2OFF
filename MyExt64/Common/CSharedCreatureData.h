@@ -77,5 +77,6 @@ public:
 	/* 0x16FC */ UINT32 m_nMultiBoxSessionCount;
 	/* 0x1700 */ wchar_t wedding_partner_name[26];
 	/* 0x1734 */ UINT32 wedding_relation;
+	/* 0x1738 */ UINT32 protectAfterLoginExpiry;
 };
 

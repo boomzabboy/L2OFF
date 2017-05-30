@@ -42,6 +42,7 @@ public:
 		std::wstring plugin;
 		bool hookWriteProcessMemory;
 		bool epiloguePetInventoryBehaviour;
+		int protectAfterLoginSeconds;
 	} *server;
 
 	struct VoiceCommands {

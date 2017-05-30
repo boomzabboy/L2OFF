@@ -72,6 +72,7 @@ void Config::Server::Load(Config *config)
 	plugin = config->GetString(L"server", L"Plugin", L"");
 	hookWriteProcessMemory = config->GetBool(L"server", L"HookWriteProcessMemory", false);
 	epiloguePetInventoryBehaviour = config->GetBool(L"server", L"EpiloguePetInventoryBehaviour", false);
+	protectAfterLoginSeconds = config->GetInt(L"server", L"ProtectAfterLoginSeconds", 0);
 }
 
 void Config::VoiceCommands::Load(Config *config)

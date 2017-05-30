@@ -615,6 +615,9 @@ void CUser::EnterWorld()
 		reinterpret_cast<bool(*)(CUserSocket*, CUser*, wchar_t*)>(0x48A8EC)(socket, this, L"//gmon");
 	}
 	reinterpret_cast<void(*)(CUser*)>(0x8CF0E4)(this);
+	if (Config::Instance()->server->protectAfterLoginSeconds > 0) {
+		sd->protectAfterLoginExpiry = time(0) + Config::Instance()->server->protectAfterLoginSeconds;
+	}
 }
 
 void __cdecl CUser::LeaveWorldWrapper(CUser *self)
@@ -737,8 +740,14 @@ bool __cdecl CUser::OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool 
 }
 
 bool CUser::OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift)
-{ GUARDED
+{
+	GUARDED;
 
+	if (!CSkillInfo::escapeSkills.count(skillId)) {
+		if (sd) {
+			sd->protectAfterLoginExpiry = 0;
+		}
+	}
 	ext.lastSkill.skillId = skillId;
 	ext.lastSkill.ctrl = ctrl;
 	ext.lastSkill.shift = shift;

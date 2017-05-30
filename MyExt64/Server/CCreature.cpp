@@ -3,6 +3,7 @@
 #include <Server/CItem.h>
 #include <Server/CUser.h>
 #include <Server/CSummon.h>
+#include <Server/CUserSocket.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CYieldLock.h>
 #include <Common/Utils.h>
@@ -178,6 +179,12 @@ bool CCreature::UseItem(CItem *item, int i)
 	}
 
 	CUser *user = reinterpret_cast<CUser*>(this);
+
+	if (user->sd && user->sd->protectAfterLoginExpiry) {
+		if (!item->itemInfo->itemSkill || !CSkillInfo::escapeSkills.count(item->itemInfo->itemSkill->skillId)) {
+			user->sd->protectAfterLoginExpiry = 0;
+		}
+	}
 
 	if (!user->spiritshotOn || !Config::Instance()->fixes->fixSpiritshotLag) {
 		return true;

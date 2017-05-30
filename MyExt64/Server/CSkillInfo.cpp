@@ -6,6 +6,9 @@
 #include <Common/CSharedCreatureData.h>
 #include <Common/Utils.h>
 
+class CSkillOperateCondition *CSkillInfo::lastAddedCondition = 0;
+std::set<int> CSkillInfo::escapeSkills;
+
 void CSkillInfo::Init()
 {
 	WriteMemoryDWORD(0x9A808F, sizeof(CSkillInfo));

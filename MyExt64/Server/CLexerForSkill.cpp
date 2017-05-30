@@ -196,6 +196,10 @@ yl::yywint_t CLexerForSkill::yyaction_(int action)
 
 	yl::yywint_t token = reinterpret_cast<yl::yywint_t(*)(CLexerForSkill*, int)>(0x98FA34)(this, action);
 
+	if (token == i_teleport || token == i_escape) {
+		CSkillInfo::escapeSkills.insert(reinterpret_cast<CParserForSkill*>(yyparserptr)->skillInfo->skillId);
+	}
+
 	if (token == CONSTANT && action == 628
 		&& substAction != abnormal_visual_effect
 		&& substAction != i_p_attack

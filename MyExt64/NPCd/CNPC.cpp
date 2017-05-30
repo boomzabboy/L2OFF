@@ -8,6 +8,7 @@
 #include <NPCd/CStrListType.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
+#include <time.h>
 
 namespace NPC {
 
@@ -60,6 +61,7 @@ void CNPC::Init()
 
 	WriteInstructionCall(0x49AF48, reinterpret_cast<UINT32>(SeeCreatureWrapper));
 	WriteInstructionCall(0x49AF6C, reinterpret_cast<UINT32>(SeeCreatureWrapper));
+	WriteInstructionCall(0x5AD6B1, reinterpret_cast<UINT32>(SeeCreatureWrapper));
 
 	WriteInstructionCallJmpEax(0x4AA4AB, reinterpret_cast<UINT32>(EnterWorldFixDespawnedNPCHelper));
 }
@@ -197,10 +199,15 @@ void* __cdecl CNPC::UnBlockTimerFix(void *a, wchar_t *fn)
 
 void __cdecl CNPC::SeeCreatureWrapper(CNPC *self, CSharedCreatureData *sd)
 {
-	if (sd && sd->isInsidePeaceZone) {
-		switch (sd->storeMode) {
-			case 0: case 1: case 3: case 5: case 8: return;
-			default: break;
+	if (sd) {
+		if (sd->isInsidePeaceZone) {
+			switch (sd->storeMode) {
+				case 0: case 1: case 3: case 5: case 8: return;
+				default: break;
+			}
+		}
+		if (sd->protectAfterLoginExpiry && sd->protectAfterLoginExpiry > time(0)) {
+			return;
 		}
 	}
 	reinterpret_cast<void(*)(CNPC*, CSharedCreatureData*)>(0x4863A4)(self, sd);
