@@ -1305,7 +1305,7 @@ bool CUser::ReplyEnchantItem(CItem *scroll, INT64 scrollNewCount,
 	}
 
 	if (firecracker) {
-		BroadcastSkillUse(3405, 1); // large firecracker
+		BroadcastSkillUse(2024, 1); // firecracker
 	}
 
 	return ret;
