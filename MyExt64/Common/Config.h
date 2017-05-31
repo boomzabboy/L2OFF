@@ -43,6 +43,7 @@ public:
 		bool hookWriteProcessMemory;
 		bool epiloguePetInventoryBehaviour;
 		int protectAfterLoginSeconds;
+		bool epilogueEnchantFirecracker;
 	} *server;
 
 	struct VoiceCommands {

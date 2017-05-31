@@ -156,6 +156,8 @@ void CUser::Init()
 	WriteInstructionCall(0x68DF4A, reinterpret_cast<UINT32>(GetObjectTradeFix));
 
 	WriteInstructionCall(0x737525, FnPtr(&CUser::SetDailyQuest));
+
+	WriteInstructionCall(0x5B862E, FnPtr(&CUser::ReplyEnchantItem));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -1276,6 +1278,37 @@ void CUser::SetDailyQuest(UINT32 questId)
 	}
 	CLog::Add(CLog::Red, L"Warning: no empty daily quest slot for user [%s], quest = %d, time = %d",
 		GetName(), questId, now);
+}
+
+bool CUser::ReplyEnchantItem(CItem *scroll, INT64 scrollNewCount,
+							 CItem *catalyst, INT64 catalystNewCount,
+							 CItem *enchantedItem, int newEnchantValue)
+{
+	bool ret = reinterpret_cast<bool(*)(CUser*, CItem*, INT64, CItem*, INT64, CItem*, int)>(0x8E55C0)(
+		this, scroll, scrollNewCount, catalyst, catalystNewCount, enchantedItem, newEnchantValue);
+
+	if (!Config::Instance()->server->epilogueEnchantFirecracker) {
+		return ret;
+	}
+
+	bool firecracker = false;
+	if (enchantedItem) {
+		if (enchantedItem->worldInfo->itemType == 0) {
+			if (newEnchantValue == 7 || newEnchantValue == 15) {
+				firecracker = true;
+			}
+		} else if(enchantedItem->worldInfo->itemType == 1) {
+			if (newEnchantValue == 6) {
+				firecracker = true;
+			}
+		}
+	}
+
+	if (firecracker) {
+		BroadcastSkillUse(3405, 1); // large firecracker
+	}
+
+	return ret;
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

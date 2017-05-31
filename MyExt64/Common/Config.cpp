@@ -73,6 +73,7 @@ void Config::Server::Load(Config *config)
 	hookWriteProcessMemory = config->GetBool(L"server", L"HookWriteProcessMemory", false);
 	epiloguePetInventoryBehaviour = config->GetBool(L"server", L"EpiloguePetInventoryBehaviour", false);
 	protectAfterLoginSeconds = config->GetInt(L"server", L"ProtectAfterLoginSeconds", 0);
+	epilogueEnchantFirecracker = config->GetBool(L"server", L"EpilogueEnchantFirecracker", false);
 }
 
 void Config::VoiceCommands::Load(Config *config)

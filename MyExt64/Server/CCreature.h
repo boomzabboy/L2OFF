@@ -33,6 +33,7 @@ public:
 	bool UnequipItem(enum SlotType slotType);
 	UINT32 GetServerId();
 	bool IsEnemyTo(CCreature *creature);
+	void BroadcastSkillUse(const int skillId, const int skillLevel, const int hitTime = 200, const int reuseTime = 200);
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);
