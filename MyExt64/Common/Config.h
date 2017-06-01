@@ -44,6 +44,8 @@ public:
 		bool epiloguePetInventoryBehaviour;
 		int protectAfterLoginSeconds;
 		bool epilogueEnchantFirecracker;
+		double epilogueDamageReduction78Plus;
+		double epilogueMagicChanceReduction78Plus;
 	} *server;
 
 	struct VoiceCommands {

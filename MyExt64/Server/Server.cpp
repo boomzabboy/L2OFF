@@ -42,6 +42,7 @@
 #include <Server/CParserForItem.h>
 #include <Server/CLexerForSkillAcquire.h>
 #include <Server/CParserForSkillAcquire.h>
+#include <Server/L2SkillFunc.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
@@ -148,6 +149,7 @@ void Server::Init()
 	CParserForItem::Init();
 	CLexerForSkillAcquire::Init();
 	CParserForSkillAcquire::Init();
+	L2SkillFunc::Init();
 	HideWarnings(); // call this at last!
 }
 

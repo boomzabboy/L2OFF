@@ -1590,6 +1590,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\L2SkillFunc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\L2SkillFunc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\NpcServer.cpp"
 				>
 			</File>

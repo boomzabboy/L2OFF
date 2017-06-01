@@ -74,6 +74,8 @@ void Config::Server::Load(Config *config)
 	epiloguePetInventoryBehaviour = config->GetBool(L"server", L"EpiloguePetInventoryBehaviour", false);
 	protectAfterLoginSeconds = config->GetInt(L"server", L"ProtectAfterLoginSeconds", 0);
 	epilogueEnchantFirecracker = config->GetBool(L"server", L"EpilogueEnchantFirecracker", false);
+	epilogueDamageReduction78Plus = config->GetDouble(L"server", L"EpilogueDamageReduction78Plus", 0.0);
+	epilogueMagicChanceReduction78Plus = config->GetDouble(L"server", L"EpilogueMagicChanceReduction78Plus", 0.0);
 }
 
 void Config::VoiceCommands::Load(Config *config)
