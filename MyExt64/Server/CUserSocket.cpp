@@ -683,6 +683,7 @@ UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const 
 		case 0x1F: // Action
 		case 0x56: // RequestActionUse
 			self->user->sd->protectAfterLoginExpiry = 0;
+			self->SendSystemMessage(3108);
 			break;
 		}
 	}

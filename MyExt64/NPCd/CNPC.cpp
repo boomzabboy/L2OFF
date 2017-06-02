@@ -206,7 +206,7 @@ void __cdecl CNPC::SeeCreatureWrapper(CNPC *self, CSharedCreatureData *sd)
 				default: break;
 			}
 		}
-		if (sd->protectAfterLoginExpiry && sd->protectAfterLoginExpiry > time(0)) {
+		if (sd->protectAfterLoginExpiry) {
 			return;
 		}
 	}

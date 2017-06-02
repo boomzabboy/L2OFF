@@ -748,6 +748,9 @@ bool CUser::OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift)
 	if (!CSkillInfo::escapeSkills.count(skillId)) {
 		if (sd) {
 			sd->protectAfterLoginExpiry = 0;
+			if (socket) {
+				socket->SendSystemMessage(3108);
+			}
 		}
 	}
 	ext.lastSkill.skillId = skillId;
@@ -900,6 +903,12 @@ void CUser::TimerExpired(int id)
 			if (socket) {
 				socket->SendSystemMessage(2451);
 			}
+		}
+	}
+	if (sd->protectAfterLoginExpiry && sd->protectAfterLoginExpiry <= time(0)) {
+		sd->protectAfterLoginExpiry = 0;
+		if (socket) {
+			socket->SendSystemMessage(3108);
 		}
 	}
 }
@@ -1306,6 +1315,9 @@ bool CUser::ReplyEnchantItem(CItem *scroll, INT64 scrollNewCount,
 
 	if (firecracker) {
 		BroadcastSkillUse(2024, 1); // firecracker
+		reinterpret_cast<void(*)(UINT64, CCreature*, int, double*, int, const char*, ...)>(0x421EC8)(
+			0x10FF64D8, this, 0x5000, GetPosition(), 0x5DC,
+			"cdddSdddd", 0x62, 3013, 3, 0, GetName(), 1, newEnchantValue, 3, enchantedItem->itemId);
 	}
 
 	return ret;

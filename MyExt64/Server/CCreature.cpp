@@ -183,6 +183,9 @@ bool CCreature::UseItem(CItem *item, int i)
 	if (user->sd && user->sd->protectAfterLoginExpiry) {
 		if (!item->itemInfo->itemSkill || !CSkillInfo::escapeSkills.count(item->itemInfo->itemSkill->skillId)) {
 			user->sd->protectAfterLoginExpiry = 0;
+			if (user->socket) {
+				user->socket->SendSystemMessage(3108);
+			}
 		}
 	}
 
@@ -294,19 +297,18 @@ bool CCreature::IsEnemyTo(CCreature *creature)
 
 void CCreature::BroadcastSkillUse(const int skillId, const int skillLevel, const int hitTime, const int reuseTime)
 {
-	if (!sd) {
-		return;
-	}
-	double pos[3];
-	pos[0] = sd->x;
-	pos[1] = sd->y;
-	pos[2] = sd->z;
+	double *pos = GetPosition();
 	reinterpret_cast<void(*)(UINT64, CCreature*, int, double*, int, const char*, ...)>(0x421EC8)(
 		0x10FF64D8, this, 0x5000, pos, 0xC00, "cddddddddddddd", 0x48,
 		objectId, objectId, skillId, skillLevel, hitTime, reuseTime,
 		static_cast<INT32>(pos[0]), static_cast<INT32>(pos[1]), static_cast<INT32>(pos[2]),
 		0,
 		static_cast<INT32>(pos[0]), static_cast<INT32>(pos[1]), static_cast<INT32>(pos[2]));
+}
+
+double* CCreature::GetPosition()
+{
+	return &sd->x;
 }
 
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);

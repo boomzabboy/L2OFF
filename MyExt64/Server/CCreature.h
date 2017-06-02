@@ -34,6 +34,7 @@ public:
 	UINT32 GetServerId();
 	bool IsEnemyTo(CCreature *creature);
 	void BroadcastSkillUse(const int skillId, const int skillLevel, const int hitTime = 200, const int reuseTime = 200);
+	double* GetPosition();
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);
