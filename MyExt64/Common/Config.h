@@ -46,6 +46,7 @@ public:
 		bool epilogueEnchantFirecracker;
 		double epilogueDamageReduction78Plus;
 		double epilogueMagicChanceReduction78Plus;
+		bool epilogueVitalitySystem;
 	} *server;
 
 	struct VoiceCommands {

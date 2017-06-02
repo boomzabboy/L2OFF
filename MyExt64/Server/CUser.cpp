@@ -158,6 +158,9 @@ void CUser::Init()
 	WriteInstructionCall(0x737525, FnPtr(&CUser::SetDailyQuest));
 
 	WriteInstructionCall(0x5B862E, FnPtr(&CUser::ReplyEnchantItem));
+
+	WriteInstructionCall(0x75E845, FnPtr(CVitalityPointGetDecrementValue));
+	WriteInstructionCall(0x75FB09, FnPtr(CVitalityPointGetDecrementValue));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -1321,6 +1324,14 @@ bool CUser::ReplyEnchantItem(CItem *scroll, INT64 scrollNewCount,
 	}
 
 	return ret;
+}
+
+int CUser::CVitalityPointGetDecrementValue(int level)
+{
+	if (Config::Instance()->server->epilogueVitalitySystem && level > 75) {
+		level = 75;
+	}
+	return reinterpret_cast<int(*)(int)>(0x9593EC)(level);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);
