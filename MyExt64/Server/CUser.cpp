@@ -748,8 +748,8 @@ bool CUser::OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift)
 {
 	GUARDED;
 
-	if (!CSkillInfo::escapeSkills.count(skillId)) {
-		if (sd) {
+	if (sd && sd->protectAfterLoginExpiry) {
+		if (!CSkillInfo::escapeSkills.count(skillId)) {
 			sd->protectAfterLoginExpiry = 0;
 			if (socket) {
 				socket->SendSystemMessage(3108);
