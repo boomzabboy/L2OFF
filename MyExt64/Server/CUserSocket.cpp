@@ -589,41 +589,21 @@ void CUserSocket::CheckGuard(const UINT32 &i) const
 
 void __cdecl CUserSocket::PacketDecryptWrapper(unsigned char *data, CUserSocket *socket, UINT32 size)
 {
-	std::wstring s;
-	for (size_t i = 0 ; i < size ; ++i) {
-		wchar_t buffer[16];
-		wsprintf(buffer, L"%02X ", static_cast<unsigned int>(data[i]));
-		s.append(buffer);
-	}
-	CLog::Add(CLog::Blue, L"Incoming packet (before decryption): %d bytes = %s", size, s.c_str());
-
 	if (reinterpret_cast<unsigned char*>(socket)[0xDC]) {
 		reinterpret_cast<void(*)(unsigned char*, UINT64, UINT32)>(0x91C148)(
 			data, reinterpret_cast<UINT64>(socket) + 0xDC, size);
 	}
 
-	s.clear();
-	for (size_t i = 0 ; i < size ; ++i) {
-		wchar_t buffer[16];
-		wsprintf(buffer, L"%02X ", static_cast<unsigned int>(data[i]));
-		s.append(buffer);
-	}
-	CLog::Add(CLog::Blue, L"Incoming packet (after first decryption): %d bytes = %s", size, s.c_str());
-
 	if (Server::GetPlugin()) {
-		BYTE opcode = (*reinterpret_cast<UINT32**>(reinterpret_cast<char*>(socket) + 0xF10))[data[0]];
-		CLog::Add(CLog::Blue, L"Opcode = %d", static_cast<unsigned int>(opcode));
+		BYTE opcode = data[0];
+		if (opcode <= 0xD0) {
+			opcode = (*reinterpret_cast<UINT32**>(reinterpret_cast<char*>(socket) + 0xF10))[opcode];
+		} else {
+			opcode = 0xD1;
+		}
 		Server::GetPlugin()->decrypt(
 			socket->ext.pluginData, socket->ext.pluginCS, data+1, size+2, opcode);
 	}
-
-	s.clear();
-	for (size_t i = 0 ; i < size ; ++i) {
-		wchar_t buffer[16];
-		wsprintf(buffer, L"%02X ", static_cast<unsigned int>(data[i]));
-		s.append(buffer);
-	}
-	CLog::Add(CLog::Blue, L"Incoming packet (after second decryption): %d bytes = %s", size, s.c_str());
 }
 
 void CUserSocket::CheckTargetInHide(const unsigned char *packet, const size_t offset)
