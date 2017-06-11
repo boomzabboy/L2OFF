@@ -41,19 +41,6 @@ void ReplaceOutExOpcode(unsigned int address, BYTE opcode)
 	WriteMemoryBYTE(address + 9, static_cast<BYTE>(0xFE - opcode));
 }
 
-UINT32 RejectedPacketHelper(CUserSocket *socket, BYTE *packet, BYTE opcode, BYTE status)
-{
-	if (Server::GetPlugin()) {
-		const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
-		Server::GetPlugin()->decrypt(socket->ext.pluginData, socket->ext.pluginCS, const_cast<BYTE*>(packet), packetLen, opcode);
-	}
-	if (status) {
-		return 0x92EE20;
-	} else {
-		return 0x92EE40;
-	}
-}
-
 }
 
 void CUserSocket::Init()
@@ -68,21 +55,14 @@ void CUserSocket::Init()
 	WriteInstructionCallJmpEax(0x92EDFE, reinterpret_cast<UINT32>(InGamePacketHandlerWrapper), 0x92EE0C);
 	WriteInstructionCall(0x92EAE9, reinterpret_cast<UINT32>(InGamePacketExHandlerWrapper), 0x92EB03);
 
-	const static char *rejectedPacketHelperBuffer = \
-		/* 0x00 */ "\x48\x63\xC3"							// mov rax, ebx
-		/* 0x03 */ "\x48\x8D\x0D\x00\x00\x00\x00"			// lea rcx, ????
-		/* 0x0A */ "\x4C\x0F\xB6\x8C\x08\xA0\x11\xDC\x11"	// movzx r9, BYTE PTR [rax+rcx+0x11DC11A0]
-		/* 0x13 */ "\x4C\x63\xC3"							// movsxd r8, ebx
-		/* 0x16 */ "\x48\x8B\x86\xC0\x00\x00\x00"			// mov rax, [rsi+0xC0]
-		/* 0x1D */ "\x4C\x8B\xAC\x24\xA0\x00\x00\x00"		// mov r13, [rsp+98h+arg_0]
-		/* 0x25 */ "\x4B\x8D\x54\x2E\x01"					// lea rdx, [r14+r13+1]
-		/* 0x2A */ "\x48\x8B\xCE"							// mov rcx, rsi
-		/* 0x2D */ "\x90\x90\x90\x90\x90\x90\x90";			// placeholder for call with jump
-
-	WriteAddress(reinterpret_cast<UINT32>(&rejectedPacketHelperBuffer[0x03 + 3]), 0x400000);
-	WriteInstructionCallJmpEax(reinterpret_cast<UINT32>(&rejectedPacketHelperBuffer[0x2D]), reinterpret_cast<UINT32>(RejectedPacketHelper));
-	WriteInstructionJmp(0x92EE0C, reinterpret_cast<UINT32>(rejectedPacketHelperBuffer));
-	MakeExecutable(reinterpret_cast<UINT32>(rejectedPacketHelperBuffer), 0x34);
+	const static char *packetDecryptHelperBuffer = \
+		/* 0x00 */ "\x48\x89\xF2"           // mov rdx, rsi
+		/* 0x03 */ "\x90\x90\x90\x90\x90"   // placeholder for jmp
+		/* 0x08 */ ;
+	WriteInstructionJmp(reinterpret_cast<UINT32>(&packetDecryptHelperBuffer[0x03]), reinterpret_cast<UINT32>(PacketDecryptWrapper));
+	WriteInstructionCall(0x92ECA2, reinterpret_cast<UINT32>(packetDecryptHelperBuffer));
+	MakeExecutable(reinterpret_cast<UINT32>(packetDecryptHelperBuffer), 0x8);
+	NOPMemory(0x92EC93, 2);
 
 	switch (Server::GetProtocolVersion()) {
 	case Server::ProtocolVersionGraciaFinal:
@@ -607,6 +587,45 @@ void CUserSocket::CheckGuard(const UINT32 &i) const
 	}
 }
 
+void __cdecl CUserSocket::PacketDecryptWrapper(unsigned char *data, CUserSocket *socket, UINT32 size)
+{
+	std::wstring s;
+	for (size_t i = 0 ; i < size ; ++i) {
+		wchar_t buffer[16];
+		wsprintf(buffer, L"%02X ", static_cast<unsigned int>(data[i]));
+		s.append(buffer);
+	}
+	CLog::Add(CLog::Blue, L"Incoming packet (before decryption): %d bytes = %s", size, s.c_str());
+
+	if (reinterpret_cast<unsigned char*>(socket)[0xDC]) {
+		reinterpret_cast<void(*)(unsigned char*, UINT64, UINT32)>(0x91C148)(
+			data, reinterpret_cast<UINT64>(socket) + 0xDC, size);
+	}
+
+	s.clear();
+	for (size_t i = 0 ; i < size ; ++i) {
+		wchar_t buffer[16];
+		wsprintf(buffer, L"%02X ", static_cast<unsigned int>(data[i]));
+		s.append(buffer);
+	}
+	CLog::Add(CLog::Blue, L"Incoming packet (after first decryption): %d bytes = %s", size, s.c_str());
+
+	if (Server::GetPlugin()) {
+		BYTE opcode = (*reinterpret_cast<UINT32**>(reinterpret_cast<char*>(socket) + 0xF10))[data[0]];
+		CLog::Add(CLog::Blue, L"Opcode = %d", static_cast<unsigned int>(opcode));
+		Server::GetPlugin()->decrypt(
+			socket->ext.pluginData, socket->ext.pluginCS, data+1, size+2, opcode);
+	}
+
+	s.clear();
+	for (size_t i = 0 ; i < size ; ++i) {
+		wchar_t buffer[16];
+		wsprintf(buffer, L"%02X ", static_cast<unsigned int>(data[i]));
+		s.append(buffer);
+	}
+	CLog::Add(CLog::Blue, L"Incoming packet (after second decryption): %d bytes = %s", size, s.c_str());
+}
+
 void CUserSocket::CheckTargetInHide(const unsigned char *packet, const size_t offset)
 {
 	CUser *user_ = user;
@@ -831,9 +850,6 @@ bool CUserSocket::OutGamePacketHandler(const BYTE *packet, BYTE opcode)
 	if (packetLen < 3) {
 		return false;
 	}
-	if (Server::GetPlugin()) {
-		Server::GetPlugin()->decrypt(ext.pluginData, ext.pluginCS, const_cast<BYTE*>(packet), packetLen, opcode);
-	}
 
 	bool ret = CallPacketHandler(opcode, packet);
 	return ret;
@@ -846,9 +862,6 @@ bool CUserSocket::InGamePacketHandler(const BYTE *packet, BYTE opcode)
 	const UINT16 &packetLen(*reinterpret_cast<const UINT16*>(packet - 3));
 	if (packetLen < 3) {
 		return false;
-	}
-	if (Server::GetPlugin()) {
-		Server::GetPlugin()->decrypt(ext.pluginData, ext.pluginCS, const_cast<BYTE*>(packet), packetLen, opcode);
 	}
 
 	switch (opcode) {
