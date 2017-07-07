@@ -47,7 +47,7 @@ void CAttackAction::GenerateAttackTargetData(CCreature *attacker, CObject *targe
 	if (!targetCreature->IsValidCreature()) return;
 	if (targetCreature->IsUserOrSummon()) return;
 	int targetLevel = targetCreature->GetLevel();
-	if (targetLevel < 78) return;
+	if (targetLevel <= 78) return;
 	int attackerLevel = attacker->GetLevel();
 	if (attacker->IsSummon()) {
 		CUser *master = reinterpret_cast<CSummon*>(attacker)->GetUserOrMaster();

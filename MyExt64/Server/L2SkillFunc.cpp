@@ -43,7 +43,7 @@ double L2SkillFunc::CalculateDamage(CCreature *attacker, CObject *target, const 
 	if (!targetCreature->IsValidCreature()) return ret;
 	if (targetCreature->IsUserOrSummon()) return ret;
 	int targetLevel = targetCreature->GetLevel();
-	if (targetLevel < 78) return ret;
+	if (targetLevel <= 78) return ret;
 	int attackerLevel = attacker->GetLevel();
 	if (attacker->IsSummon()) {
 		CUser *master = reinterpret_cast<CSummon*>(attacker)->GetUserOrMaster();
@@ -73,7 +73,7 @@ bool L2SkillFunc::CheckResistedWrapper(class CCreature *attacker, class CCreatur
 		if (!targetCreature->IsValidCreature()) break;
 		if (targetCreature->IsUserOrSummon()) break;
 		int targetLevel = targetCreature->GetLevel();
-		if (targetLevel < 78) break;
+		if (targetLevel <= 78) break;
 		int attackerLevel = attacker->GetLevel();
 		if (attacker->IsSummon()) {
 			CUser *master = reinterpret_cast<CSummon*>(attacker)->GetUserOrMaster();
