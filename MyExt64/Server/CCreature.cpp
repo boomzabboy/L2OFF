@@ -255,6 +255,12 @@ bool CCreature::UnequipItem(SlotType slotType)
 		(*reinterpret_cast<void***>(this))[0xEF])(this, slotType);
 }
 
+UINT32 CCreature::GetServerId()
+{
+	return reinterpret_cast<UINT32(*)(CCreature*)>(
+		(*reinterpret_cast<void***>(this))[0x8C])(this);
+}
+
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);
 CompileTimeOffsetCheck(CCreature, padding0x1464, 0x1464);
 

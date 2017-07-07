@@ -154,6 +154,8 @@ void CUser::Init()
 	WriteInstructionCall(0x6B3C28 + 0x39F, reinterpret_cast<UINT32>(SetMessageVWrapper));
 
 	WriteInstructionCall(0x68DF4A, reinterpret_cast<UINT32>(GetObjectTradeFix));
+
+	WriteInstructionCall(0x737525, FnPtr(&CUser::SetDailyQuest));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -1244,6 +1246,21 @@ void __cdecl CUser::GetObjectTradeFix(void*, SmartPtr<CCreature> *ptr, UINT32 ob
 	if (Guard::WasCalled(reinterpret_cast<wchar_t*>(0xC36140))) return; // "int __cdecl CTrade::AddItems(const unsigned char *,unsigned int)"
 	if (Guard::WasCalled(reinterpret_cast<wchar_t*>(0xC5A500))) return; // "void __cdecl User::DecreaseEquippedItemDurationOnTimerExpired(void)"
 	user->TradeCancel();
+}
+
+void CUser::SetDailyQuest(UINT32 questId)
+{
+	time_t now = time(0);
+	for (size_t i = 0 ; i < 25 ; ++i) {
+		if (!sd->dailyQuests[i].questId || sd->dailyQuests[i].questId == questId) {
+			sd->dailyQuests[i].questId = questId;
+			sd->dailyQuests[i].completeTime = now;
+			CDB::Instance()->SetDailyQuest(GetServerId(), questId, now);
+			return;
+		}
+	}
+	CLog::Add(CLog::Red, L"Warning: no empty daily quest slot for user [%s], quest = %d, time = %d",
+		GetName(), questId, now);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

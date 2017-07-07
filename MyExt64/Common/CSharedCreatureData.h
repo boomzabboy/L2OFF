@@ -8,6 +8,12 @@ public:
 	static void InitNpc();
 	static void InitServer();
 
+	class DailyQuest {
+	public:
+		UINT32 questId;
+		UINT32 completeTime;
+	};
+
 	/* 0x0000 */ unsigned char padding0x0000[0x8];
 	/* 0x0008 */ double x;
 	/* 0x0010 */ double y;
@@ -27,7 +33,9 @@ public:
 	/* 0x00D6 */ unsigned char padding0x00D6[0x0100-0x00D6];
 	/* 0x0100 */ UINT64 exp;
 	/* 0x0108 */ UINT32 sp;
-	/* 0x010C */ unsigned char padding0x010C[0x06AC-0x010C];
+	/* 0x010C */ unsigned char padding0x010C[0x0500-0x010C];
+	/* 0x0500 */ DailyQuest dailyQuests[25];
+	/* 0x05C8 */ unsigned char padding0x05C8[0x06AC-0x05C8];
 	/* 0x06AC */ INT32 storeMode;
 	/* 0x06B0 */ unsigned char padding0x06B0[0x07A4-0x06B0];
 	/* 0x07A4 */ UINT32 level;

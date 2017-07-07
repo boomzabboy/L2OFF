@@ -111,3 +111,9 @@ UINT64 GetVt(T *object)
 	return *reinterpret_cast<UINT64*>(object);
 }
 
+template<typename T>
+UINT32 FnPtr(T f)
+{
+	return reinterpret_cast<UINT32>(*reinterpret_cast<void**>(&f));
+}
+

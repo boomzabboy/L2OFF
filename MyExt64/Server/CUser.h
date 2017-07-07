@@ -158,6 +158,7 @@ public:
 	void ShowQuestHTML(wchar_t *filename, wchar_t *data, int i);
 	bool IsValidPrivateStoreItem(INT64 count, INT64 price, class CItem *item);
 	void OutOfSight(CObject *object, bool b);
+	void SetDailyQuest(UINT32 questId);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);

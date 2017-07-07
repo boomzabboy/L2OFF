@@ -31,6 +31,7 @@ public:
 	void ChangeTarget(CObject *target, int reason);
 	void UnequipWeapon();
 	bool UnequipItem(enum SlotType slotType);
+	UINT32 GetServerId();
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);

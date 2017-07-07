@@ -89,3 +89,8 @@ void CDB::SendSaveCharacterInfo(CUser *user, bool a, bool b)
 	reinterpret_cast<void(*)(CDB*, CUser*, bool, bool)>(0x5994C4)(this, user, a, b);
 }
 
+void CDB::SetDailyQuest(UINT32 charId, UINT32 questId, UINT32 completeTime)
+{
+	reinterpret_cast<void(*)(CDB*, UINT32, UINT32, UINT32)>(0x595798)(this, charId, questId, completeTime);
+}
+
