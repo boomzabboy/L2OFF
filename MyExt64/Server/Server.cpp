@@ -70,6 +70,7 @@ void Server::Init()
 	SetShutdownSeconds(Config::Instance()->server->shutdownDuration);
 	EnableLoadNpcSettingsAnytime();
 	AllowAirshipSkills();
+	EnableGlobalShout();
 	MountUnmountKeepBuffs();
 	SetPledgeLoadTimeout(Config::Instance()->server->pledgeLoadTimeout);
 	SetPledgeWarLoadTimeout(Config::Instance()->server->pledgeWarLoadTimeout);
