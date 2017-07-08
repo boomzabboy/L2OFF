@@ -200,6 +200,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\CSharedItemData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\CSharedItemData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\CYieldLock.cpp"
 				>
 			</File>

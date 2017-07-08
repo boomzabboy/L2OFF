@@ -44,6 +44,7 @@
 #include <Server/CParserForSkillAcquire.h>
 #include <Server/L2SkillFunc.h>
 #include <Common/CSharedCreatureData.h>
+#include <Common/CSharedItemData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -91,6 +92,7 @@ void Server::Init()
 		RemoveKamaelRace();
 	}
 	CSharedCreatureData::InitServer();
+	CSharedItemData::InitServer();
 	CWorld::Init();
 	CUser::Init();
 	CUserSocket::Init();

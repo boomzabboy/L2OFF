@@ -9,11 +9,13 @@ void CItem::Init()
 	WriteMemoryBYTES(0x95B09C, "\x48\x89\xD9", 3);
 	WriteInstructionCallJmpEax(0x95B09F, reinterpret_cast<UINT32>(WarehouseDepositHelper));
 
-	WriteMemoryDWORD(0x9A3D3D, sizeof(CItem::ItemInfo));
-	WriteInstructionCall(0x9A3D58, FnPtr(&CItem::ItemInfo::Constructor));
-	WriteMemoryQWORD(0xB63F80, FnPtr(&CItem::ItemInfo::Destructor));
-
-	CompileTimeOffsetCheck(ItemInfo, ext, 0x0198);
+	WriteInstructionCall(0x8B08D6, FnPtr(&CItem::IsPrivateSellable), 0x8B08DC);
+	WriteInstructionCall(0x8B1159, FnPtr(&CItem::IsPrivateSellable), 0x8B115F);
+	WriteInstructionCall(0x8B21A2, FnPtr(&CItem::IsPrivateSellable), 0x8B21A8);
+	WriteInstructionCall(0x8B27E4, FnPtr(&CItem::IsPrivateSellable), 0x8B27EA);
+	WriteInstructionCall(0x8BA5B0, FnPtr(&CItem::IsPrivateSellable), 0x8BA5B6);
+	WriteInstructionCall(0x8BB282, FnPtr(&CItem::IsPrivateSellable), 0x8BB288);
+	WriteInstructionCall(0x8C83CC, FnPtr(&CItem::IsPrivateSellable), 0x8C83D2);
 }
 
 CContributeData* CItem::GetContributeData()
@@ -28,9 +30,9 @@ bool CItem::IsTradeable(CUser *user)
 
 UINT64 __cdecl CItem::WarehouseDepositHelper(CItem *item)
 {
-	if (item->itemInfo->someType == 2
-		|| item->itemInfo->someType == 0x10
-		|| item->itemInfo->someType == 0x1a) {
+	if (item->sd->someType == 2
+		|| item->sd->someType == 0x10
+		|| item->sd->someType == 0x1a) {
 
 		return 0x95B0AB; // have to check whether item is equipped
 	} else {
@@ -38,25 +40,16 @@ UINT64 __cdecl CItem::WarehouseDepositHelper(CItem *item)
 	}
 }
 
-CItem::ItemInfo* CItem::ItemInfo::Constructor()
+bool CItem::IsPrivateSellable(CUser *user, bool b)
 {
-	ItemInfo *ret = reinterpret_cast<ItemInfo*(*)(ItemInfo*)>(0x69EAAC)(this);
-	new (&ret->ext) Ext();
-	return ret;
-}
-
-void CItem::ItemInfo::Destructor(bool isMemoryFreeUsed)
-{
-	ext.~Ext();
-	reinterpret_cast<void(*)(ItemInfo*, bool)>(0x69ECE4)(this, isMemoryFreeUsed);
-}
-
-CItem::ItemInfo::Ext::Ext() : isPrivateStore(false), isPrivateStoreSet(false), isOlympiadCanUse(true)
-{
-}
-
-CItem::ItemInfo::Ext::~Ext()
-{
+	if (!GetVfn<bool(*)(CItem*, CUser*, bool)>(this, 0x98)(this, user, b)) {
+		return false;
+	}
+	if (sd->ext.isPrivateStoreSet) {
+		return sd->ext.isPrivateStore;
+	} else {
+		return IsTradeable(user);
+	}
 }
 
 CompileTimeOffsetCheck(CItem, worldInfo, 0x0048);

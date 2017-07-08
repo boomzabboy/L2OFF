@@ -1143,8 +1143,8 @@ bool CUser::IsValidPrivateStoreItem(INT64 count, INT64 price, CItem *item)
 	if (!reinterpret_cast<bool(*)(CUser*, INT64, INT64, CItem*)>(0x88D740)(this, count, price, item)) {
 		return false;
 	}
-	if (item->itemInfo->ext.isPrivateStoreSet) {
-		if (!item->itemInfo->ext.isPrivateStore) {
+	if (item->sd->ext.isPrivateStoreSet) {
+		if (!item->sd->ext.isPrivateStore) {
 			return false;
 		}
 	} else {

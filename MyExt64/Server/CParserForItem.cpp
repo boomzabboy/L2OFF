@@ -12,18 +12,18 @@ void CParserForItem::Init()
 
 void CParserForItem::yyaction_(int action)
 {
-	CItem::ItemInfo *itemInfo = reinterpret_cast<CItem::ItemInfo*>(yyvalptr);
-
 	if (CLexerForItem::substAction) {
 		if (CLexerForItem::substOwn) {
+			CItem *item = GetYYAttr<CItem*>(-3);
 			action = CLexerForItem::substAction;
+
 			switch (action) {
 			case CLexerForItem::is_private_store:
-				itemInfo->ext.isPrivateStore = _wtoi(yylexerptr->yytext);
-				itemInfo->ext.isPrivateStoreSet = true;
+				item->sd->ext.isPrivateStore = _wtoi(yylexerptr->yytext);
+				item->sd->ext.isPrivateStoreSet = true;
 				break;
 			case CLexerForItem::is_olympiad_can_use:
-				itemInfo->ext.isOlympiadCanUse = _wtoi(yylexerptr->yytext);
+				item->sd->ext.isOlympiadCanUse = _wtoi(yylexerptr->yytext);
 				break;
 			}
 		} else {

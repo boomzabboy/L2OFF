@@ -165,7 +165,7 @@ bool CCreature::UseItem(CItem *item, int i)
 			}
 		}
 
-		if (isOlympiad && !item->itemInfo->ext.isOlympiadCanUse) {
+		if (isOlympiad && !item->sd->ext.isOlympiadCanUse) {
 			return false;
 		}
 	}
@@ -181,7 +181,7 @@ bool CCreature::UseItem(CItem *item, int i)
 	CUser *user = reinterpret_cast<CUser*>(this);
 
 	if (user->sd && user->sd->protectAfterLoginExpiry) {
-		if (!item->itemInfo->itemSkill || !CSkillInfo::escapeSkills.count(item->itemInfo->itemSkill->skillId)) {
+		if (!item->sd->itemSkill || !CSkillInfo::escapeSkills.count(item->sd->itemSkill->skillId)) {
 			user->sd->protectAfterLoginExpiry = 0;
 			if (user->socket) {
 				user->socket->SendSystemMessage(3108);

@@ -8,6 +8,7 @@
 #include <NPCd/NPCHandler.h>
 #include <NPCd/CFString.h>
 #include <Common/CSharedCreatureData.h>
+#include <Common/CSharedItemData.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
 #include <Common/Config.h>
@@ -21,6 +22,7 @@ void NPCd::Init()
 		SplitAI::Init();
 	}
 	CSharedCreatureData::InitNpc();
+	CSharedItemData::InitNpc();
 	Compiler::Init();
 	CNPC::Init();
 	CNPCMaker::Init();
