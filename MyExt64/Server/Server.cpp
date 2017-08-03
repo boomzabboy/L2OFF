@@ -33,7 +33,18 @@
 #include <Server/CInventory.h>
 #include <Server/CFieldCycle.h>
 #include <Server/CTrade.h>
+#include <Server/AbnormalType.h>
+#include <Server/CLexerForSkill.h>
+#include <Server/CParserForSkill.h>
+#include <Server/CSkillOperateCondition_op_check_abnormal.h>
+#include <Server/CSkillEffect_t_hp.h>
+#include <Server/CLexerForItem.h>
+#include <Server/CParserForItem.h>
+#include <Server/CLexerForSkillAcquire.h>
+#include <Server/CParserForSkillAcquire.h>
+#include <Server/L2SkillFunc.h>
 #include <Common/CSharedCreatureData.h>
+#include <Common/CSharedItemData.h>
 #include <Common/Config.h>
 #include <Common/Utils.h>
 #include <Common/CLog.h>
@@ -59,6 +70,7 @@ void Server::Init()
 	SetShutdownSeconds(Config::Instance()->server->shutdownDuration);
 	EnableLoadNpcSettingsAnytime();
 	AllowAirshipSkills();
+	EnableGlobalShout();
 	MountUnmountKeepBuffs();
 	SetPledgeLoadTimeout(Config::Instance()->server->pledgeLoadTimeout);
 	SetPledgeWarLoadTimeout(Config::Instance()->server->pledgeWarLoadTimeout);
@@ -81,6 +93,7 @@ void Server::Init()
 		RemoveKamaelRace();
 	}
 	CSharedCreatureData::InitServer();
+	CSharedItemData::InitServer();
 	CWorld::Init();
 	CUser::Init();
 	CUserSocket::Init();
@@ -130,6 +143,16 @@ void Server::Init()
 	CInventory::Init();
 	CFieldCycle::Init();
 	CTrade::Init();
+	AbnormalType::Init();
+	CLexerForSkill::Init();
+	CParserForSkill::Init();
+	CSkillOperateCondition_op_check_abnormal::Init();
+	CSkillEffect_t_hp::Init();
+	CLexerForItem::Init();
+	CParserForItem::Init();
+	CLexerForSkillAcquire::Init();
+	CParserForSkillAcquire::Init();
+	L2SkillFunc::Init();
 	HideWarnings(); // call this at last!
 }
 
@@ -233,6 +256,8 @@ void Server::HideWarnings()
 	NOPMemory(0x92DFEA, 5);
 	NOPMemory(0x6BAC72, 5);
 	NOPMemory(0x7B9195, 5);
+	NOPMemory(0x4789EB, 5);
+	NOPMemory(0x4789F2, 5);
 }
 
 void Server::OnLoadEnd(UINT64 classBase)

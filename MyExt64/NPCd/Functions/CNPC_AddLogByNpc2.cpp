@@ -30,7 +30,11 @@ void CNPC_AddLogByNpc2::SetTypes()
 
 int CNPC_AddLogByNpc2::AddLogByNpc2(CNPC *npc, int logId, CSharedCreatureData *creature, wchar_t *str1, wchar_t *str2, __int64 param1, __int64 param2, __int64 param3, __int64 param4, __int64 param5, __int64 param6)
 {
-    CLog::Add(CLog::Blue, L"CNPC::AddLogByNpc2 stub");
+	reinterpret_cast<void(*)(UINT64, int, const wchar_t*, ...)>(0x4780E0)(
+		0x291EF90, 6, L"%I64d,%I64d,,,,%I64d,%I64d,%I64d,,,,%I64d,%I64d,%I64d,%I64d,%I64d,%I64d,,,,,%s,%s,,,",
+			logId, creature->dbId,
+			static_cast<INT64>(creature->x), static_cast<INT64>(creature->y), static_cast<INT64>(creature->z),
+			param1, param2, param3, param4, param5, param6, str1, str2);
 	return 0;
 }
 

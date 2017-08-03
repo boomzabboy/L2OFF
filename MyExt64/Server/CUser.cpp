@@ -156,6 +156,11 @@ void CUser::Init()
 	WriteInstructionCall(0x68DF4A, reinterpret_cast<UINT32>(GetObjectTradeFix));
 
 	WriteInstructionCall(0x737525, FnPtr(&CUser::SetDailyQuest));
+
+	WriteInstructionCall(0x5B862E, FnPtr(&CUser::ReplyEnchantItem));
+
+	WriteInstructionCall(0x75E845, FnPtr(CVitalityPointGetDecrementValue));
+	WriteInstructionCall(0x75FB09, FnPtr(CVitalityPointGetDecrementValue));
 }
 
 DWORD CUser::PremiumIpRefresh(void *v)
@@ -615,6 +620,9 @@ void CUser::EnterWorld()
 		reinterpret_cast<bool(*)(CUserSocket*, CUser*, wchar_t*)>(0x48A8EC)(socket, this, L"//gmon");
 	}
 	reinterpret_cast<void(*)(CUser*)>(0x8CF0E4)(this);
+	if (Config::Instance()->server->protectAfterLoginSeconds > 0) {
+		sd->protectAfterLoginExpiry = time(0) + Config::Instance()->server->protectAfterLoginSeconds;
+	}
 }
 
 void __cdecl CUser::LeaveWorldWrapper(CUser *self)
@@ -737,8 +745,17 @@ bool __cdecl CUser::OnMagicSkillUsePacketWrapper(CUser *self, int skillId, bool 
 }
 
 bool CUser::OnMagicSkillUsePacket(int skillId, bool ctrl, bool shift)
-{ GUARDED
+{
+	GUARDED;
 
+	if (sd && sd->protectAfterLoginExpiry) {
+		if (!CSkillInfo::escapeSkills.count(skillId)) {
+			sd->protectAfterLoginExpiry = 0;
+			if (socket) {
+				socket->SendSystemMessage(3108);
+			}
+		}
+	}
 	ext.lastSkill.skillId = skillId;
 	ext.lastSkill.ctrl = ctrl;
 	ext.lastSkill.shift = shift;
@@ -889,6 +906,12 @@ void CUser::TimerExpired(int id)
 			if (socket) {
 				socket->SendSystemMessage(2451);
 			}
+		}
+	}
+	if (sd->protectAfterLoginExpiry && sd->protectAfterLoginExpiry <= time(0)) {
+		sd->protectAfterLoginExpiry = 0;
+		if (socket) {
+			socket->SendSystemMessage(3108);
 		}
 	}
 }
@@ -1120,8 +1143,14 @@ bool CUser::IsValidPrivateStoreItem(INT64 count, INT64 price, CItem *item)
 	if (!reinterpret_cast<bool(*)(CUser*, INT64, INT64, CItem*)>(0x88D740)(this, count, price, item)) {
 		return false;
 	}
-	if (!item->IsTradeable(this)) {
-		return false;
+	if (item->sd->ext.isPrivateStoreSet) {
+		if (!item->sd->ext.isPrivateStore) {
+			return false;
+		}
+	} else {
+		if (!item->IsTradeable(this)) {
+			return false;
+		}
 	}
 	if (!item->worldInfo || item->worldInfo->consumeType != 2) {
 		return true;
@@ -1261,6 +1290,48 @@ void CUser::SetDailyQuest(UINT32 questId)
 	}
 	CLog::Add(CLog::Red, L"Warning: no empty daily quest slot for user [%s], quest = %d, time = %d",
 		GetName(), questId, now);
+}
+
+bool CUser::ReplyEnchantItem(CItem *scroll, INT64 scrollNewCount,
+							 CItem *catalyst, INT64 catalystNewCount,
+							 CItem *enchantedItem, int newEnchantValue)
+{
+	bool ret = reinterpret_cast<bool(*)(CUser*, CItem*, INT64, CItem*, INT64, CItem*, int)>(0x8E55C0)(
+		this, scroll, scrollNewCount, catalyst, catalystNewCount, enchantedItem, newEnchantValue);
+
+	if (!Config::Instance()->server->epilogueEnchantFirecracker) {
+		return ret;
+	}
+
+	bool firecracker = false;
+	if (enchantedItem) {
+		if (enchantedItem->worldInfo->itemType == 0) {
+			if (newEnchantValue == 7 || newEnchantValue == 15) {
+				firecracker = true;
+			}
+		} else if(enchantedItem->worldInfo->itemType == 1) {
+			if (newEnchantValue == 6) {
+				firecracker = true;
+			}
+		}
+	}
+
+	if (firecracker) {
+		BroadcastSkillUse(2024, 1); // firecracker
+		reinterpret_cast<void(*)(UINT64, CCreature*, int, double*, int, const char*, ...)>(0x421EC8)(
+			0x10FF64D8, this, 0x5000, GetPosition(), 0x5DC,
+			"cdddSdddd", 0x62, 3013, 3, 0, GetName(), 1, newEnchantValue, 3, enchantedItem->itemId);
+	}
+
+	return ret;
+}
+
+int CUser::CVitalityPointGetDecrementValue(int level)
+{
+	if (Config::Instance()->server->epilogueVitalitySystem && level > 75) {
+		level = 75;
+	}
+	return reinterpret_cast<int(*)(int)>(0x9593EC)(level);
 }
 
 CompileTimeOffsetCheck(CUser, acceptPM, 0x35D8);

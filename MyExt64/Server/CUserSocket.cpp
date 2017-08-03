@@ -673,6 +673,21 @@ UINT64 __cdecl CUserSocket::InGamePacketHandlerWrapper(CUserSocket *self, const 
 		}
 	}
 
+	if (self->user && self->user->sd && self->user->sd->protectAfterLoginExpiry) {
+		switch (opcode) {
+		case 0x0F: // MoveBackwardToLocation
+		case 0x35: // ChangeMoveType
+		case 0x52: // MoveWithDelta
+		case 0x75: // MoveToLocationInVehicle
+		case 0x01: // Attack
+		case 0x1F: // Action
+		case 0x56: // RequestActionUse
+			self->user->sd->protectAfterLoginExpiry = 0;
+			self->SendSystemMessage(3108);
+			break;
+		}
+	}
+
 	BYTE opcodeRemapped = opcode;
 
 	try {

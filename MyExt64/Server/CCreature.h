@@ -32,6 +32,9 @@ public:
 	void UnequipWeapon();
 	bool UnequipItem(enum SlotType slotType);
 	UINT32 GetServerId();
+	bool IsEnemyTo(CCreature *creature);
+	void BroadcastSkillUse(const int skillId, const int skillLevel, const int hitTime = 200, const int reuseTime = 200);
+	double* GetPosition();
 
 	static CCreature* GetCreatureByObjectId(UINT32 id);
 	static CCreature* GetValidCreatureByObjectId(UINT32 id);
@@ -43,7 +46,8 @@ public:
 
 	/* 0x0000 */ unsigned char padding0x0000[0x0018 - 0x0000];
 	/* 0x0018 */ UINT32 objectId;
-	/* 0x001C */ unsigned char padding0x001C[0x0A90 - 0x001C];
+	/* 0x001C */ UINT32 objectType;
+	/* 0x0020 */ unsigned char padding0x001C[0x0A90 - 0x0020];
 	/* 0x0A90 */ class CSharedCreatureData *sd;
 	/* 0x0A98 */ unsigned char padding0x0A98[0x0AA0 - 0x0A98];
 	/* 0x0AA0 */ class CYieldLock *sdLock;

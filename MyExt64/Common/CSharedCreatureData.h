@@ -37,9 +37,13 @@ public:
 	/* 0x0500 */ DailyQuest dailyQuests[25];
 	/* 0x05C8 */ unsigned char padding0x05C8[0x06AC-0x05C8];
 	/* 0x06AC */ INT32 storeMode;
-	/* 0x06B0 */ unsigned char padding0x06B0[0x07A4-0x06B0];
+	/* 0x06B0 */ unsigned char padding0x06B0[0x0740-0x06B0];
+	/* 0x0740 */ UINT32 dbId;
+	/* 0x0744 */ unsigned char padding0x0744[0x07A4-0x0744];
 	/* 0x07A4 */ UINT32 level;
-	/* 0x07A8 */ unsigned char padding0x07A8[0x08C8-0x07A8];
+	/* 0x07A8 */ unsigned char padding0x07A8[0x07D8-0x07A8];
+	/* 0x07D8 */ double maxHp;
+	/* 0x07E0 */ unsigned char padding0x07E0[0x08C8-0x07E0];
 	/* 0x08C8 */ UINT32 builder;
 	/* 0x08CC */ unsigned char padding0x08CC[0x0930-0x08CC];
 	/* 0x0930 */ UINT32 isInsidePeaceZone;
@@ -73,5 +77,6 @@ public:
 	/* 0x16FC */ UINT32 m_nMultiBoxSessionCount;
 	/* 0x1700 */ wchar_t wedding_partner_name[26];
 	/* 0x1734 */ UINT32 wedding_relation;
+	/* 0x1738 */ UINT32 protectAfterLoginExpiry;
 };
 

@@ -41,6 +41,12 @@ public:
 		std::wstring loadDlls;
 		std::wstring plugin;
 		bool hookWriteProcessMemory;
+		bool epiloguePetInventoryBehaviour;
+		int protectAfterLoginSeconds;
+		bool epilogueEnchantFirecracker;
+		double epilogueDamageReduction78Plus;
+		double epilogueMagicChanceReduction78Plus;
+		bool epilogueVitalitySystem;
 	} *server;
 
 	struct VoiceCommands {

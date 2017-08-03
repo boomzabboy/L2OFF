@@ -1,5 +1,6 @@
 
 #include <NPCd/Functions/CNPC_Whisper.h>
+#include <NPCd/NPCd.h>
 #include <Common/CLog.h>
 
 CNPC_Whisper::CNPC_Whisper() :
@@ -22,7 +23,7 @@ void CNPC_Whisper::SetTypes()
 
 int CNPC_Whisper::Whisper(CNPC *npc, CSharedCreatureData *talker, wchar_t *str)
 {
-    CLog::Add(CLog::Blue, L"CNPC::Whisper stub");
+	NPCd::Send("chddS", 0x36, NPCd::WHISPER, npc->sm->index, talker->index, str);
 	return 0;
 }
 

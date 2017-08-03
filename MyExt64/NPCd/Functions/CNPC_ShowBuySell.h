@@ -11,6 +11,6 @@ public:
 	CNPC_ShowBuySell();
 	virtual void* Call(void *caller, void **params);
 	virtual void SetTypes();
-	static int ShowBuySell(CNPC *npc, CSharedCreatureData *talker, CBuySellList *buyList, CBuySellList *sellList, float rate);
+	static int ShowBuySell(CNPC *npc, CSharedCreatureData *talker, CBuySellList *sellList, CBuySellList *buyList, float rate);
 };
 

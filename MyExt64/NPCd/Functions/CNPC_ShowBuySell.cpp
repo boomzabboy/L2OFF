@@ -1,5 +1,6 @@
 
 #include <NPCd/Functions/CNPC_ShowBuySell.h>
+#include <NPCd/NPCd.h>
 #include <Common/CLog.h>
 
 CNPC_ShowBuySell::CNPC_ShowBuySell() :
@@ -22,9 +23,19 @@ void CNPC_ShowBuySell::SetTypes()
 	AddParameter(Type::TYPE_FLOAT);
 }
 
-int CNPC_ShowBuySell::ShowBuySell(CNPC *npc, CSharedCreatureData *talker, CBuySellList *buyList, CBuySellList *sellList, float rate)
+int CNPC_ShowBuySell::ShowBuySell(CNPC *npc, CSharedCreatureData *talker, CBuySellList *sellList, CBuySellList *buyList, float rate)
 {
-    CLog::Add(CLog::Blue, L"CNPC::ShowBuySell stub");
+	if (!talker || !buyList || !sellList) {
+		return 0;
+	}
+	if (!reinterpret_cast<bool(*)(CBuySellList*)>(0x555EF8)(buyList)) {
+		reinterpret_cast<bool(*)(CBuySellList*)>(0x556BA8)(buyList);
+	}
+	if (!reinterpret_cast<bool(*)(CBuySellList*)>(0x555EF8)(sellList)) {
+		reinterpret_cast<bool(*)(CBuySellList*)>(0x556BA8)(sellList);
+	}
+	NPCd::Send("chddddf", 0x36, NPCd::SHOW_BUY_SELL,
+		npc->sm->index, talker->index, buyList, sellList, rate);
 	return 0;
 }
 

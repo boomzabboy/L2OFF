@@ -3,6 +3,7 @@
 #include <Server/CItem.h>
 #include <Server/CUser.h>
 #include <Server/CSummon.h>
+#include <Server/CUserSocket.h>
 #include <Common/CSharedCreatureData.h>
 #include <Common/CYieldLock.h>
 #include <Common/Utils.h>
@@ -22,6 +23,8 @@ void CCreature::Init()
 
 	WriteInstructionCall(0x8DD566, reinterpret_cast<UINT32>(UseItemWrapper));
 	WriteMemoryQWORD(0xC54348, reinterpret_cast<UINT64>(UseItemWrapper));
+	WriteMemoryQWORD(0xBCCFB8, reinterpret_cast<UINT64>(UseItemWrapper));
+	WriteMemoryQWORD(0xBCB888, reinterpret_cast<UINT64>(UseItemWrapper));
 
 	if (Config::Instance()->fixes->territoryWarPetFix) {
 		WriteInstructionCall(0x8D1470, reinterpret_cast<UINT32>(GetUserOrMaster), 0x8D1476);
@@ -151,6 +154,22 @@ bool CCreature::UseItem(CItem *item, int i)
 {
 	GUARDED;
 
+	if (this && item) {
+		bool isOlympiad = false;
+		if (IsUser()) {
+			isOlympiad = reinterpret_cast<CUser*>(this)->IsInOlympiad();
+		} else if (IsSummon()) {
+			CUser *user = reinterpret_cast<CSummon*>(this)->GetUserOrMaster();
+			if (user && user->IsInOlympiad()) {
+				isOlympiad = true;
+			}
+		}
+
+		if (isOlympiad && !item->sd->ext.isOlympiadCanUse) {
+			return false;
+		}
+	}
+
 	if (!reinterpret_cast<bool(*)(CCreature*, CItem*, int)>(0x54C4FC)(this, item, i)) {
 		return false;
 	}
@@ -160,6 +179,15 @@ bool CCreature::UseItem(CItem *item, int i)
 	}
 
 	CUser *user = reinterpret_cast<CUser*>(this);
+
+	if (user->sd && user->sd->protectAfterLoginExpiry) {
+		if (!item->sd->itemSkill || !CSkillInfo::escapeSkills.count(item->sd->itemSkill->skillId)) {
+			user->sd->protectAfterLoginExpiry = 0;
+			if (user->socket) {
+				user->socket->SendSystemMessage(3108);
+			}
+		}
+	}
 
 	if (!user->spiritshotOn || !Config::Instance()->fixes->fixSpiritshotLag) {
 		return true;
@@ -259,6 +287,28 @@ UINT32 CCreature::GetServerId()
 {
 	return reinterpret_cast<UINT32(*)(CCreature*)>(
 		(*reinterpret_cast<void***>(this))[0x8C])(this);
+}
+
+bool CCreature::IsEnemyTo(CCreature *creature)
+{
+	return reinterpret_cast<bool(*)(CCreature*, CCreature*)>(
+		(*reinterpret_cast<void***>(this))[0x74])(this, creature);
+}
+
+void CCreature::BroadcastSkillUse(const int skillId, const int skillLevel, const int hitTime, const int reuseTime)
+{
+	double *pos = GetPosition();
+	reinterpret_cast<void(*)(UINT64, CCreature*, int, double*, int, const char*, ...)>(0x421EC8)(
+		0x10FF64D8, this, 0x5000, pos, 0xC00, "cddddddddddddd", 0x48,
+		objectId, objectId, skillId, skillLevel, hitTime, reuseTime,
+		static_cast<INT32>(pos[0]), static_cast<INT32>(pos[1]), static_cast<INT32>(pos[2]),
+		0,
+		static_cast<INT32>(pos[0]), static_cast<INT32>(pos[1]), static_cast<INT32>(pos[2]));
+}
+
+double* CCreature::GetPosition()
+{
+	return &sd->x;
 }
 
 CompileTimeOffsetCheck(CCreature, sdLock, 0x0AA0);

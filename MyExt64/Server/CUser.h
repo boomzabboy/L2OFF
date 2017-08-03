@@ -159,6 +159,7 @@ public:
 	bool IsValidPrivateStoreItem(INT64 count, INT64 price, class CItem *item);
 	void OutOfSight(CObject *object, bool b);
 	void SetDailyQuest(UINT32 questId);
+	bool ReplyEnchantItem(class CItem *scroll, INT64 scrollNewCount, class CItem *catalyst, INT64 catalystNewCount, class CItem *enchantedItem, int newEnchantValue);
 
 	static void __cdecl SayWrapper(CUser *self, const wchar_t *message);
 	static INT64 __cdecl ExpIncWrapper(CUser *self, const INT64 exp, const bool b);
@@ -188,6 +189,7 @@ public:
 	static void __cdecl SetMessage_dWrapper(void *self, int line, const wchar_t *format, int value);
 	static void __cdecl SetMessageVWrapper(void *self, int line, const wchar_t *format, ...);
 	static void __cdecl GetObjectTradeFix(void*, SmartPtr<CCreature> *ptr, UINT32 objectId);
+	static int CVitalityPointGetDecrementValue(int);
 
 	static CriticalSection onlineOfflineTradeUsersCS;
 	static std::set<CUser*> onlineUsers;
